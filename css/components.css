@@ -1,0 +1,270 @@
+/* ============================================================
+   components.css — botões, marquee, moldura de navegador, reveals
+   ============================================================ */
+
+/* ---------- Botões ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 9999px;
+  text-decoration: none;
+  font-size: 14.5px;
+  font-weight: 600;
+}
+
+.btn-glass {
+  height: 40px;
+  padding: 0 18px;
+  gap: 7px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--line-strong);
+  color: var(--ink-strong);
+  font-size: 14px;
+  transition: background 0.25s ease, border-color 0.25s ease;
+}
+
+.btn-glass:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.34);
+}
+
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+  height: 46px;
+  padding: 0 22px;
+  background: #ededed;
+  color: var(--bg-raised);
+  font-weight: 700;
+  transition: background 0.25s ease;
+}
+
+.btn-primary:hover {
+  background: var(--ink-strong);
+}
+
+.btn-ghost {
+  height: 46px;
+  padding: 0 22px;
+  background: transparent;
+  border: 1px solid var(--line-strong);
+  color: rgba(255, 255, 255, 0.75);
+  transition: border-color 0.25s ease, background 0.25s ease, color 0.25s ease;
+}
+
+.btn-ghost:hover {
+  border-color: rgba(255, 255, 255, 0.36);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--ink-strong);
+}
+
+.btn-white {
+  height: 52px;
+  padding: 0 28px;
+  background: var(--ink-strong);
+  color: var(--bg-raised);
+  font-weight: 700;
+  font-size: 15px;
+  transition: transform 0.25s var(--ease-out);
+}
+
+.btn-white:hover {
+  transform: translateY(-1px);
+}
+
+.btn-outline {
+  height: 52px;
+  padding: 0 26px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: var(--ink-strong);
+  font-size: 15px;
+  transition: border-color 0.25s ease;
+}
+
+.btn-outline:hover {
+  border-color: var(--ink-strong);
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: var(--ink-strong);
+  text-decoration: none;
+  transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+}
+
+.icon-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.34);
+  transform: translateY(-2px);
+}
+
+/* Brilho que atravessa o botão primário no hover (via JS) */
+.sheen {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 44%;
+  background: linear-gradient(80deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.85) 50%, rgba(255, 255, 255, 0));
+  transform: translateX(-180%) skewX(-18deg);
+  pointer-events: none;
+}
+
+/* ---------- Marquee de habilidades ---------- */
+.marquee {
+  overflow: hidden;
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+}
+
+.marquee-row {
+  display: flex;
+  width: max-content;
+}
+
+/* A animação só liga depois que o JS duplica o conteúdo da fila
+   (o deslocamento de -50% exige duplicação exata) */
+.marquee-row--left.is-on {
+  animation: marquee-left 32s linear infinite;
+}
+
+.marquee-row--right.is-on {
+  animation: marquee-right 32s linear infinite;
+}
+
+.marquee-row:hover {
+  animation-play-state: paused;
+}
+
+@keyframes marquee-left {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@keyframes marquee-right {
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0); }
+}
+
+.marquee-item {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 42px;
+  opacity: 0.92;
+  transition: opacity 0.3s ease, transform 0.3s var(--ease-out);
+}
+
+.marquee-item:hover {
+  opacity: 1;
+  transform: scale(1.06);
+}
+
+.marquee-item img {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  display: block;
+}
+
+.marquee-item span {
+  font-size: 23px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--ink-strong);
+  white-space: nowrap;
+}
+
+.icon-invert {
+  filter: brightness(0) invert(1);
+}
+
+/* ---------- Moldura de navegador dos mockups ---------- */
+.browser-bar {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  height: 42px;
+  padding: 0 16px;
+  background: rgba(255, 255, 255, 0.035);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.browser-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.13);
+  display: inline-block;
+}
+
+.browser-url-wrap {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.browser-url {
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding: 0 14px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: var(--ink-muted);
+}
+
+.browser-pad {
+  width: 44px;
+}
+
+/* ---------- Reveals de rolagem ---------- */
+/* O conteúdo é visível por padrão; o JS aplica .will-reveal antes
+   de observar, então nada some se o script não rodar. */
+.will-reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.9s var(--ease-spring), transform 0.9s var(--ease-spring);
+}
+
+.will-reveal.is-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* A captura entra um instante depois do texto do card */
+.proj-shot.will-reveal {
+  transition-delay: 0.1s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-row--left.is-on,
+  .marquee-row--right.is-on {
+    animation: none;
+  }
+
+  .marquee {
+    overflow-x: auto;
+  }
+
+  .will-reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
