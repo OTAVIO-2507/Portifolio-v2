@@ -192,48 +192,6 @@
   filter: brightness(0) invert(1);
 }
 
-/* ---------- Moldura de navegador dos mockups ---------- */
-.browser-bar {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  height: 42px;
-  padding: 0 16px;
-  background: rgba(255, 255, 255, 0.035);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-}
-
-.browser-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.13);
-  display: inline-block;
-}
-
-.browser-url-wrap {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-}
-
-.browser-url {
-  display: inline-flex;
-  align-items: center;
-  height: 24px;
-  padding: 0 14px;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.05);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.02em;
-  color: var(--ink-muted);
-}
-
-.browser-pad {
-  width: 44px;
-}
-
 /* ---------- Reveals de rolagem ---------- */
 /* O conteúdo é visível por padrão; o JS aplica .will-reveal antes
    de observar, então nada some se o script não rodar. */

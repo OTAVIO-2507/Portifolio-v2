@@ -410,10 +410,12 @@
 }
 
 .showcase-head {
+  /* Sem fundo próprio: o canvas de partículas da seção fica visível
+     atrás do título; os cards travam abaixo (top: 112px) e não passam
+     por aqui no desktop. */
   position: sticky;
   top: 0;
   z-index: var(--z-sticky);
-  background: var(--bg-raised);
   padding: 18px 0 16px;
 }
 
@@ -482,12 +484,45 @@
   padding: clamp(1.6rem, 3.4vw, 3.6rem);
   border-radius: 30px;
   border: 1px solid var(--line);
-  background: linear-gradient(165deg, rgba(19, 20, 31, 0.93), rgba(9, 9, 15, 0.97));
+  /* Opaco: o card sobrepõe o projeto anterior na pilha sticky sem
+     deixar o conteúdo de baixo transparecer. */
+  background: linear-gradient(165deg, #13141f, #09090f);
   box-shadow: 0 42px 110px -38px rgba(0, 0, 0, 0.85);
 }
 
 .proj--flip .proj-card {
   flex-direction: row-reverse;
+}
+
+/* Fundo do card: o próprio mockup borrado, sob um véu escuro que
+   escurece mais o lado do texto. Fica recortado pelo raio do card,
+   então acompanha o tilt sem vazar. */
+.proj-card-bg {
+  position: absolute;
+  inset: 0;
+  border-radius: 30px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.proj-card-bg-img {
+  position: absolute;
+  /* Estoura o contêiner para o blur não revelar bordas transparentes. */
+  inset: -64px;
+  background-size: cover;
+  background-position: center;
+  filter: blur(56px) saturate(1.15) brightness(0.6);
+}
+
+.proj-card-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, rgba(9, 9, 15, 0.4) 32%, rgba(9, 9, 15, 0.85) 64%);
+}
+
+.proj--flip .proj-card-bg::after {
+  background: linear-gradient(260deg, rgba(9, 9, 15, 0.4) 32%, rgba(9, 9, 15, 0.85) 64%);
 }
 
 .proj-card-glow {
@@ -526,7 +561,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transform: translateZ(52px);
+  /* O scale compensa a ampliação da perspectiva (1400/(1400-52)),
+     senão a mídia projeta maior que o card e vaza no tilt. */
+  transform: translateZ(52px) scale(0.963);
 }
 
 .proj-backglow {
@@ -578,17 +615,6 @@
   gap: 14px;
   transform: translateZ(26px);
   font-family: var(--font-mono);
-}
-
-.proj-num {
-  font-size: 12.5px;
-  color: var(--accent-soft);
-}
-
-.proj-dash {
-  width: 40px;
-  height: 1px;
-  background: rgba(255, 255, 255, 0.18);
 }
 
 .proj-tag {
@@ -652,7 +678,9 @@
   border-radius: 30px;
   overflow: hidden;
   pointer-events: none;
-  transform: translateZ(70px);
+  /* O scale compensa a ampliação da perspectiva (1400/(1400-70)),
+     senão a borda do recorte aparece fora do card no hover. */
+  transform: translateZ(70px) scale(0.95);
 }
 
 .proj-glare-dot {
@@ -1161,6 +1189,12 @@
 
   .showcase {
     padding-top: 56px;
+  }
+
+  /* Aqui os cards rolam normalmente; título sticky sem fundo colidiria
+     com eles, então volta ao fluxo. */
+  .showcase-head {
+    position: static;
   }
 
   .proj {

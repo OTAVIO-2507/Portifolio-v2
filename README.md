@@ -58,7 +58,7 @@ Portifolio-v2/
 ├── index.html          Conteúdo semântico (header, main, sections, footer)
 ├── css/
 │   ├── base.css        Tokens de design, reset, fontes e tipografia base
-│   ├── components.css  Botões, marquee, moldura de navegador, reveals
+│   ├── components.css  Botões, marquee, reveals
 │   └── sections.css    Hero, sobre, projetos, GitHub, experiência, contato
 ├── js/
 │   ├── main.js         Ponto de entrada; navegação mobile e ano do rodapé
