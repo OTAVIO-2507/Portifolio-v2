@@ -412,10 +412,12 @@
 .showcase-head {
   /* Sem fundo próprio: o canvas de partículas da seção fica visível
      atrás do título; os cards travam abaixo (top: 112px) e não passam
-     por aqui no desktop. */
+     por aqui no desktop. Fica ABAIXO dos cards (z 0 < z 1 do
+     .showcase-cards): no fim da seção o último card sobe cobrindo o
+     título, em vez de o título seguir por cima dele. */
   position: sticky;
   top: 0;
-  z-index: var(--z-sticky);
+  z-index: 0;
   padding: 18px 0 16px;
 }
 
