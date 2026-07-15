@@ -735,13 +735,29 @@
   padding-bottom: 64px;
 }
 
+/* Cabeçalho centralizado sobre o painel: label entre duas linhas
+   espelhadas e título no eixo do calendário. */
+.github-head {
+  justify-content: center;
+}
+
+.github-head .section-rule {
+  width: 120px;
+  max-width: 18vw;
+}
+
+.section-rule--in {
+  background: linear-gradient(90deg, transparent, var(--line-strong));
+}
+
 .github .section-head {
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .github-title {
+  text-align: center;
   font-size: clamp(22px, 3vw, 32px);
-  margin-bottom: 26px;
+  margin-bottom: 30px;
 }
 
 .github-host {
