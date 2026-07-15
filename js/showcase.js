@@ -27,25 +27,29 @@ function initScrollZoom(sec, reduced) {
   const head = sec.querySelector('.showcase-head');
   if (!zoomEls.length) return;
 
+  // Com preferência por menos movimento, o zoom e os deslocamentos
+  // saem de cena, mas os fades de cobertura continuam: sem eles o
+  // card anterior vaza nas bordas e o título flutua no fim da seção.
   if (reduced) {
     zoomEls.forEach((img) => { img.style.transform = 'none'; });
-    return;
   }
 
   let ticking = false;
   const update = () => {
     ticking = false;
     const vh = window.innerHeight;
-    zoomEls.forEach((img) => {
-      const art = img.closest('.proj');
-      if (!art) return;
-      const r = art.getBoundingClientRect();
-      if (r.bottom < 0 || r.top > vh) return;
-      let p = (vh - r.top) / Math.max(1, vh - 112);
-      p = Math.max(0, Math.min(1, p));
-      const e = 1 - Math.pow(1 - p, 3);
-      img.style.transform = 'scale(' + (1.14 - 0.14 * e).toFixed(4) + ')';
-    });
+    if (!reduced) {
+      zoomEls.forEach((img) => {
+        const art = img.closest('.proj');
+        if (!art) return;
+        const r = art.getBoundingClientRect();
+        if (r.bottom < 0 || r.top > vh) return;
+        let p = (vh - r.top) / Math.max(1, vh - 112);
+        p = Math.max(0, Math.min(1, p));
+        const e = 1 - Math.pow(1 - p, 3);
+        img.style.transform = 'scale(' + (1.14 - 0.14 * e).toFixed(4) + ')';
+      });
+    }
 
     for (let i = 0; i < arts.length - 1; i++) {
       const frame = arts[i].querySelector('.proj-frame');
@@ -63,7 +67,9 @@ function initScrollZoom(sec, reduced) {
       let p = (vh - r.top) / Math.max(1, vh - 112);
       p = Math.max(0, Math.min(1, p));
       const e = p * p * (3 - 2 * p);
-      frame.style.transform = 'translateY(' + (-16 * e).toFixed(1) + 'px) scale(' + (1 - 0.05 * e).toFixed(4) + ')';
+      if (!reduced) {
+        frame.style.transform = 'translateY(' + (-16 * e).toFixed(1) + 'px) scale(' + (1 - 0.05 * e).toFixed(4) + ')';
+      }
       frame.style.opacity = (1 - e).toFixed(3);
       // Um card apagado não pode continuar clicável/tabulável por
       // baixo do card que o cobriu.
