@@ -725,8 +725,12 @@
 
 /* ---------- GitHub ---------- */
 .github {
+  /* Vive dentro da seção de projetos: acima do canvas de partículas
+     (z 1 > z-bg) e com respiro para fechar a faixa da seção. */
+  position: relative;
+  z-index: 1;
   padding-top: 24px;
-  padding-bottom: 10px;
+  padding-bottom: 64px;
 }
 
 .github-host {
