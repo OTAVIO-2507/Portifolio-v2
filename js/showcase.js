@@ -55,6 +55,8 @@ function initScrollZoom(sec, reduced) {
       if (getComputedStyle(arts[i]).position !== 'sticky') {
         frame.style.transform = '';
         frame.style.opacity = '';
+        frame.style.visibility = '';
+        frame.style.pointerEvents = '';
         continue;
       }
       const r = arts[i + 1].getBoundingClientRect();
@@ -63,6 +65,10 @@ function initScrollZoom(sec, reduced) {
       const e = p * p * (3 - 2 * p);
       frame.style.transform = 'translateY(' + (-16 * e).toFixed(1) + 'px) scale(' + (1 - 0.05 * e).toFixed(4) + ')';
       frame.style.opacity = (1 - e).toFixed(3);
+      // Um card apagado não pode continuar clicável/tabulável por
+      // baixo do card que o cobriu.
+      frame.style.visibility = e >= 1 ? 'hidden' : '';
+      frame.style.pointerEvents = e > 0.5 ? 'none' : '';
     }
 
     // O título pinado sai de cena junto com o último card: quando o
