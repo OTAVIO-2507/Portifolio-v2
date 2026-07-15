@@ -17,9 +17,14 @@ export function initShowcase({ reduced }) {
   if (canHover) initCursor(sec);
 }
 
-/* As capturas começam com scale(1.14) e assentam em 1 conforme o card sobe. */
+/* As capturas começam com scale(1.14) e assentam em 1 conforme o card
+   sobe. Também recua e esconde o card pinado conforme o próximo o
+   cobre — as alturas dos cards diferem, então sem isso as bordas do
+   anterior ficariam aparecendo por trás do novo. */
 function initScrollZoom(sec, reduced) {
   const zoomEls = Array.from(sec.querySelectorAll('[data-zoom]'));
+  const arts = Array.from(sec.querySelectorAll('.proj'));
+  const head = sec.querySelector('.showcase-head');
   if (!zoomEls.length) return;
 
   if (reduced) {
@@ -41,6 +46,40 @@ function initScrollZoom(sec, reduced) {
       const e = 1 - Math.pow(1 - p, 3);
       img.style.transform = 'scale(' + (1.14 - 0.14 * e).toFixed(4) + ')';
     });
+
+    for (let i = 0; i < arts.length - 1; i++) {
+      const frame = arts[i].querySelector('.proj-frame');
+      if (!frame) continue;
+      // Só quando os cards estão empilhados (sticky); no mobile eles
+      // rolam em fluxo e o anterior não deve sumir.
+      if (getComputedStyle(arts[i]).position !== 'sticky') {
+        frame.style.transform = '';
+        frame.style.opacity = '';
+        continue;
+      }
+      const r = arts[i + 1].getBoundingClientRect();
+      let p = (vh - r.top) / Math.max(1, vh - 112);
+      p = Math.max(0, Math.min(1, p));
+      const e = p * p * (3 - 2 * p);
+      frame.style.transform = 'translateY(' + (-16 * e).toFixed(1) + 'px) scale(' + (1 - 0.05 * e).toFixed(4) + ')';
+      frame.style.opacity = (1 - e).toFixed(3);
+    }
+
+    // O título pinado sai de cena junto com o último card: quando o
+    // artigo dele é empurrado acima do ponto de fixação (top < 112),
+    // o head desvanece em vez de ficar flutuando até o fim da seção.
+    if (head && arts.length) {
+      const last = arts[arts.length - 1];
+      if (getComputedStyle(last).position === 'sticky') {
+        let p = (112 - last.getBoundingClientRect().top) / 200;
+        p = Math.max(0, Math.min(1, p));
+        head.style.opacity = (1 - p).toFixed(3);
+        head.style.visibility = p >= 1 ? 'hidden' : '';
+      } else {
+        head.style.opacity = '';
+        head.style.visibility = '';
+      }
+    }
   };
   const onScroll = () => {
     if (!ticking) { ticking = true; requestAnimationFrame(update); }
