@@ -133,27 +133,6 @@ h1, h2, h3 {
   color: var(--ink-strong);
 }
 
-.section-head {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.section-label {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ink-muted);
-}
-
-.section-rule {
-  width: 200px;
-  max-width: 32vw;
-  height: 1px;
-  background: linear-gradient(90deg, var(--line-strong), transparent);
-}
-
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

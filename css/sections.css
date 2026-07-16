@@ -208,11 +208,7 @@
 .skills {
   max-width: var(--container);
   margin: 0 auto;
-  padding: 36px 0 40px;
-}
-
-.skills .section-head {
-  margin-bottom: 22px;
+  padding: 48px 0 40px;
 }
 
 /* ---------- Sobre ---------- */
@@ -234,11 +230,6 @@
   background: radial-gradient(circle, rgba(58, 76, 240, 0.15), transparent 68%);
   filter: blur(34px);
   pointer-events: none;
-}
-
-.about .section-head {
-  position: relative;
-  margin-bottom: 16px;
 }
 
 .about-grid {
@@ -424,10 +415,6 @@
 .showcase-head-inner {
   max-width: 1400px;
   margin: 0 auto;
-}
-
-.showcase-head .section-head {
-  margin-bottom: 10px;
 }
 
 .showcase-head .section-title {
@@ -735,25 +722,6 @@
   padding-bottom: 64px;
 }
 
-/* Cabeçalho centralizado sobre o painel: label entre duas linhas
-   espelhadas e título no eixo do calendário. */
-.github-head {
-  justify-content: center;
-}
-
-.github-head .section-rule {
-  width: 120px;
-  max-width: 18vw;
-}
-
-.section-rule--in {
-  background: linear-gradient(90deg, transparent, var(--line-strong));
-}
-
-.github .section-head {
-  margin-bottom: 12px;
-}
-
 .github-title {
   text-align: center;
   font-size: clamp(22px, 3vw, 32px);
@@ -926,12 +894,8 @@
   padding-bottom: 40px;
 }
 
-.xp .section-head {
-  margin-bottom: 12px;
-}
-
 .xp-title {
-  margin-bottom: 56px;
+  margin-bottom: 64px;
 }
 
 .xp-list {
