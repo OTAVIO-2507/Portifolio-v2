@@ -951,56 +951,68 @@
 }
 
 /* ---------- Contato ---------- */
+/* Sem cartão de CTA: a seção é uma composição direta, alinhada à
+   esquerda, com o e-mail como elemento principal. */
 .contact {
-  padding-top: 100px;
-  padding-bottom: 20px;
-}
-
-.contact-card {
-  position: relative;
-  overflow: hidden;
-  border-radius: 28px;
-  border: 1px solid rgba(91, 116, 255, 0.25);
-  background: radial-gradient(120% 140% at 50% 0%, rgba(45, 57, 170, 0.4), rgba(13, 15, 46, 0.6));
-  padding: 80px 40px;
-  text-align: center;
-}
-
-.contact-dots {
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
-  background-size: 24px 24px;
-  opacity: 0.5;
-  pointer-events: none;
-}
-
-.contact-body {
-  position: relative;
+  padding-top: 130px;
+  padding-bottom: 90px;
 }
 
 .contact-title {
-  font-size: clamp(34px, 5vw, 56px);
-  font-weight: 900;
-  letter-spacing: -0.035em;
+  font-family: var(--font-display);
+  font-size: clamp(38px, 5.6vw, 72px);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.02;
   text-transform: uppercase;
-  margin-bottom: 18px;
+  margin-bottom: 22px;
   color: var(--ink-strong);
 }
 
 .contact-sub {
-  font-size: 18px;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.72);
-  margin: 0 auto 34px;
-  max-width: 46ch;
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--ink-soft);
+  margin-bottom: 54px;
+  max-width: 52ch;
 }
 
-.contact-actions {
+.contact-mail {
+  display: inline-block;
+  max-width: 100%;
+  font-weight: 800;
+  font-size: clamp(24px, 4.6vw, 58px);
+  letter-spacing: -0.03em;
+  color: var(--ink-strong);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  border-bottom: 3px solid var(--line-strong);
+  padding-bottom: 8px;
+  transition: border-color 0.3s var(--ease-out), color 0.3s var(--ease-out);
+}
+
+.contact-mail:hover {
+  color: var(--accent-pale);
+  border-color: var(--accent);
+}
+
+.contact-meta {
   display: flex;
-  gap: 14px;
-  justify-content: center;
   flex-wrap: wrap;
+  gap: 12px 34px;
+  margin-top: 44px;
+}
+
+.contact-meta a {
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  color: var(--ink-soft);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.contact-meta a:hover {
+  color: var(--accent-pale);
 }
 
 /* ---------- Rodapé ---------- */
@@ -1241,11 +1253,18 @@
   }
 
   .contact {
-    padding-top: 72px;
+    padding-top: 84px;
+    padding-bottom: 64px;
   }
 
-  .contact-card {
-    padding: 56px 22px;
+  .contact-sub {
+    margin-bottom: 40px;
+  }
+
+  .contact-meta {
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 36px;
   }
 
   .footer {
