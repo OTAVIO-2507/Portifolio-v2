@@ -66,6 +66,7 @@ Portifolio-v2/
 │   ├── marquee.js      Fileiras infinitas de habilidades
 │   ├── reveal.js       Animações de entrada na rolagem
 │   ├── showcase.js     Tilt 3D, botões magnéticos, zoom, partículas, cursor
+│   ├── xp.js           Trilho da linha do tempo da experiência
 │   └── github.js       Calendário de contribuições + modo jogo
 └── assets/             Ícones SVG, capturas em WebP, fonte Bropella, favicon
 ```

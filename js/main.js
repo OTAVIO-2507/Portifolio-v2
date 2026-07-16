@@ -3,6 +3,7 @@ import { initHero } from './hero.js';
 import { initMarquee } from './marquee.js';
 import { initReveals } from './reveal.js';
 import { initShowcase } from './showcase.js';
+import { initXp } from './xp.js';
 import { initGithubCalendar } from './github.js';
 
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -13,6 +14,7 @@ initHero({ reduced });
 initMarquee({ reduced });
 initReveals({ reduced });
 initShowcase({ reduced });
+initXp({ reduced });
 initGithubCalendar();
 
 function initNav() {

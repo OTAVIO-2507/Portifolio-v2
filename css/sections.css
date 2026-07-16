@@ -909,6 +909,9 @@
 .xp-list {
   position: relative;
   border-top: 1px solid var(--line);
+  /* Palco 3D: as entradas giram para o lugar e os logos ganham
+     profundidade no hover. */
+  perspective: 1400px;
 }
 
 /* Trilho da linha do tempo: passa por trás dos logos e é preenchido
@@ -939,6 +942,26 @@
   gap: 34px;
   padding: 44px 0;
   border-bottom: 1px solid var(--line);
+  transform-style: preserve-3d;
+}
+
+/* Entrada 3D: o item gira de uma prancha inclinada para o lugar,
+   saindo do desfoque — via mecanismo will-reveal/is-in do reveal.js. */
+.xp-item.will-reveal {
+  opacity: 0;
+  transform: rotateX(-18deg) translateY(56px);
+  transform-origin: 50% 0;
+  filter: blur(12px);
+  transition:
+    opacity 0.9s var(--ease-spring),
+    transform 1.05s var(--ease-spring),
+    filter 0.9s var(--ease-spring);
+}
+
+.xp-item.will-reveal.is-in {
+  opacity: 1;
+  transform: none;
+  filter: none;
 }
 
 .xp-logo {
@@ -950,6 +973,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  transform-style: preserve-3d;
+  transition:
+    transform 0.55s var(--ease-spring),
+    box-shadow 0.55s var(--ease-spring),
+    border-color 0.3s ease;
+}
+
+.xp-item:hover .xp-logo {
+  transform: translateZ(30px) rotateY(-13deg) rotateX(8deg);
+  border-color: rgba(139, 157, 255, 0.5);
+  box-shadow: 0 22px 44px -18px rgba(61, 90, 254, 0.6);
 }
 
 .xp-logo svg {

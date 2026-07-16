@@ -221,8 +221,10 @@
     overflow-x: auto;
   }
 
-  .will-reveal {
+  .will-reveal,
+  .xp-item.will-reveal {
     opacity: 1;
     transform: none;
+    filter: none;
   }
 }
