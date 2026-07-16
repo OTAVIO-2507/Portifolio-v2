@@ -895,19 +895,76 @@
 }
 
 .xp-title {
+  margin-bottom: 18px;
+}
+
+.xp-lede {
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  max-width: 60ch;
   margin-bottom: 64px;
 }
 
 .xp-list {
+  position: relative;
   border-top: 1px solid var(--line);
 }
 
+/* Trilho da linha do tempo: passa por trás dos logos e é preenchido
+   conforme a rolagem (js/xp.js). */
+.xp-rail {
+  position: absolute;
+  left: 27px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.xp-rail-fill {
+  position: absolute;
+  inset: 0;
+  transform-origin: top;
+  transform: scaleY(0);
+  background: linear-gradient(180deg, var(--accent), rgba(91, 116, 255, 0.14));
+  box-shadow: 0 0 18px rgba(91, 116, 255, 0.5);
+  will-change: transform;
+}
+
 .xp-item {
+  position: relative;
   display: grid;
-  grid-template-columns: 200px 1fr;
-  gap: 40px;
-  padding: 38px 0;
+  grid-template-columns: 56px 176px 1fr;
+  gap: 34px;
+  padding: 44px 0;
   border-bottom: 1px solid var(--line);
+}
+
+.xp-logo {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: var(--bg-panel);
+  border: 1px solid var(--line-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.xp-logo svg {
+  width: 40px;
+  height: 40px;
+  display: block;
+}
+
+.xp-logo--edu svg {
+  width: 34px;
+  height: 34px;
+}
+
+.xp-when {
+  padding-top: 8px;
 }
 
 .xp-period {
@@ -919,7 +976,25 @@
 
 .xp-place {
   font-size: 13px;
+  line-height: 1.5;
   color: var(--ink-muted);
+}
+
+.xp-span {
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-muted);
+}
+
+.xp-org {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-bottom: 10px;
+  padding-top: 8px;
 }
 
 .xp-role {
@@ -928,11 +1003,37 @@
   letter-spacing: -0.01em;
   color: var(--ink-strong);
   margin-bottom: 10px;
-  transition: color 0.25s ease;
 }
 
-.xp-item:hover .xp-role {
-  color: var(--accent-pale);
+.xp-sub-head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+}
+
+.xp-sub-head .xp-role {
+  margin-bottom: 0;
+}
+
+.xp-sub-period {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--ink-muted);
+}
+
+.xp-sub {
+  padding-top: 6px;
+}
+
+.xp-sub .xp-desc {
+  margin-top: 10px;
+}
+
+.xp-sub + .xp-sub {
+  margin-top: 26px;
+  padding-top: 26px;
+  border-top: 1px solid var(--line);
 }
 
 .xp-desc {
@@ -1208,20 +1309,58 @@
     padding-top: 72px;
   }
 
+  .xp-lede {
+    margin-bottom: 44px;
+  }
+
+  .xp-rail {
+    left: 21px;
+  }
+
   .xp-item {
-    grid-template-columns: 1fr;
-    gap: 12px;
-    padding: 26px 0;
+    grid-template-columns: 44px 1fr;
+    gap: 8px 18px;
+    padding: 30px 0;
+  }
+
+  .xp-logo {
+    width: 44px;
+    height: 44px;
+    border-radius: 11px;
+  }
+
+  .xp-logo svg {
+    width: 32px;
+    height: 32px;
+  }
+
+  .xp-logo--edu svg {
+    width: 27px;
+    height: 27px;
+  }
+
+  .xp-what {
+    grid-column: 1 / -1;
   }
 
   .xp-when {
     display: flex;
+    flex-wrap: wrap;
     align-items: baseline;
-    gap: 12px;
+    gap: 2px 14px;
+    padding-top: 4px;
   }
 
   .xp-period {
     margin-bottom: 0;
+  }
+
+  .xp-span {
+    margin-top: 0;
+  }
+
+  .xp-org {
+    padding-top: 4px;
   }
 
   .contact {
