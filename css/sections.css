@@ -890,7 +890,7 @@
 
 /* ---------- Experiência ---------- */
 .xp {
-  padding-top: 100px;
+  padding-top: 110px;
   padding-bottom: 40px;
 }
 
@@ -906,14 +906,14 @@
   display: grid;
   grid-template-columns: 200px 1fr;
   gap: 40px;
-  padding: 34px 0;
+  padding: 38px 0;
   border-bottom: 1px solid var(--line);
 }
 
 .xp-period {
   font-family: var(--font-mono);
   font-size: 13px;
-  color: var(--accent);
+  color: var(--accent-soft);
   margin-bottom: 8px;
 }
 
@@ -923,17 +923,31 @@
 }
 
 .xp-role {
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
   color: var(--ink-strong);
   margin-bottom: 10px;
+  transition: color 0.25s ease;
+}
+
+.xp-item:hover .xp-role {
+  color: var(--accent-pale);
 }
 
 .xp-desc {
   font-size: 15px;
-  line-height: 1.6;
+  line-height: 1.65;
   color: var(--ink-soft);
   max-width: 64ch;
+}
+
+.xp-stack {
+  margin-top: 14px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  letter-spacing: 0.02em;
+  color: var(--ink-muted);
 }
 
 /* ---------- Contato ---------- */
