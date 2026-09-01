@@ -2,7 +2,7 @@
 // magnéticos, sheen, zoom das capturas conforme a rolagem, fundo de
 // partículas com holofote e cursor customizado "Ver Projeto".
 
-export function initShowcase({ reduced }) {
+function initShowcase({ reduced }) {
   const sec = document.getElementById('projetos');
   if (!sec) return;
 
@@ -19,7 +19,7 @@ export function initShowcase({ reduced }) {
 
 /* As capturas começam com scale(1.14) e assentam em 1 conforme o card
    sobe. Também recua e esconde o card pinado conforme o próximo o
-   cobre — as alturas dos cards diferem, então sem isso as bordas do
+   cobre, porque as alturas dos cards diferem, então sem isso as bordas do
    anterior ficariam aparecendo por trás do novo. */
 function initScrollZoom(sec, reduced) {
   const zoomEls = Array.from(sec.querySelectorAll('[data-zoom]'));
@@ -34,17 +34,25 @@ function initScrollZoom(sec, reduced) {
     zoomEls.forEach((img) => { img.style.transform = 'none'; });
   }
 
-  let ticking = false;
-  const update = () => {
-    ticking = false;
+  // getComputedStyle dentro do laco de scroll forcava recalculo de
+  // estilo a cada quadro. O modo (empilhado ou em fluxo) so muda com o
+  // breakpoint, entao e medido uma vez e no resize.
+  let empilhado = [];
+  const medirModo = () => {
+    empilhado = arts.map((a) => getComputedStyle(a).position === 'sticky');
+  };
+  medirModo();
+
+  const update = (desloc) => {
     const vh = window.innerHeight;
     if (!reduced) {
       zoomEls.forEach((img) => {
         const art = img.closest('.proj');
         if (!art) return;
         const r = art.getBoundingClientRect();
-        if (r.bottom < 0 || r.top > vh) return;
-        let p = (vh - r.top) / Math.max(1, vh - 112);
+        const topo = r.top + desloc;
+        if (r.bottom < 0 || topo > vh) return;
+        let p = (vh - topo) / Math.max(1, vh - 112);
         p = Math.max(0, Math.min(1, p));
         const e = 1 - Math.pow(1 - p, 3);
         img.style.transform = 'scale(' + (1.14 - 0.14 * e).toFixed(4) + ')';
@@ -56,7 +64,7 @@ function initScrollZoom(sec, reduced) {
       if (!frame) continue;
       // Só quando os cards estão empilhados (sticky); no mobile eles
       // rolam em fluxo e o anterior não deve sumir.
-      if (getComputedStyle(arts[i]).position !== 'sticky') {
+      if (!empilhado[i]) {
         frame.style.transform = '';
         frame.style.opacity = '';
         frame.style.visibility = '';
@@ -64,7 +72,7 @@ function initScrollZoom(sec, reduced) {
         continue;
       }
       const r = arts[i + 1].getBoundingClientRect();
-      let p = (vh - r.top) / Math.max(1, vh - 112);
+      let p = (vh - (r.top + desloc)) / Math.max(1, vh - 112);
       p = Math.max(0, Math.min(1, p));
       const e = p * p * (3 - 2 * p);
       if (!reduced) {
@@ -82,8 +90,8 @@ function initScrollZoom(sec, reduced) {
     // o head desvanece em vez de ficar flutuando até o fim da seção.
     if (head && arts.length) {
       const last = arts[arts.length - 1];
-      if (getComputedStyle(last).position === 'sticky') {
-        let p = (112 - last.getBoundingClientRect().top) / 200;
+      if (empilhado[arts.length - 1]) {
+        let p = (112 - (last.getBoundingClientRect().top + desloc)) / 200;
         p = Math.max(0, Math.min(1, p));
         head.style.opacity = (1 - p).toFixed(3);
         head.style.visibility = p >= 1 ? 'hidden' : '';
@@ -93,12 +101,10 @@ function initScrollZoom(sec, reduced) {
       }
     }
   };
-  const onScroll = () => {
-    if (!ticking) { ticking = true; requestAnimationFrame(update); }
-  };
-  window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', onScroll, { passive: true });
-  update();
+  // criarScrollSuave (reveal.js) da a esta secao a mesma inercia do
+  // hero: os cards deslizam ate o valor novo em vez de colar nele.
+  const acordar = criarScrollSuave(update);
+  window.addEventListener('resize', () => { medirModo(); acordar(); }, { passive: true });
 }
 
 /* Tilt 3D por painel + glare + sombra + botões magnéticos, tudo num
@@ -196,6 +202,16 @@ function initSheen(sec) {
   });
 }
 
+/* Registra o segmento entre dois pontos na faixa de opacidade certa,
+   se estiverem perto o bastante. */
+function ligar(a, b, faixas) {
+  const dx = a.x - b.x, dy = a.y - b.y, d2 = dx * dx + dy * dy;
+  if (d2 >= 12100) return;
+  const t = 1 - Math.sqrt(d2) / 110;
+  const f = t > 0.66 ? 2 : t > 0.33 ? 1 : 0;
+  faixas[f].push(a.x, a.y, b.x, b.y);
+}
+
 /* Fundo vivo: constelação de partículas + holofote que segue o mouse. */
 function initParticles(sec, canHover) {
   const cv = sec.querySelector('[data-fx]');
@@ -204,28 +220,49 @@ function initParticles(sec, canHover) {
   if (!ctx) return;
 
   const spot = sec.querySelector('[data-spot]');
+  const RAIO = 110;
+  const ALFAS = [0.017, 0.033, 0.05];
+  // O canvas cobre a viewport inteira; rasterizar isso a cada quadro era
+  // o gargalo da secao. Metade da resolucao (a CSS reescala de volta) e
+  // 30fps derrubam a pintura para ~1/8, sem diferenca visivel numa
+  // constelacao de pontos e linhas quase transparentes.
+  const ESCALA = 0.5, FPS = 30, INTERVALO = 1000 / FPS;
+  let ultimo = 0;
   let W = 0, H = 0, pts = [], visible = false, raf = null, lastY = window.scrollY;
+  let cols = 1, linhas = 1;
   let sx = -800, sy = -800, tsx = -800, tsy = -800, so = 0, tso = 0;
 
   const size = () => {
-    W = cv.width = cv.clientWidth;
-    H = cv.height = cv.clientHeight;
-    const n = Math.round(Math.min(72, Math.max(36, W * H / 27000)));
+    W = cv.clientWidth;
+    H = cv.clientHeight;
+    cv.width = Math.max(1, Math.round(W * ESCALA));
+    cv.height = Math.max(1, Math.round(H * ESCALA));
+    // Desenha em coordenadas CSS; o contexto reduz na hora de pintar.
+    ctx.setTransform(ESCALA, 0, 0, ESCALA, 0, 0);
+    const n = Math.round(Math.min(54, Math.max(28, W * H / 34000)));
     if (pts.length !== n) {
       pts = Array.from({ length: n }, () => ({
         x: Math.random() * W,
         y: Math.random() * H,
         vx: (Math.random() - 0.5) * 0.16,
         vy: (Math.random() - 0.5) * 0.16,
-        z: Math.random() * 0.7 + 0.3,
+        // z em tres degraus: permite pintar todos os pontos de um mesmo
+        // degrau num unico fill em vez de um por ponto.
+        z: 0.3 + ((Math.random() * 3) | 0) * 0.25,
         r: Math.random() * 1.4 + 0.6,
       }));
     }
+    cols = Math.max(1, Math.ceil(W / RAIO));
+    linhas = Math.max(1, Math.ceil(H / RAIO));
   };
   size();
 
-  const step = () => {
+  const step = (t) => {
     if (!visible) { raf = null; return; }
+    raf = requestAnimationFrame(step);
+    if (t - ultimo < INTERVALO) return;
+    ultimo = t;
+
     const dy = window.scrollY - lastY;
     lastY = window.scrollY;
     ctx.clearRect(0, 0, W, H);
@@ -238,24 +275,66 @@ function initParticles(sec, canHover) {
     }
 
     ctx.lineWidth = 1;
+
+    // Grade espacial: cada ponto so e comparado com os das celulas
+    // vizinhas, no lugar da varredura O(n^2) de todos contra todos.
+    const grade = [];
     for (let i = 0; i < pts.length; i++) {
-      for (let j = i + 1; j < pts.length; j++) {
-        const a = pts[i], b = pts[j];
-        const dx = a.x - b.x, dyy = a.y - b.y, d2 = dx * dx + dyy * dyy;
-        if (d2 < 12100) {
-          ctx.strokeStyle = 'rgba(139,157,255,' + ((1 - Math.sqrt(d2) / 110) * 0.05).toFixed(3) + ')';
-          ctx.beginPath();
-          ctx.moveTo(a.x, a.y);
-          ctx.lineTo(b.x, b.y);
-          ctx.stroke();
+      const p = pts[i];
+      const cx = Math.min(cols - 1, Math.max(0, (p.x / RAIO) | 0));
+      const cy = Math.min(linhas - 1, Math.max(0, (p.y / RAIO) | 0));
+      const k = cy * cols + cx;
+      (grade[k] || (grade[k] = [])).push(i);
+    }
+
+    // Segmentos agrupados por faixa de opacidade: tres stroke() no
+    // total, em vez de um por linha.
+    const faixas = [[], [], []];
+    const vizinhas = [[1, 0], [-1, 1], [0, 1], [1, 1]];
+    for (let cy = 0; cy < linhas; cy++) {
+      for (let cx = 0; cx < cols; cx++) {
+        const celula = grade[cy * cols + cx];
+        if (!celula) continue;
+        for (let ii = 0; ii < celula.length; ii++) {
+          const a = pts[celula[ii]];
+          for (let jj = ii + 1; jj < celula.length; jj++) ligar(a, pts[celula[jj]], faixas);
+          for (const [ox, oy] of vizinhas) {
+            const nx = cx + ox, ny = cy + oy;
+            if (nx < 0 || ny < 0 || nx >= cols || ny >= linhas) continue;
+            const outra = grade[ny * cols + nx];
+            if (!outra) continue;
+            for (let jj = 0; jj < outra.length; jj++) ligar(a, pts[outra[jj]], faixas);
+          }
         }
       }
     }
-    for (const p of pts) {
-      ctx.fillStyle = 'rgba(160,173,255,' + (p.z * 0.3).toFixed(3) + ')';
+
+    for (let f = 0; f < 3; f++) {
+      const seg = faixas[f];
+      if (!seg.length) continue;
+      ctx.strokeStyle = 'rgba(139,157,255,' + ALFAS[f] + ')';
       ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, 6.2832);
-      ctx.fill();
+      for (let i = 0; i < seg.length; i += 4) {
+        ctx.moveTo(seg[i], seg[i + 1]);
+        ctx.lineTo(seg[i + 2], seg[i + 3]);
+      }
+      ctx.stroke();
+    }
+
+    // Pontos: um fill por degrau de z, nao um por ponto.
+    for (let d = 0; d < 3; d++) {
+      const z = 0.3 + d * 0.25;
+      let abriu = false;
+      for (const p of pts) {
+        if (p.z !== z) continue;
+        if (!abriu) { ctx.beginPath(); abriu = true; }
+        ctx.moveTo(p.x + p.r, p.y);
+        ctx.arc(p.x, p.y, p.r, 0, 6.2832);
+      }
+      if (abriu) {
+        ctx.fillStyle = 'rgba(160,173,255,' + (z * 0.3).toFixed(3) + ')';
+        ctx.fill();
+      }
     }
 
     if (spot) {
@@ -265,7 +344,6 @@ function initParticles(sec, canHover) {
       spot.style.transform = 'translate(' + (sx - 360).toFixed(1) + 'px,' + (sy - 360).toFixed(1) + 'px)';
       spot.style.opacity = so.toFixed(3);
     }
-    raf = requestAnimationFrame(step);
   };
 
   const io = new IntersectionObserver((entries) => {
@@ -295,6 +373,14 @@ function initCursor(sec) {
   document.body.appendChild(cur);
 
   let tx = 0, ty = 0, x = 0, y = 0, active = false, raf = null;
+  // Ultima posicao conhecida do ponteiro, para saber o que esta sob ele
+  // quando quem se move e a pagina, nao o mouse.
+  let px = -1, py = -1;
+
+  const desativar = () => {
+    active = false;
+    cur.classList.remove('is-active');
+  };
   const loop = () => {
     x += (tx - x) * 0.24;
     y += (ty - y) * 0.24;
@@ -307,11 +393,37 @@ function initCursor(sec) {
     }
   };
 
+  window.addEventListener('pointermove', (ev) => {
+    px = ev.clientX;
+    py = ev.clientY;
+  }, { passive: true });
+
+  // Rolar nao dispara mouseleave: o ponteiro fica parado e e o card que
+  // sai de baixo dele. Sem esta checagem o balao continuava aceso sobre
+  // outras secoes. Só custa um hit-test por quadro, e só enquanto aceso.
+  let checando = false;
+  window.addEventListener('scroll', () => {
+    if (!active || checando) return;
+    checando = true;
+    requestAnimationFrame(() => {
+      checando = false;
+      if (!active || px < 0) return;
+      const sob = document.elementFromPoint(px, py);
+      if (!sob || !sob.closest('.proj-shot')) desativar();
+    });
+  }, { passive: true });
+
+  // Ponteiro saindo da janela (ou trocando de aba) tambem apaga.
+  document.addEventListener('mouseleave', desativar);
+  window.addEventListener('blur', desativar);
+
   links.forEach((a) => {
     a.style.cursor = 'none';
     a.addEventListener('mouseenter', (ev) => {
       tx = x = ev.clientX;
       ty = y = ev.clientY;
+      px = ev.clientX;
+      py = ev.clientY;
       active = true;
       cur.classList.add('is-active');
       if (raf == null) raf = requestAnimationFrame(loop);
@@ -321,9 +433,6 @@ function initCursor(sec) {
       ty = ev.clientY;
       if (raf == null) raf = requestAnimationFrame(loop);
     });
-    a.addEventListener('mouseleave', () => {
-      active = false;
-      cur.classList.remove('is-active');
-    });
+    a.addEventListener('mouseleave', desativar);
   });
 }

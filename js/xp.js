@@ -1,7 +1,7 @@
 // Experiência: preenche o trilho da linha do tempo conforme a rolagem.
 // Com menos movimento, o trilho fica cheio e estático.
 
-export function initXp({ reduced }) {
+function initXp({ reduced }) {
   const sec = document.getElementById('experiencia');
   if (!sec) return;
   const fill = sec.querySelector('[data-xp-line]');

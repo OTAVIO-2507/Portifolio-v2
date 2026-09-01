@@ -1,5 +1,5 @@
 /* ============================================================
-   sections.css — nav, hero, sobre, projetos, github, experiência,
+   sections.css: nav, hero, sobre, projetos, github, experiência,
    contato, rodapé e responsividade
    ============================================================ */
 
@@ -60,7 +60,7 @@
 }
 
 .nav-links a {
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.92);
   text-decoration: none;
   font-size: 14px;
   font-weight: 500;
@@ -105,81 +105,158 @@
 .nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
 /* ---------- Hero ---------- */
+/* Geometria medida do wishlabs.ai (Framer). Todas as camadas tem
+   width:100% e aspect-ratio 1536/2743, ou seja altura 178,6vw. Os
+   deslocamentos originais sao px fixos no breakpoint desktop (container
+   +50px, mountain -155px); aqui viram vw para acompanharem a arte em
+   qualquer largura. */
 .hero {
   position: relative;
-  display: flex;
-  height: 88vh;
-  min-height: 600px;
+  height: 100vh;
+  height: 100svh;
+  min-height: 620px;
   width: 100%;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   overflow: hidden;
   background: var(--bg);
+  /* Contem a pilha: o nome se intercala entre as camadas. */
+  isolation: isolate;
 }
 
-.hero-grid {
+.hero-scene {
   position: absolute;
   inset: 0;
-  z-index: var(--z-bg);
-  width: 100%;
-  height: 100%;
-  display: block;
-  pointer-events: none;
-  mask-image: radial-gradient(120% 90% at 50% 46%, #000 30%, transparent 80%);
-  -webkit-mask-image: radial-gradient(120% 90% at 50% 46%, #000 30%, transparent 80%);
-}
-
-.hero-3d {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-.hero-vignette {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  background: radial-gradient(70% 60% at 50% 46%, rgba(6, 6, 8, 0.5) 0%, rgba(6, 6, 8, 0.35) 45%, rgba(6, 6, 8, 0.72) 100%);
+  overflow: hidden;
   pointer-events: none;
 }
 
+/* Ceu: gradiente do original, sobre uma caixa da altura da arte. */
+.hero-sky {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  width: 100%;
+  height: 178.6vw;
+  background: linear-gradient(#497def -5%, #778bf2 5%, #6e8bf3 10%, #e891e3 15%, #6b50cf 35%);
+}
+
+/* O clarao rosa nao e um radial-gradient: e um circulo azul borrado com
+   um box-shadow rosa muito espalhado. */
+.hero-glow {
+  position: absolute;
+  top: 16.1vw;
+  left: 50%;
+  z-index: 0;
+  width: 35.8vw;
+  height: 35.8vw;
+  border-radius: 999px;
+  background-color: #728bf3;
+  filter: blur(3.75vw);
+  box-shadow: 0 0 1.6vw 9.7vw #fd8fd4;
+  transform: translateX(-50%);
+}
+
+/* Largura e altura explicitas: um <img> absoluto com height:auto
+   ignora o `bottom` e volta ao tamanho intrinseco. E base.css limita
+   todo img a max-width:100%, o que cortaria a caixa. */
+.hero-layer {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  max-width: none;
+  height: 178.6vw;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* As quatro camadas dividem praticamente a mesma caixa, que e o que
+   preserva as mascaras complementares (a image_2 tapa o corte reto da
+   image_3). So a image_1 sobe 9,7vw, como no original.
+   Consequencia importante: a image_1 nao aparece na primeira tela; quem
+   faz a crista de baixo ali e a image_2. A image_1 e a crista que surge
+   sob a nevoa na segunda tela. */
+.hero-layer--4,
+.hero-layer--3,
+.hero-layer--2 { top: 3.1vw; }
+.hero-layer--1 { top: -6.6vw; }
+
+/* O nome ocupa o z-index 2, entre a image_4 e a image_3: a fabrica, o
+   mar de nuvens, as cristas e o primeiro plano passam na frente dele. */
+.hero-layer--4 { z-index: 1; }
+.hero-layer--3 { z-index: 3; }
+.hero-layer--2 { z-index: 4; }
+.hero-layer--1 { z-index: 5; }
+
+@media (min-aspect-ratio: 3/2) {
+  /* Duas telas, como o original. O teto por 178,6vw impede que a arte
+     acabe antes do hero, o que deixaria uma faixa chapada no fim. */
+  .hero {
+    height: min(200vh, calc(178.6vw - 100vh));
+    height: min(200svh, calc(178.6vw - 100svh));
+  }
+}
+
+/* Sem parallax a jornada perde o sentido; uma tela so evita rolagem
+   longa sobre imagem quase parada. */
+@media (prefers-reduced-motion: reduce) {
+  .hero { height: 100vh; height: 100svh; min-height: 620px; }
+}
+
+/* Ocupa a primeira tela e sobe embora com a rolagem. */
 .hero-content {
-  position: relative;
-  z-index: var(--z-content);
-  text-align: center;
-  padding: 0 24px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100vh;
+  height: 100svh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  transform: translateY(64px);
-}
-
-.hero-kicker {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  margin-bottom: 26px;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.14em;
-  white-space: nowrap;
-  color: rgba(205, 212, 255, 0.95);
+  justify-content: center;
+  width: 100%;
+  max-width: var(--container);
+  margin: 0 auto;
+  /* Recuo no topo desce o bloco. Com `justify-content: center` o recuo
+     desloca o centro pela metade dele, entao 36svh poe a base do nome
+     sobre o corpo da fabrica (que fica entre y 470 e 674 numa tela de
+     1600x900), sem enterrar o nome nele. */
+  /* Com a frase fora do fluxo (ela vai para a segunda tela), o bloco
+     encolheu para nome e icones, dai o recuo menor para o nome voltar
+     a cruzar a fabrica. */
+  padding: 7svh var(--gutter) 0;
+  text-align: left;
 }
 
 .hero-title {
-  font-size: clamp(46px, 7.4vw, 96px);
+  position: relative;
+  /* Na frente por padrao. Abaixo de 3:2 as camadas cobrem o hero
+     inteiro e nao sobra ceu: o nome atras delas simplesmente sumiria. */
+  z-index: var(--z-content);
+  font-family: var(--font-hero);
+  /* "Otavio Oliveira" mede 7,29em em Poppins 900, entao 186px e o
+     maximo que cabe na coluna de 1376px sem quebrar a linha. */
+  font-size: clamp(48px, 11.6vw, 186px);
   font-weight: 900;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.04em;
   color: var(--ink-strong);
   margin: 0 auto;
-  max-width: 15ch;
-  line-height: 0.96;
-  text-transform: uppercase;
-  text-shadow: 0 2px 30px rgba(6, 6, 8, 0.85), 0 1px 8px rgba(6, 6, 8, 0.9);
+  /* Sem limite: fica em uma linha ate ~500px de largura e so entao
+     quebra sozinho, quando realmente nao cabe. */
+  max-width: none;
+  text-align: center;
+  line-height: 0.84;
+  text-shadow: 0 6px 46px rgba(24, 12, 52, 0.42);
+}
+
+/* Precisa vir depois da regra base: mesma especificidade, quem vale e a
+   ultima. Aqui o nome desce para o z-index 2, entre a image_4 e a
+   image_3: a fabrica e as cristas passam na frente dele. Abaixo de 3:2
+   ele fica na frente, senao as camadas o cobririam por completo. */
+@media (min-aspect-ratio: 3/2) {
+  .hero-title { z-index: 2; }
 }
 
 .hero-title .word {
@@ -187,19 +264,81 @@
   white-space: nowrap;
 }
 
-.hero-sub {
-  margin: 28px auto 0;
-  max-width: 52ch;
-  font-size: 18px;
-  line-height: 1.6;
-  color: rgba(240, 238, 248, 0.82);
+/* A frase vive na SEGUNDA tela do hero, sobre a nevoa. Como o
+   .hero-content comeca no topo do hero, `top: 124svh` (unidade de
+   viewport, nao porcentagem) cai exatamente na segunda tela. Sair do
+   fluxo aqui e proposital: o nome volta a ser centrado sozinho. */
+.hero-note {
+  position: absolute;
+  top: 124svh;
+  left: 0;
+  right: 0;
+  z-index: var(--z-content);
+  padding: 0 var(--gutter);
+}
+
+.hero-note p {
+  margin: 0;
+  text-align: left;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: rgba(255, 255, 255, 0.96);
+  text-shadow: 0 2px 24px rgba(20, 12, 48, 0.55);
+}
+
+.hero-note-lede {
+  max-width: 21em;
+  font-size: clamp(20px, 2.1vw, 34px);
+  font-weight: 600;
+}
+
+/* max-width em `em` para as duas colunas ficarem da mesma largura
+   apesar dos corpos diferentes. */
+.hero-note-body {
+  margin-top: 0.7em !important;
+  max-width: 32em;
+  font-size: clamp(15px, 1.38vw, 22px);
+  line-height: 1.45;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+/* As palavras entram uma a uma conforme a rolagem
+   (ver initWordReveal em js/reveal.js e initHeroNote em js/hero.js). */
+.palavra {
+  display: inline-block;
+}
+
+/* Numa tela so (abaixo de 3:2) nao existe segunda tela: a frase volta
+   para baixo do nome, no fluxo do bloco. */
+@media (max-aspect-ratio: 3/2) {
+  .hero-note {
+    position: static;
+    margin-top: clamp(24px, 4vh, 40px);
+    padding: 0;
+  }
+
+  .hero-social { margin-top: clamp(22px, 3vh, 30px); }
+
+  /* Aqui a frase volta ao fluxo e o bloco fica mais alto. */
+  .hero-content { padding-top: 20svh; }
+
+  .hero-note p {
+    max-width: 34ch;
+    margin-left: auto;
+    text-align: right;
+  }
+
+  .hero-note-lede { font-size: clamp(16px, 4.2vw, 22px); font-weight: 500; }
+  .hero-note-body { font-size: clamp(14px, 3.6vw, 18px); }
 }
 
 .hero-social {
-  margin-top: 38px;
+  position: relative;
+  z-index: var(--z-content);
+  margin-top: 30px;
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 14px;
   flex-wrap: wrap;
 }
@@ -1291,11 +1430,9 @@
   }
 
   .hero {
-    height: 92vh;
-  }
-
-  .hero-content {
-    transform: translateY(24px);
+    height: 100vh;
+    height: 100svh;
+    min-height: 560px;
   }
 
   .about {

@@ -15,7 +15,7 @@ const fmt = (d) => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.g
 const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
 const parseDate = (s) => { const p = s.split('-').map(Number); return new Date(p[0], p[1] - 1, p[2]); };
 
-export function initGithubCalendar() {
+function initGithubCalendar() {
   const host = document.querySelector('[data-gh-cal]');
   if (!host || !('fetch' in window)) return;
 

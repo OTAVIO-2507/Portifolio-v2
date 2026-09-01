@@ -1,5 +1,5 @@
 /* ============================================================
-   base.css — tokens de design, reset, fontes e tipografia base
+   base.css: tokens de design, reset, fontes e tipografia base
    ============================================================ */
 
 @font-face {
@@ -29,6 +29,9 @@
   /* Tipografia */
   --font-sans: 'Hanken Grotesk', system-ui, sans-serif;
   --font-display: 'Archivo Black', sans-serif;
+  /* Só o nome no hero: geométrica de bojos circulares, o desenho mais
+     próximo do lettering do wishlabs (que lá é SVG, não fonte). */
+  --font-hero: 'Poppins', 'Archivo Black', sans-serif;
   --font-mono: 'Spline Sans Mono', ui-monospace, monospace;
   --font-script: 'Bropella', cursive;
 

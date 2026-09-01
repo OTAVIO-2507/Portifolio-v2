@@ -3,36 +3,60 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Otávio Oliveira — Desenvolvedor Full Stack</title>
+  <title>Otávio Oliveira | Desenvolvedor Full Stack</title>
   <meta name="description" content="Portfólio de Otávio Oliveira, desenvolvedor full stack. Aplicações web de ponta a ponta com Python, Django, Next.js e JavaScript.">
   <meta name="theme-color" content="#060608">
-  <meta property="og:title" content="Otávio Oliveira — Desenvolvedor Full Stack">
-  <meta property="og:description" content="Construo aplicações web de ponta a ponta — do banco de dados à interface.">
+  <meta property="og:title" content="Otávio Oliveira | Desenvolvedor Full Stack">
+  <meta property="og:description" content="Construo aplicações web de ponta a ponta, do banco de dados à interface.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://otavio-2507.github.io/Portifolio-v2/">
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Hanken+Grotesk:wght@400;500;600;700;900&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <!-- Poppins aparece só no nome do hero, então vem só com os caracteres
+       usados: o arquivo cai de ~30 KB para poucos bytes. -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@900&text=%20Oaeilortv%C3%A1&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/sections.css">
 
-  <script type="importmap">
-    { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }
-  </script>
-  <script type="module" src="js/main.js"></script>
+  <!-- Scripts clássicos e não módulos ES: assim a página também abre
+       direto do disco (file://), onde o navegador bloqueia módulos por
+       CORS. `defer` mantém a ordem e roda tudo após o parse. -->
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollToPlugin.min.js"></script>
+  <script defer src="js/hero.js"></script>
+  <script defer src="js/marquee.js"></script>
+  <script defer src="js/reveal.js"></script>
+  <script defer src="js/showcase.js"></script>
+  <script defer src="js/xp.js"></script>
+  <script defer src="js/github.js"></script>
+  <script defer src="js/main.js"></script>
 </head>
 <body>
 <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
 
+
 <!-- ===================== HERO ===================== -->
 <header class="hero" id="inicio">
-  <canvas class="hero-grid" data-grid-canvas aria-hidden="true"></canvas>
-  <canvas class="hero-3d" data-hero-canvas aria-hidden="true"></canvas>
-  <div class="hero-vignette" aria-hidden="true"></div>
+  <!-- Paisagem em quatro camadas. Velocidades e geometria medidas do
+       wishlabs.ai: cloud +0,40 / factory +0,20 / valley 0 / mountain
+       -0,10, todas lineares na rolagem. A valley (image_2) nao se move:
+       e a referencia, a arte acompanha a pagina. As variantes de 768px
+       poupam ~400 KB em telas estreitas. -->
+  <div class="hero-scene" aria-hidden="true">
+    <div class="hero-sky"></div>
+    <div class="hero-glow"></div>
+    <img class="hero-layer hero-layer--4" data-parallax="0.40" srcset="assets/Parallax/image_4-768.webp 768w, assets/Parallax/image_4.webp 1536w" sizes="103vw" src="assets/Parallax/image_4.webp" alt="" decoding="async" fetchpriority="high">
+    <img class="hero-layer hero-layer--3" data-parallax="0.20" srcset="assets/Parallax/image_3-768.webp 768w, assets/Parallax/image_3.webp 1536w" sizes="103vw" src="assets/Parallax/image_3.webp" alt="" decoding="async" fetchpriority="high">
+    <img class="hero-layer hero-layer--2" data-parallax="0" srcset="assets/Parallax/image_2-768.webp 768w, assets/Parallax/image_2.webp 1536w" sizes="103vw" src="assets/Parallax/image_2.webp" alt="" decoding="async">
+    <img class="hero-layer hero-layer--1" data-parallax="-0.10" srcset="assets/Parallax/image_1-768.webp 768w, assets/Parallax/image_1.webp 1536w" sizes="103vw" src="assets/Parallax/image_1.webp" alt="" decoding="async">
+  </div>
 
   <nav class="nav anim-nav" aria-label="Navegação principal">
     <div class="nav-inner">
@@ -54,9 +78,14 @@
   </nav>
 
   <div class="hero-content">
-    <p class="hero-kicker anim-nav">DISPONÍVEL PARA OPORTUNIDADES</p>
-    <h1 class="hero-title" data-split>Desenvolvedor de Software</h1>
-    <p class="hero-sub anim-sub">Construo aplicações web de ponta a ponta — do banco de dados à interface — com Python, Django e Next.js.</p>
+    <h1 class="hero-title" data-split>Otávio Oliveira</h1>
+    <!-- Fica na SEGUNDA tela do hero, sobre a névoa, revelada pela
+         rolagem (ver initHeroNote em js/hero.js). Numa tela só volta
+         para o fluxo, logo abaixo do nome. -->
+    <div class="hero-note">
+      <p class="hero-note-lede" data-hero-note>Desenvolvedor full stack. Construo aplicações web de ponta a ponta, do banco de dados à interface.</p>
+      <p class="hero-note-body" data-hero-note>Comecei resolvendo chamados de suporte e hoje escrevo o software que roda do outro lado da tela. Essa passagem pela infraestrutura me deu noção de como cada camada afeta a próxima.</p>
+    </div>
     <div class="hero-social anim-cta">
       <a class="icon-btn" href="https://github.com/OTAVIO-2507" target="_blank" rel="noopener" aria-label="GitHub">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222 0 1.606-.014 2.898-.014 3.293 0 .322.216.694.825.576C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
@@ -103,8 +132,8 @@
 
     <div class="about-grid">
       <div class="about-left" data-reveal>
-        <h2 class="section-title">Construo software em todas as camadas</h2>
-        <p class="about-lede">Full-stack na prática — do banco de dados à interface, passando por deploy e infraestrutura.</p>
+        <h2 class="section-title" data-words>Construo software em todas as camadas</h2>
+        <p class="about-lede" data-words>Full-stack na prática: do banco de dados à interface, passando por deploy e infraestrutura.</p>
 
         <div class="iso" aria-hidden="true">
           <ul class="iso-stack">
@@ -118,27 +147,27 @@
       </div>
 
       <div class="about-right" data-reveal>
-        <p class="about-manifesto">Comecei resolvendo chamados de suporte. Hoje escrevo o software que roda do outro lado da tela.</p>
-        <p class="about-body">Estudante de Engenharia da Computação e desenvolvedor full-stack. A vivência em infraestrutura me deu uma noção rara de como cada camada afeta a próxima — e por que engenharia bem feita faz diferença no resultado.</p>
+        <p class="about-manifesto" data-words>Comecei resolvendo chamados de suporte. Hoje escrevo o software que roda do outro lado da tela.</p>
+        <p class="about-body" data-words>Estudante de Engenharia da Computação e desenvolvedor full-stack. A vivência em infraestrutura me deu uma noção rara de como cada camada afeta a próxima, e por que engenharia bem feita faz diferença no resultado.</p>
 
-        <div class="about-principle">
+        <div class="about-principle" data-words>
           <h3>Entender antes de escrever</h3>
           <p>O problema e o negócio primeiro; o código vem depois.</p>
         </div>
-        <div class="about-principle">
+        <div class="about-principle" data-words>
           <h3>Simplicidade que se mantém</h3>
           <p>Soluções diretas, legíveis e fáceis de evoluir.</p>
         </div>
-        <div class="about-principle">
+        <div class="about-principle" data-words>
           <h3>O detalhe é o produto</h3>
           <p>Performance e experiência tratadas como requisito, não enfeite.</p>
         </div>
-        <div class="about-principle about-principle--last">
+        <div class="about-principle about-principle--last" data-words>
           <h3>Aprendizado contínuo</h3>
-          <p>Novas tecnologias e boas práticas fazem parte da rotina — não do fim de semana.</p>
+          <p>Novas tecnologias e boas práticas fazem parte da rotina, não do fim de semana.</p>
         </div>
 
-        <p class="about-closing">No fim, o que me move é simples: resolver problemas reais e entregar software que gera valor para pessoas e negócios.</p>
+        <p class="about-closing" data-words>No fim, o que me move é simples: resolver problemas reais e entregar software que gera valor para pessoas e negócios.</p>
       </div>
     </div>
   </section>
@@ -154,7 +183,7 @@
 
     <div class="showcase-head">
       <div class="showcase-head-inner">
-        <h2 class="section-title">Meus Projetos</h2>
+        <h2 class="section-title" data-words>Meus Projetos</h2>
       </div>
     </div>
 
@@ -163,12 +192,12 @@
         <div class="proj-frame">
           <div class="proj-shadow" data-shadow aria-hidden="true"></div>
           <div class="proj-card" data-tilt>
-            <div class="proj-card-bg" aria-hidden="true"><div class="proj-card-bg-img" style="background-image:url('assets/img/controle-financeiro.webp')"></div></div>
+            <div class="proj-card-bg" aria-hidden="true"><div class="proj-card-bg-img" style="background-image:url('assets/img/controle-financeiro-blur.webp')"></div></div>
             <div class="proj-card-glow" aria-hidden="true"></div>
             <div class="proj-media">
               <div class="proj-backglow" aria-hidden="true"></div>
               <a class="proj-shot" href="https://otavio-2507.github.io/Controle_Financeiro/" target="_blank" rel="noopener">
-                <span class="proj-shot-img"><img src="assets/img/controle-financeiro.webp" alt="Controle Financeiro — dashboard com gráficos de gastos e receitas" data-zoom></span>
+                <span class="proj-shot-img"><img srcset="assets/img/controle-financeiro-760.webp 760w, assets/img/controle-financeiro.webp 1440w" sizes="(max-width: 900px) 92vw, 46vw" src="assets/img/controle-financeiro.webp" alt="Controle Financeiro: dashboard com gráficos de gastos e receitas" loading="lazy" decoding="async" data-zoom></span>
               </a>
             </div>
             <div class="proj-info">
@@ -194,12 +223,12 @@
         <div class="proj-frame">
           <div class="proj-shadow" data-shadow aria-hidden="true"></div>
           <div class="proj-card" data-tilt>
-            <div class="proj-card-bg" aria-hidden="true"><div class="proj-card-bg-img" style="background-image:url('assets/img/ping-pong.webp')"></div></div>
+            <div class="proj-card-bg" aria-hidden="true"><div class="proj-card-bg-img" style="background-image:url('assets/img/ping-pong-blur.webp')"></div></div>
             <div class="proj-card-glow" aria-hidden="true"></div>
             <div class="proj-media">
               <div class="proj-backglow" aria-hidden="true"></div>
               <a class="proj-shot" href="https://otavio-2507.github.io/Jogo-de-Ping-Pong/" target="_blank" rel="noopener">
-                <span class="proj-shot-img"><img src="assets/img/ping-pong.webp" alt="Jogo de Ping Pong no navegador" loading="lazy" data-zoom></span>
+                <span class="proj-shot-img"><img srcset="assets/img/ping-pong-760.webp 760w, assets/img/ping-pong.webp 1440w" sizes="(max-width: 900px) 92vw, 46vw" src="assets/img/ping-pong.webp" alt="Jogo de Ping Pong no navegador" loading="lazy" loading="lazy" decoding="async" data-zoom></span>
               </a>
             </div>
             <div class="proj-info">
@@ -225,12 +254,12 @@
         <div class="proj-frame">
           <div class="proj-shadow" data-shadow aria-hidden="true"></div>
           <div class="proj-card" data-tilt>
-            <div class="proj-card-bg" aria-hidden="true"><div class="proj-card-bg-img" style="background-image:url('assets/img/formulario.webp')"></div></div>
+            <div class="proj-card-bg" aria-hidden="true"><div class="proj-card-bg-img" style="background-image:url('assets/img/formulario-blur.webp')"></div></div>
             <div class="proj-card-glow" aria-hidden="true"></div>
             <div class="proj-media">
               <div class="proj-backglow" aria-hidden="true"></div>
               <a class="proj-shot" href="https://otavio-2507.github.io/Formulario_Cadastro_Interativo/" target="_blank" rel="noopener">
-                <span class="proj-shot-img"><img src="assets/img/formulario.webp" alt="Formulário dinâmico com validação em tempo real" loading="lazy" data-zoom></span>
+                <span class="proj-shot-img"><img srcset="assets/img/formulario-760.webp 760w, assets/img/formulario.webp 1440w" sizes="(max-width: 900px) 92vw, 46vw" src="assets/img/formulario.webp" alt="Formulário dinâmico com validação em tempo real" loading="lazy" loading="lazy" decoding="async" data-zoom></span>
               </a>
             </div>
             <div class="proj-info">
@@ -256,7 +285,7 @@
     <!-- Contribuições do GitHub: fecha a seção de projetos sobre o
          mesmo fundo de partículas. -->
     <section id="github" class="github container">
-      <h3 class="section-title github-title">Minhas Contribuições</h3>
+      <h3 class="section-title github-title" data-words>Minhas Contribuições</h3>
       <div class="github-host" data-gh-cal>
         <a class="github-fallback" href="https://github.com/OTAVIO-2507" target="_blank" rel="noopener">Veja minhas contribuições no GitHub →</a>
       </div>
@@ -365,8 +394,8 @@
 
   <!-- ===================== CONTATO ===================== -->
   <section id="contato" class="contact container">
-    <h2 class="contact-title">Vamos direto<br>ao ponto</h2>
-    <p class="contact-sub">Aberto a estágio e projetos full stack. Sem formulário e sem espera — me escreva e eu respondo no mesmo dia.</p>
+    <h2 class="contact-title" data-words>Vamos direto<br>ao ponto</h2>
+    <p class="contact-sub" data-words>Aberto a estágio e projetos full stack. Sem formulário e sem espera: me escreva e eu respondo no mesmo dia.</p>
     <a class="contact-mail" href="mailto:56otavio@gmail.com">56otavio@gmail.com</a>
     <div class="contact-meta">
       <a href="https://www.linkedin.com/in/ot%C3%A1vio-oliveira-b9b269267" target="_blank" rel="noopener">LinkedIn&nbsp;↗</a>
@@ -389,7 +418,7 @@
   </div>
   <div class="footer-bottom">
     <span>© <span data-year>2026</span> Otávio Oliveira</span>
-    <span class="footer-stack">Feito à mão — HTML, CSS e JS puros, sem frameworks</span>
+    <span class="footer-stack">Feito à mão com HTML, CSS e JS puros, sem frameworks</span>
   </div>
 </footer>
 </body>

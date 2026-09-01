@@ -2,7 +2,7 @@
 // contínuo (o deslocamento de -50% exige duplicação exata) e liga a animação.
 // Com motion reduzido a fila fica estática.
 
-export function initMarquee({ reduced }) {
+function initMarquee({ reduced }) {
   if (reduced) return;
 
   document.querySelectorAll('[data-marquee-row]').forEach((row) => {
