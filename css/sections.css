@@ -1028,40 +1028,132 @@
 }
 
 /* ---------- Experiência ---------- */
+/* A seção é uma régua de carreira: um eixo vertical com os anos na calha
+   à esquerda, as empresas ancoradas nele pela logo e cada cargo como um
+   ponto. Toda a geometria sai de três medidas — onde passa o trilho
+   (--rail), onde começa o conteúdo (--indent) e o tamanho da placa da
+   logo (--logo) —, então o mobile só troca esses três números. */
 .xp {
-  padding-top: 110px;
-  padding-bottom: 40px;
+  position: relative;
+  padding-top: 118px;
+  padding-bottom: 48px;
+}
+
+.xp::before {
+  content: '';
+  position: absolute;
+  left: -6%;
+  top: 40px;
+  width: min(760px, 76%);
+  height: 640px;
+  background: radial-gradient(circle at 28% 28%, rgba(91, 116, 255, 0.17), transparent 62%),
+              radial-gradient(circle at 70% 58%, rgba(174, 162, 255, 0.09), transparent 58%);
+  filter: blur(38px);
+  pointer-events: none;
+}
+
+.xp > * {
+  position: relative;
+  z-index: 1;
 }
 
 .xp-title {
-  margin-bottom: 18px;
+  margin-bottom: 16px;
 }
 
 .xp-lede {
+  position: relative;
+  padding-left: 18px;
   font-size: 17px;
   line-height: 1.6;
   color: var(--ink-soft);
-  max-width: 60ch;
-  margin-bottom: 64px;
+  max-width: 64ch;
 }
 
-.xp-list {
+.xp-lede::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.35em;
+  bottom: 0.35em;
+  width: 1px;
+  background: linear-gradient(180deg, rgba(139, 157, 255, 0.9), rgba(139, 157, 255, 0.12));
+}
+
+/* Uma fileira de itens separados por fio de cabelo. É o mesmo idioma em
+   três lugares (o resumo, os dados da empresa e a stack), o que dá
+   unidade à seção sem recorrer a pills. */
+.xp-hair {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 5px 16px;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-mono);
+}
+
+.xp-hair > * {
   position: relative;
-  border-top: 1px solid var(--line);
-  /* Palco 3D: as entradas giram para o lugar e os logos ganham
-     profundidade no hover. */
-  perspective: 1400px;
 }
 
-/* Trilho da linha do tempo: passa por trás dos logos e é preenchido
-   conforme a rolagem (js/xp.js). */
+.xp-hair > * + *::before {
+  content: '';
+  position: absolute;
+  left: -9px;
+  top: 0.24em;
+  bottom: 0.18em;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.xp-scale {
+  margin-top: 22px;
+  font-size: 12.4px;
+  letter-spacing: 0.04em;
+  color: var(--ink-muted);
+}
+
+.xp-scale-total {
+  color: var(--accent-pale);
+}
+
+/* ---------- O eixo ---------- */
+.xp-line {
+  --rail: 21px;
+  --indent: 50px;
+  --logo: 44px;
+  position: relative;
+  max-width: 1040px;
+  margin-top: 60px;
+  padding-left: var(--indent);
+}
+
+@media (min-width: 761px) {
+  .xp-line {
+    --rail: 40px;
+    --indent: 88px;
+    --logo: 54px;
+  }
+}
+
+@media (min-width: 1080px) {
+  .xp-line {
+    --rail: 74px;
+    --indent: 120px;
+    --logo: 62px;
+  }
+}
+
+/* O trilho some nas duas pontas em vez de terminar em corte reto: assim
+   não precisa casar em pixel com o primeiro e o último ponto. */
 .xp-rail {
   position: absolute;
-  left: 27px;
-  top: 0;
-  bottom: 0;
+  left: calc(var(--rail) - 1px);
+  top: 8px;
+  bottom: 26px;
   width: 2px;
-  background: rgba(255, 255, 255, 0.06);
+  background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.09) 5%, rgba(255, 255, 255, 0.09) 90%, transparent);
 }
 
 .xp-rail-fill {
@@ -1069,161 +1161,421 @@
   inset: 0;
   transform-origin: top;
   transform: scaleY(0);
-  background: linear-gradient(180deg, var(--accent), rgba(91, 116, 255, 0.14));
-  box-shadow: 0 0 18px rgba(91, 116, 255, 0.5);
+  background: linear-gradient(180deg, rgba(185, 196, 255, 0.95), var(--accent) 28%, rgba(91, 116, 255, 0.5) 74%, rgba(91, 116, 255, 0));
+  box-shadow: 0 0 16px rgba(91, 116, 255, 0.4);
   will-change: transform;
 }
 
-.xp-item {
+/* ---------- Empresa: a âncora do trecho ---------- */
+.xp-era + .xp-era {
+  margin-top: clamp(48px, 5vw, 76px);
+}
+
+.xp-era-head {
   position: relative;
-  display: grid;
-  grid-template-columns: 56px 176px 1fr;
-  gap: 34px;
-  padding: 44px 0;
-  border-bottom: 1px solid var(--line);
-  transform-style: preserve-3d;
-}
-
-/* Entrada 3D: o item gira de uma prancha inclinada para o lugar,
-   saindo do desfoque — via mecanismo will-reveal/is-in do reveal.js. */
-.xp-item.will-reveal {
-  opacity: 0;
-  transform: rotateX(-18deg) translateY(56px);
-  transform-origin: 50% 0;
-  filter: blur(12px);
-  transition:
-    opacity 0.9s var(--ease-spring),
-    transform 1.05s var(--ease-spring),
-    filter 0.9s var(--ease-spring);
-}
-
-.xp-item.will-reveal.is-in {
-  opacity: 1;
-  transform: none;
-  filter: none;
-}
-
-.xp-logo {
-  width: 56px;
-  height: 56px;
-  border-radius: 14px;
-  background: var(--bg-panel);
-  border: 1px solid var(--line-strong);
   display: flex;
   align-items: center;
-  justify-content: center;
-  transform-style: preserve-3d;
-  transition:
-    transform 0.55s var(--ease-spring),
-    box-shadow 0.55s var(--ease-spring),
-    border-color 0.3s ease;
+  min-height: var(--logo);
 }
 
-.xp-item:hover .xp-logo {
-  transform: translateZ(30px) rotateY(-13deg) rotateX(8deg);
+/* A placa é opaca e fica acima do trilho, que passa por trás dela. */
+.xp-logo {
+  position: absolute;
+  top: 50%;
+  left: calc(var(--rail) - var(--indent) - var(--logo) / 2);
+  z-index: 2;
+  width: var(--logo);
+  height: var(--logo);
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--line-strong);
+  background: #fff;
+  transform: translateY(-50%);
+  box-shadow: 0 12px 26px -12px rgba(0, 0, 0, 0.9);
+  transition: border-color 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out);
+}
+
+.xp-logo.is-lit {
+  border-color: rgba(139, 157, 255, 0.38);
+  box-shadow: 0 0 0 4px rgba(91, 116, 255, 0.09), 0 12px 26px -12px rgba(0, 0, 0, 0.9);
+}
+
+.xp-era--now .xp-logo {
   border-color: rgba(139, 157, 255, 0.5);
-  box-shadow: 0 22px 44px -18px rgba(61, 90, 254, 0.6);
+  box-shadow: 0 0 0 4px rgba(91, 116, 255, 0.1), 0 12px 26px -12px rgba(0, 0, 0, 0.9);
 }
 
-.xp-logo svg {
-  width: 40px;
-  height: 40px;
+.xp-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   display: block;
 }
 
-.xp-logo--edu svg {
-  width: 34px;
-  height: 34px;
+.xp-era-ident {
+  min-width: 0;
 }
 
+.xp-company {
+  font-size: clamp(19px, 2vw, 27px);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--ink-strong);
+}
+
+.xp-era-meta {
+  margin-top: 7px;
+  font-size: 12.2px;
+  letter-spacing: 0.03em;
+  color: var(--ink-muted);
+}
+
+.xp-era-desc {
+  margin-top: 16px;
+  max-width: 62ch;
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--ink-soft);
+}
+
+.xp-jobs {
+  /* <ol> por ser uma sequencia cronologica; base.css so zera o <ul>,
+     entao o marcador numerico e removido aqui. */
+  list-style: none;
+  margin: clamp(24px, 2.6vw, 34px) 0 0;
+  padding: 0;
+  display: grid;
+  gap: clamp(14px, 1.6vw, 20px);
+}
+
+/* ---------- Cargo: o ponto no eixo ---------- */
+.xp-job {
+  --bloom: 0;
+  position: relative;
+  isolation: isolate;
+  padding: clamp(20px, 2.2vw, 30px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(17, 18, 27, 0.78), rgba(10, 11, 17, 0.9));
+  transition: border-color 0.4s var(--ease-out), transform 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out);
+}
+
+.xp-job::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(120% 96% at 0% 0%, rgba(139, 157, 255, 0.1), transparent 58%);
+  opacity: var(--bloom);
+  transition: opacity 0.45s var(--ease-out);
+  pointer-events: none;
+}
+
+.xp-job.is-active {
+  --bloom: 1;
+  border-color: rgba(139, 157, 255, 0.22);
+}
+
+/* O cargo atual ganha superfície mais clara, borda em accent e um fio
+   vertical na aresta esquerda. Os anteriores não são apagados: o texto
+   deles mantém o mesmo contraste. */
+.xp-job--now {
+  --bloom: 0.6;
+  border-color: rgba(139, 157, 255, 0.24);
+  background: linear-gradient(180deg, rgba(24, 27, 46, 0.82), rgba(11, 12, 20, 0.92));
+}
+
+.xp-job--now::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 18px;
+  bottom: 18px;
+  width: 2px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, var(--accent-pale), var(--accent) 42%, rgba(91, 116, 255, 0));
+}
+
+.xp-node {
+  position: absolute;
+  /* Acompanha o padding do cartão para cair sempre na altura da
+     primeira linha do cargo, em qualquer largura. */
+  top: calc(clamp(20px, 2.2vw, 30px) + 7px);
+  left: calc(var(--rail) - var(--indent) - 6px);
+  z-index: 2;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #101119;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.2);
+  transition: background 0.55s var(--ease-out), box-shadow 0.55s var(--ease-out), transform 0.35s var(--ease-out);
+}
+
+/* Acende quando a frente do trilho passa por ele (js/xp.js). */
+.xp-node.is-lit {
+  background: var(--accent-pale);
+  box-shadow: 0 0 0 4px rgba(91, 116, 255, 0.13), 0 0 14px rgba(91, 116, 255, 0.5);
+}
+
+
+/* Ano na calha à esquerda do trilho. Só aparece quando muda em relação
+   ao cargo de cima — é um eixo, não uma etiqueta por linha. */
 .xp-when {
-  padding-top: 8px;
-}
-
-.xp-period {
+  display: none;
+  position: absolute;
+  top: calc(clamp(20px, 2.2vw, 30px) + 5px);
+  right: calc(100% + var(--indent) - var(--rail) + 16px);
   font-family: var(--font-mono);
-  font-size: 13px;
-  color: var(--accent-soft);
-  margin-bottom: 8px;
+  font-size: 11.5px;
+  letter-spacing: 0.1em;
+  /* Nao baixar deste valor: e o piso que mantem o rotulo do eixo em
+     4,5:1 sobre o fundo da secao (WCAG AA para texto normal). */
+  color: rgba(255, 255, 255, 0.46);
+  transition: color 0.5s var(--ease-out);
 }
 
-.xp-place {
-  font-size: 13px;
-  line-height: 1.5;
-  color: var(--ink-muted);
+.xp-job.is-active .xp-when {
+  color: var(--accent-pale);
 }
 
-.xp-span {
-  margin-top: 8px;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--ink-muted);
+@media (min-width: 1080px) {
+  .xp-when {
+    display: block;
+  }
 }
 
-.xp-org {
-  font-family: var(--font-mono);
-  font-size: 12.5px;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: var(--ink-muted);
-  margin-bottom: 10px;
-  padding-top: 8px;
+.xp-job-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+}
+
+.xp-job-ident {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .xp-role {
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: -0.01em;
+  font-size: clamp(17px, 1.5vw, 21px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
   color: var(--ink-strong);
-  margin-bottom: 10px;
 }
 
-.xp-sub-head {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 4px 16px;
+.xp-job--now .xp-role {
+  font-size: clamp(19px, 1.8vw, 24px);
 }
 
-.xp-sub-head .xp-role {
-  margin-bottom: 0;
-}
-
-.xp-sub-period {
+.xp-period {
+  margin-top: 7px;
   font-family: var(--font-mono);
-  font-size: 12.5px;
+  font-size: 12.2px;
+  letter-spacing: 0.03em;
   color: var(--ink-muted);
 }
 
-.xp-sub {
-  padding-top: 6px;
+/* "Atual" sem pill: só o ponto que pulsa e a palavra. */
+.xp-now {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-pale);
 }
 
-.xp-sub .xp-desc {
-  margin-top: 10px;
+.xp-now-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  animation: xp-pulse 2.8s var(--ease-out) infinite;
 }
 
-.xp-sub + .xp-sub {
-  margin-top: 26px;
-  padding-top: 26px;
-  border-top: 1px solid var(--line);
+@keyframes xp-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(139, 157, 255, 0.45); }
+  70%  { box-shadow: 0 0 0 9px rgba(139, 157, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(139, 157, 255, 0); }
+}
+
+/* Corpo do cartão: responsabilidades à esquerda, stack numa coluna
+   própria à direita, separadas por um fio. Abaixo de 1080px a stack
+   desce para uma fileira sob um fio horizontal. */
+.xp-job-body {
+  display: grid;
+  gap: 16px;
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 .xp-desc {
+  max-width: 68ch;
   font-size: 15px;
-  line-height: 1.65;
-  color: var(--ink-soft);
-  max-width: 64ch;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.72);
 }
+
+.xp-tasks {
+  display: grid;
+  gap: 9px;
+  margin: 15px 0 0;
+  padding: 0;
+}
+
+.xp-tasks li {
+  position: relative;
+  padding-left: 21px;
+  max-width: 70ch;
+  font-size: 14.6px;
+  line-height: 1.62;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+/* Marcador de traço, não de bolinha: acompanha o desenho técnico do
+   resto da seção e acende junto com o cartão. */
+.xp-tasks li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.72em;
+  width: 10px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.28);
+  transition: background 0.4s var(--ease-out), width 0.4s var(--ease-out);
+}
+
+.xp-job.is-active .xp-tasks li::before {
+  width: 14px;
+  background: var(--accent-soft);
+}
+
+.xp-tasks li:nth-child(2)::before { transition-delay: 0.04s; }
+.xp-tasks li:nth-child(3)::before { transition-delay: 0.08s; }
+.xp-tasks li:nth-child(4)::before { transition-delay: 0.12s; }
+.xp-tasks li:nth-child(5)::before { transition-delay: 0.16s; }
 
 .xp-stack {
-  margin-top: 14px;
-  font-family: var(--font-mono);
-  font-size: 12.5px;
+  margin-top: 2px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  font-size: 12.4px;
   letter-spacing: 0.02em;
-  color: var(--ink-muted);
+  color: rgba(255, 255, 255, 0.6);
+  transition: border-color 0.4s var(--ease-out);
 }
 
+@media (min-width: 1080px) {
+  .xp-job-body {
+    grid-template-columns: minmax(0, 1fr) 186px;
+    column-gap: 40px;
+  }
+
+  .xp-job-body--plain {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* Item de grid estica por padrão, então o fio acompanha a altura toda
+     do corpo mesmo quando a stack é curta. */
+  .xp-stack {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    align-content: flex-start;
+    gap: 10px;
+    margin-top: 0;
+    padding-top: 0;
+    padding-left: 26px;
+    border-top: none;
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  /* Aqui o fio de cabelo vira um traço horizontal que liga cada
+     tecnologia à régua vertical. */
+  .xp-stack li::before {
+    content: '';
+    left: -26px;
+    top: 0.62em;
+    bottom: auto;
+    width: 9px;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.18);
+    transition: background 0.4s var(--ease-out);
+  }
+
+  .xp-job.is-active .xp-stack {
+    border-left-color: rgba(139, 157, 255, 0.24);
+  }
+
+  .xp-job.is-active .xp-stack li::before {
+    background: rgba(139, 157, 255, 0.5);
+  }
+}
+
+/* Entrada: os cargos de um mesmo trecho escalonam levemente. */
+.xp-job.will-reveal {
+  transform: translateY(24px);
+}
+
+.xp-job.will-reveal.is-in {
+  transform: translateY(0);
+}
+
+.xp-jobs .xp-job:nth-child(2).will-reveal { transition-delay: 0.08s; }
+.xp-jobs .xp-job:nth-child(3).will-reveal { transition-delay: 0.16s; }
+
+/* Hover so onde ha ponteiro de verdade. No toque o :hover gruda depois
+   do tap e ficaria brigando com o cartao em foco pela rolagem — que ja
+   e o feedback equivalente ali. Guardar por largura nao resolvia: um
+   tablet de toque de 834px passava pela guarda. */
+@media (hover: hover) {
+  .xp-job:hover {
+    --bloom: 1;
+    border-color: rgba(139, 157, 255, 0.22);
+    transform: translateY(-2px);
+    box-shadow: 0 20px 44px -26px rgba(0, 0, 0, 0.95);
+  }
+
+  .xp-job:hover .xp-node {
+    transform: scale(1.3);
+  }
+
+  .xp-job:hover .xp-when {
+    color: var(--accent-pale);
+  }
+
+  .xp-job:hover .xp-tasks li::before {
+    width: 14px;
+    background: var(--accent-soft);
+  }
+
+  @media (min-width: 1080px) {
+    .xp-job:hover .xp-stack {
+      border-left-color: rgba(139, 157, 255, 0.24);
+    }
+
+    .xp-job:hover .xp-stack li::before {
+      background: rgba(139, 157, 255, 0.5);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .xp-job.will-reveal,
+  .xp-job.will-reveal.is-in {
+    transform: none;
+  }
+
+  .xp-rail-fill {
+    box-shadow: none;
+  }
+}
 /* ---------- Contato ---------- */
 /* Sem cartão de CTA: a seção é uma composição direta, alinhada à
    esquerda, com o e-mail como elemento principal. */
@@ -1477,61 +1829,29 @@
   }
 
   .xp {
-    padding-top: 72px;
+    padding-top: 76px;
   }
 
-  .xp-lede {
-    margin-bottom: 44px;
+  .xp-line {
+    margin-top: 44px;
   }
 
-  .xp-rail {
-    left: 21px;
+  /* A placa da logo encosta na calha; o nome da empresa fica ao lado,
+     com respiro suficiente para quebrar em duas linhas. */
+  .xp-era-ident {
+    padding-left: 5px;
   }
 
-  .xp-item {
-    grid-template-columns: 44px 1fr;
-    gap: 8px 18px;
-    padding: 30px 0;
+  .xp-job {
+    border-radius: 16px;
   }
 
-  .xp-logo {
-    width: 44px;
-    height: 44px;
-    border-radius: 11px;
+  .xp-desc {
+    font-size: 14.5px;
   }
 
-  .xp-logo svg {
-    width: 32px;
-    height: 32px;
-  }
-
-  .xp-logo--edu svg {
-    width: 27px;
-    height: 27px;
-  }
-
-  .xp-what {
-    grid-column: 1 / -1;
-  }
-
-  .xp-when {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 2px 14px;
-    padding-top: 4px;
-  }
-
-  .xp-period {
-    margin-bottom: 0;
-  }
-
-  .xp-span {
-    margin-top: 0;
-  }
-
-  .xp-org {
-    padding-top: 4px;
+  .xp-tasks li {
+    font-size: 14.2px;
   }
 
   .contact {

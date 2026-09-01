@@ -221,8 +221,7 @@
     overflow-x: auto;
   }
 
-  .will-reveal,
-  .xp-item.will-reveal {
+  .will-reveal {
     opacity: 1;
     transform: none;
     filter: none;
