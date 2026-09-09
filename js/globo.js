@@ -493,10 +493,15 @@ function initGlobo({ reduced }) {
       const n = cargos[id].childElementCount;
       onde.textContent = l.cidade + ' · ' + n + (n === 1 ? ' cargo' : ' cargos');
     }
+    /* aria-pressed e não aria-selected: selected só vale em tab, option,
+       row e afins, e estes são botões comuns — um par de alternadores,
+       que é exatamente o que aria-pressed descreve. Fazer disto um
+       tablist de verdade brigaria com as setas do teclado, que aqui já
+       folheiam os cargos. */
     abas.forEach((b) => {
       const on = b.dataset.globoAba === id;
       b.classList.toggle('is-on', on);
-      b.setAttribute('aria-selected', String(on));
+      b.setAttribute('aria-pressed', String(on));
     });
     Object.keys(cargos).forEach((k) => { cargos[k].hidden = k !== id; });
     legenda.scrollTop = 0;
