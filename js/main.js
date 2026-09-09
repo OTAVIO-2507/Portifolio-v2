@@ -6,7 +6,6 @@
 
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-initScrollSuave();
 initNav();
 initYear();
 initHero({ reduced });
@@ -41,19 +40,11 @@ function initYear() {
   if (el) el.textContent = new Date().getFullYear();
 }
 
-/* Rolagem suave: em vez de transformar a página (o que o ScrollSmoother
-   faz, e que quebraria os `position: sticky` que sustentam o
-   empilhamento de Projetos), anima a POSIÇÃO REAL de rolagem. O
-   navegador continua rolando de verdade, então sticky, âncoras e barra
-   de rolagem seguem funcionando — só que o movimento ganha inércia.
+/* A rolagem da página é a nativa, de propósito: interpolar a roda do
+   mouse atrasa a resposta ao gesto, e transformar a página (o que o
+   ScrollSmoother faz) quebraria os `position: sticky` que sustentam o
+   empilhamento de Projetos. A inércia que existe no site é dos EFEITOS,
+   não da barra: quem a dá é o criarScrollSuave de js/reveal.js.
 
-   Só no ponteiro fino: no toque a rolagem nativa já tem inércia própria
-   e interceptá-la piora. */
-function initScrollSuave() {
-  if (reduced) return;
-  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
-
-  // A rolagem precisa responder no mesmo instante da ação do usuário.
-  // Por isso mantemos a navegação nativa do navegador e evitamos qualquer
-  // interpolação artificial no mousewheel / trackpad.
-}
+   Ficava aqui uma initScrollSuave() vazia — só as guardas e o comentário,
+   corpo nenhum — e o main a chamava em toda carga. */
