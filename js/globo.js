@@ -68,6 +68,14 @@ function initGlobo({ reduced }) {
     carta.appendChild(cargos[l.id]);
   });
   [...lista.querySelectorAll('.xp-job')].forEach((job) => {
+    /* O reveal de rolagem (js/reveal.js) já marcou estes cargos: eles
+       estavam na lista, abaixo da dobra, e ganharam .will-reveal — que é
+       opacidade zero até o observador acender. Dentro do pergaminho isso
+       vira defeito: as páginas escondidas nunca cruzam a viewport, então
+       trocar de empresa mostrava papel EM BRANCO até o observador reagir.
+       Aqui dentro quem anima a entrada é o folhear, e ele não depende de
+       rolagem nenhuma. */
+    job.classList.remove('will-reveal', 'is-in');
     const emp = (job.querySelector('.xp-company') || {}).textContent || '';
     cargos[emp.trim().toLowerCase().startsWith('brav') ? 'bravend' : 'zincoligas'].appendChild(job);
   });
