@@ -15,6 +15,8 @@ initReveals({ reduced });
 initWordReveal({ reduced });
 initShowcase({ reduced });
 initXp({ reduced });
+initGlobo({ reduced });
+initFooter({ reduced });
 initGithubCalendar();
 
 function initNav() {

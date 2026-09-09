@@ -15,10 +15,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Hanken+Grotesk:wght@400;500;600;700;900&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <!-- Três famílias, um pedido só. Fraunces vem com os eixos SOFT e WONK
+       já fixos em 40 e 1: são eles que dão os terminais irregulares e as
+       formas alternativas, e fixá-los na URL evita servir os eixos
+       inteiros para variar o que não vai variar. -->
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,700..900,40,1&family=Hanken+Grotesk:wght@400;500;600;700;900&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
   <!-- Poppins aparece só no nome do hero, então vem só com os caracteres
        usados: o arquivo cai de ~30 KB para poucos bytes. -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@900&text=%20Oaeilortv%C3%A1&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/components.css">
@@ -35,6 +38,8 @@
   <script defer src="js/reveal.js"></script>
   <script defer src="js/showcase.js"></script>
   <script defer src="js/xp.js"></script>
+  <script defer src="js/globo.js"></script>
+  <script defer src="js/footer.js"></script>
   <script defer src="js/github.js"></script>
   <script defer src="js/main.js"></script>
 </head>
@@ -70,10 +75,9 @@
         <a href="#projetos">Projetos</a>
         <a href="#experiencia">Experiência</a>
       </div>
-      <a class="btn btn-glass nav-cv" href="assets/curriculo.pdf" target="_blank" rel="noopener">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg>
-        Meu CV
-      </a>
+      <!-- O botao do CV volta aqui assim que assets/curriculo.pdf existir.
+           Estava apontando para um arquivo que nunca foi para o repositorio:
+           quem clicasse levava 404, e o PRODUCT.md proibe PDF fantasma. -->
     </div>
   </nav>
 
@@ -175,10 +179,7 @@
   <!-- ===================== PROJETOS ===================== -->
   <section id="projetos" class="showcase">
     <div class="showcase-bg" aria-hidden="true">
-      <div class="showcase-bg-sticky">
-        <canvas data-fx></canvas>
-        <div class="showcase-spot" data-spot></div>
-      </div>
+      <div class="showcase-bg-sticky"></div>
     </div>
 
     <div class="showcase-head">
@@ -192,7 +193,6 @@
         <div class="proj-frame">
           <div class="proj-shadow" data-shadow aria-hidden="true"></div>
           <div class="proj-card" data-tilt>
-            <div class="proj-card-bg" aria-hidden="true"><div class="proj-card-bg-img" style="background-image:url('assets/img/controle-financeiro-blur.webp')"></div></div>
             <div class="proj-card-glow" aria-hidden="true"></div>
             <div class="proj-media">
               <div class="proj-backglow" aria-hidden="true"></div>
@@ -202,13 +202,13 @@
             </div>
             <div class="proj-info">
               <div class="proj-meta">
-                <span class="proj-tag">Aplicação Web</span>
+                <span class="proj-tag"><svg class="xp-ic" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2 2.4h12a1.4 1.4 0 0 1 1.4 1.4v8.4A1.4 1.4 0 0 1 14 13.6H2a1.4 1.4 0 0 1-1.4-1.4V3.8A1.4 1.4 0 0 1 2 2.4Zm.2 1.6v8h11.6V4Zm1.4 1.4h8.8v5.2H3.6Z"/></svg>Aplicação Web</span>
                 <span class="proj-fill"></span>
                 <span class="proj-year">2025</span>
               </div>
               <h3 class="proj-title">Controle Financeiro</h3>
               <p class="proj-desc">Sistema completo que permite o controle de gastos, receitas, metas financeiras e visualização de dados por meio de gráficos interativos. Interface moderna e responsiva, pensada para uma experiência premium de gerenciamento financeiro.</p>
-              <div class="proj-stack">JavaScript · HTML · CSS · Chart.js</div>
+              <ul class="proj-stack xp-stack" role="list" aria-label="Stack tecnológica"><li><svg class="xp-marca xp-marca--javascript" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M0 0h24v24H0V0zm22.034 18.276c-.175-1.095-.888-2.015-3.003-2.873-.736-.345-1.554-.585-1.797-1.14-.091-.33-.105-.51-.046-.705.15-.646.915-.84 1.515-.66.39.12.75.42.976.9 1.034-.676 1.034-.676 1.755-1.125-.27-.42-.404-.601-.586-.78-.63-.705-1.469-1.065-2.834-1.034l-.705.089c-.676.165-1.32.525-1.71 1.005-1.14 1.291-.811 3.541.569 4.471 1.365 1.02 3.361 1.244 3.616 2.205.24 1.17-.87 1.545-1.966 1.41-.811-.18-1.26-.586-1.755-1.336l-1.83 1.051c.21.48.45.689.81 1.109 1.74 1.756 6.09 1.666 6.871-1.004.029-.09.24-.705.074-1.65l.046.067zm-8.983-7.245h-2.248c0 1.938-.009 3.864-.009 5.805 0 1.232.063 2.363-.138 2.711-.33.689-1.18.601-1.566.48-.396-.196-.597-.466-.83-.855-.063-.105-.11-.196-.127-.196l-1.825 1.125c.305.63.75 1.172 1.324 1.517.855.51 2.004.675 3.207.405.783-.226 1.458-.691 1.811-1.411.51-.93.402-2.07.397-3.346.012-2.054 0-4.109 0-6.179l.004-.056z"/></svg>JavaScript</li><li><svg class="xp-marca xp-marca--html" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M1.5 0h21l-1.91 21.563L11.977 24l-8.564-2.438L1.5 0zm7.031 9.75l-.232-2.718 10.059.003.23-2.622L5.412 4.41l.698 8.01h9.126l-.326 3.426-2.91.804-2.955-.81-.188-2.11H6.248l.33 4.171L12 19.351l5.379-1.443.744-8.157H8.531z"/></svg>HTML</li><li><svg class="xp-marca xp-marca--css" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M1.5 0h21l-1.91 21.563L11.977 24l-8.565-2.438L1.5 0zm17.09 4.413L5.41 4.41l.213 2.622 10.125.002-.255 2.716h-6.64l.24 2.573h6.182l-.366 3.523-2.91.804-2.956-.81-.188-2.11h-2.61l.29 3.855L12 19.288l5.373-1.53L18.59 4.414z"/></svg>CSS</li><li><svg class="xp-marca xp-marca--chartjs" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 0L1.605 6v12L12 24l10.395-6V6zm0 1.41l9.172 5.295v10.59L12 22.59l-9.172-5.295V6.705zM5.902 8.334c-1.306 0-1.983.956-2.574 2.41v6.262L12 22.014l8.672-5.008v-5.971c-.447-.264-.894-.412-1.336-.412-4.275 0-3.97 4.885-6.717 5.8-2.748.917-3.511-8.089-6.717-8.089zm12.364.457c-2.9 0-2.137 4.732-5.342 4.732-1.63 0-2.52-1.317-3.477-1.981.148.326.3.655.442.98.467 1.068.922 2.09 1.379 2.734.228.322.455.541.644.644a.595.595 0 0 0 .549.05c.558-.187.968-.571 1.36-1.112.39-.541.74-1.228 1.154-1.916.413-.688.894-1.385 1.59-1.918.695-.534 1.607-.881 2.77-.881.465 0 .908.136 1.337.352v-.121c-.633-.849-1.348-1.563-2.406-1.563zm-6.68.152c-.868 0-1.491.82-2.076 2.06.094.055.192.106.277.167 1.06.761 1.798 1.853 3.137 1.853.678 0 1.067-.218 1.418-.585-.722-1.546-1.432-3.492-2.756-3.495Z"/></svg>Chart.js</li></ul>
               <div class="proj-actions">
                 <span data-mag><a class="btn btn-primary" href="https://otavio-2507.github.io/Controle_Financeiro/" target="_blank" rel="noopener" data-sheen-host><span class="sheen" data-sheen aria-hidden="true"></span>Ver demonstração <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg></a></span>
                 <span data-mag><a class="btn btn-ghost" href="https://github.com/otavio-2507/Controle_Financeiro" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222 0 1.606-.014 2.898-.014 3.293 0 .322.216.694.825.576C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>Código</a></span>
@@ -223,23 +223,22 @@
         <div class="proj-frame">
           <div class="proj-shadow" data-shadow aria-hidden="true"></div>
           <div class="proj-card" data-tilt>
-            <div class="proj-card-bg" aria-hidden="true"><div class="proj-card-bg-img" style="background-image:url('assets/img/ping-pong-blur.webp')"></div></div>
             <div class="proj-card-glow" aria-hidden="true"></div>
             <div class="proj-media">
               <div class="proj-backglow" aria-hidden="true"></div>
               <a class="proj-shot" href="https://otavio-2507.github.io/Jogo-de-Ping-Pong/" target="_blank" rel="noopener">
-                <span class="proj-shot-img"><img srcset="assets/img/ping-pong-760.webp 760w, assets/img/ping-pong.webp 1440w" sizes="(max-width: 900px) 92vw, 46vw" src="assets/img/ping-pong.webp" alt="Jogo de Ping Pong no navegador" loading="lazy" loading="lazy" decoding="async" data-zoom></span>
+                <span class="proj-shot-img"><img srcset="assets/img/ping-pong-760.webp 760w, assets/img/ping-pong.webp 1440w" sizes="(max-width: 900px) 92vw, 46vw" src="assets/img/ping-pong.webp" alt="Jogo de Ping Pong no navegador" loading="lazy" decoding="async" data-zoom></span>
               </a>
             </div>
             <div class="proj-info">
               <div class="proj-meta">
-                <span class="proj-tag">Jogo no Navegador</span>
+                <span class="proj-tag"><svg class="xp-ic" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2 2.4h12a1.4 1.4 0 0 1 1.4 1.4v8.4A1.4 1.4 0 0 1 14 13.6H2a1.4 1.4 0 0 1-1.4-1.4V3.8A1.4 1.4 0 0 1 2 2.4Zm.2 1.6v8h11.6V4Zm1.4 1.4h8.8v5.2H3.6Z"/></svg>Jogo no Navegador</span>
                 <span class="proj-fill"></span>
                 <span class="proj-year">2024</span>
               </div>
               <h3 class="proj-title">Jogo de Ping Pong</h3>
               <p class="proj-desc">Jogo interativo de ping pong desenvolvido com JavaScript e Canvas, aplicando lógica de jogos, detecção de colisão e renderização em tempo real. Uma experiência divertida e tecnicamente desafiadora.</p>
-              <div class="proj-stack">JavaScript · HTML · CSS · Canvas</div>
+              <ul class="proj-stack xp-stack" role="list" aria-label="Stack tecnológica"><li><svg class="xp-marca xp-marca--javascript" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M0 0h24v24H0V0zm22.034 18.276c-.175-1.095-.888-2.015-3.003-2.873-.736-.345-1.554-.585-1.797-1.14-.091-.33-.105-.51-.046-.705.15-.646.915-.84 1.515-.66.39.12.75.42.976.9 1.034-.676 1.034-.676 1.755-1.125-.27-.42-.404-.601-.586-.78-.63-.705-1.469-1.065-2.834-1.034l-.705.089c-.676.165-1.32.525-1.71 1.005-1.14 1.291-.811 3.541.569 4.471 1.365 1.02 3.361 1.244 3.616 2.205.24 1.17-.87 1.545-1.966 1.41-.811-.18-1.26-.586-1.755-1.336l-1.83 1.051c.21.48.45.689.81 1.109 1.74 1.756 6.09 1.666 6.871-1.004.029-.09.24-.705.074-1.65l.046.067zm-8.983-7.245h-2.248c0 1.938-.009 3.864-.009 5.805 0 1.232.063 2.363-.138 2.711-.33.689-1.18.601-1.566.48-.396-.196-.597-.466-.83-.855-.063-.105-.11-.196-.127-.196l-1.825 1.125c.305.63.75 1.172 1.324 1.517.855.51 2.004.675 3.207.405.783-.226 1.458-.691 1.811-1.411.51-.93.402-2.07.397-3.346.012-2.054 0-4.109 0-6.179l.004-.056z"/></svg>JavaScript</li><li><svg class="xp-marca xp-marca--html" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M1.5 0h21l-1.91 21.563L11.977 24l-8.564-2.438L1.5 0zm7.031 9.75l-.232-2.718 10.059.003.23-2.622L5.412 4.41l.698 8.01h9.126l-.326 3.426-2.91.804-2.955-.81-.188-2.11H6.248l.33 4.171L12 19.351l5.379-1.443.744-8.157H8.531z"/></svg>HTML</li><li><svg class="xp-marca xp-marca--css" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M1.5 0h21l-1.91 21.563L11.977 24l-8.565-2.438L1.5 0zm17.09 4.413L5.41 4.41l.213 2.622 10.125.002-.255 2.716h-6.64l.24 2.573h6.182l-.366 3.523-2.91.804-2.956-.81-.188-2.11h-2.61l.29 3.855L12 19.288l5.373-1.53L18.59 4.414z"/></svg>CSS</li><li><svg class="xp-marca xp-marca--canvas" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4.8 2.4h14.4a2.4 2.4 0 0 1 2.4 2.4v14.4a2.4 2.4 0 0 1-2.4 2.4H4.8a2.4 2.4 0 0 1-2.4-2.4V4.8a2.4 2.4 0 0 1 2.4-2.4Zm0 1.8a.6.6 0 0 0-.6.6v14.4a.6.6 0 0 0 .6.6h14.4a.6.6 0 0 0 .6-.6V4.8a.6.6 0 0 0-.6-.6ZM8.4 8.4h7.2v7.2H8.4Z"/></svg>Canvas</li></ul>
               <div class="proj-actions">
                 <span data-mag><a class="btn btn-primary" href="https://otavio-2507.github.io/Jogo-de-Ping-Pong/" target="_blank" rel="noopener" data-sheen-host><span class="sheen" data-sheen aria-hidden="true"></span>Ver demonstração <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg></a></span>
                 <span data-mag><a class="btn btn-ghost" href="https://github.com/otavio-2507/Jogo-de-Ping-Pong" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222 0 1.606-.014 2.898-.014 3.293 0 .322.216.694.825.576C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>Código</a></span>
@@ -254,23 +253,22 @@
         <div class="proj-frame">
           <div class="proj-shadow" data-shadow aria-hidden="true"></div>
           <div class="proj-card" data-tilt>
-            <div class="proj-card-bg" aria-hidden="true"><div class="proj-card-bg-img" style="background-image:url('assets/img/formulario-blur.webp')"></div></div>
             <div class="proj-card-glow" aria-hidden="true"></div>
             <div class="proj-media">
               <div class="proj-backglow" aria-hidden="true"></div>
               <a class="proj-shot" href="https://otavio-2507.github.io/Formulario_Cadastro_Interativo/" target="_blank" rel="noopener">
-                <span class="proj-shot-img"><img srcset="assets/img/formulario-760.webp 760w, assets/img/formulario.webp 1440w" sizes="(max-width: 900px) 92vw, 46vw" src="assets/img/formulario.webp" alt="Formulário dinâmico com validação em tempo real" loading="lazy" loading="lazy" decoding="async" data-zoom></span>
+                <span class="proj-shot-img"><img srcset="assets/img/formulario-760.webp 760w, assets/img/formulario.webp 1440w" sizes="(max-width: 900px) 92vw, 46vw" src="assets/img/formulario.webp" alt="Formulário dinâmico com validação em tempo real" loading="lazy" decoding="async" data-zoom></span>
               </a>
             </div>
             <div class="proj-info">
               <div class="proj-meta">
-                <span class="proj-tag">Aplicação Web</span>
+                <span class="proj-tag"><svg class="xp-ic" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2 2.4h12a1.4 1.4 0 0 1 1.4 1.4v8.4A1.4 1.4 0 0 1 14 13.6H2a1.4 1.4 0 0 1-1.4-1.4V3.8A1.4 1.4 0 0 1 2 2.4Zm.2 1.6v8h11.6V4Zm1.4 1.4h8.8v5.2H3.6Z"/></svg>Aplicação Web</span>
                 <span class="proj-fill"></span>
                 <span class="proj-year">2025</span>
               </div>
               <h3 class="proj-title">Formulário Dinâmico</h3>
               <p class="proj-desc">Formulário interativo com validação em tempo real, máscaras de input e interface amigável para coleta de dados. Focado em usabilidade, acessibilidade e boas práticas de UX.</p>
-              <div class="proj-stack">JavaScript · HTML · CSS</div>
+              <ul class="proj-stack xp-stack" role="list" aria-label="Stack tecnológica"><li><svg class="xp-marca xp-marca--javascript" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M0 0h24v24H0V0zm22.034 18.276c-.175-1.095-.888-2.015-3.003-2.873-.736-.345-1.554-.585-1.797-1.14-.091-.33-.105-.51-.046-.705.15-.646.915-.84 1.515-.66.39.12.75.42.976.9 1.034-.676 1.034-.676 1.755-1.125-.27-.42-.404-.601-.586-.78-.63-.705-1.469-1.065-2.834-1.034l-.705.089c-.676.165-1.32.525-1.71 1.005-1.14 1.291-.811 3.541.569 4.471 1.365 1.02 3.361 1.244 3.616 2.205.24 1.17-.87 1.545-1.966 1.41-.811-.18-1.26-.586-1.755-1.336l-1.83 1.051c.21.48.45.689.81 1.109 1.74 1.756 6.09 1.666 6.871-1.004.029-.09.24-.705.074-1.65l.046.067zm-8.983-7.245h-2.248c0 1.938-.009 3.864-.009 5.805 0 1.232.063 2.363-.138 2.711-.33.689-1.18.601-1.566.48-.396-.196-.597-.466-.83-.855-.063-.105-.11-.196-.127-.196l-1.825 1.125c.305.63.75 1.172 1.324 1.517.855.51 2.004.675 3.207.405.783-.226 1.458-.691 1.811-1.411.51-.93.402-2.07.397-3.346.012-2.054 0-4.109 0-6.179l.004-.056z"/></svg>JavaScript</li><li><svg class="xp-marca xp-marca--html" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M1.5 0h21l-1.91 21.563L11.977 24l-8.564-2.438L1.5 0zm7.031 9.75l-.232-2.718 10.059.003.23-2.622L5.412 4.41l.698 8.01h9.126l-.326 3.426-2.91.804-2.955-.81-.188-2.11H6.248l.33 4.171L12 19.351l5.379-1.443.744-8.157H8.531z"/></svg>HTML</li><li><svg class="xp-marca xp-marca--css" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M1.5 0h21l-1.91 21.563L11.977 24l-8.565-2.438L1.5 0zm17.09 4.413L5.41 4.41l.213 2.622 10.125.002-.255 2.716h-6.64l.24 2.573h6.182l-.366 3.523-2.91.804-2.956-.81-.188-2.11h-2.61l.29 3.855L12 19.288l5.373-1.53L18.59 4.414z"/></svg>CSS</li></ul>
               <div class="proj-actions">
                 <span data-mag><a class="btn btn-primary" href="https://otavio-2507.github.io/Formulario_Cadastro_Interativo/" target="_blank" rel="noopener" data-sheen-host><span class="sheen" data-sheen aria-hidden="true"></span>Ver demonstração <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg></a></span>
                 <span data-mag><a class="btn btn-ghost" href="https://github.com/otavio-2507/Formulario_Cadastro_Interativo" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222 0 1.606-.014 2.898-.014 3.293 0 .322.216.694.825.576C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>Código</a></span>
@@ -298,6 +296,11 @@
        cada cargo é um ponto nesse eixo. O trilho se preenche conforme a
        rolagem e acende os pontos que já passaram. -->
   <section id="experiencia" class="xp container">
+    <!-- O palco. Sem JS ele é uma div qualquer e a seção segue sendo
+         cabeçalho + lista. Com o globo ativo o CSS o prende em sticky do
+         tamanho exato da tela: é assim que a cena fica sempre enquadrada
+         e o corte da pintura nunca estica. -->
+    <div class="xp-palco">
     <div class="xp-head">
       <h2 class="section-title xp-title" data-words>Minhas Experiências</h2>
       <p class="xp-lede" data-words>Da infraestrutura ao produto: entrei como jovem aprendiz, passei pelo suporte de TI e hoje escrevo software full stack. Nenhuma camada ficou de fora do caminho.</p>
@@ -308,40 +311,68 @@
       </p>
     </div>
 
-    <div class="xp-line">
-      <span class="xp-rail" aria-hidden="true"><span class="xp-rail-fill" data-xp-line></span></span>
+    <!-- ===== O corte geológico =====
+         Os cargos deixam de ser agrupados por EMPRESA e passam a ser
+         agrupados por CAMADA DA STACK, que é a tese que o próprio site
+         declara em "construo software em todas as camadas". A ordem
+         continua do presente para o passado: rolar para baixo é descer
+         do produto até o substrato. A empresa não sumiu — virou
+         metadado de cada cargo, que é o papel dela aqui. -->
+    <!-- O globo. Nasce hidden e só aparece quando o js/globo.js
+         consegue rodar: sem JS ou sem canvas, a lista de estratos abaixo
+         continua sendo o conteúdo. Os cargos são MOVIDOS para o painel,
+         não copiados, para o leitor de tela não ouvir tudo duas vezes. -->
+    <div class="globo" data-globo hidden>
+      <div class="globo-cena">
+        <canvas class="globo-cv" width="760" height="760" role="img"
+                aria-label="Globo com as duas cidades onde trabalhei: Tatuapé, em São Paulo, e Itaquaquecetuba."></canvas>
+        <p class="globo-dica" aria-hidden="true">Arraste para girar em qualquer direção</p>
+        <p class="globo-nota">Os dois endereços ficam na Grande São Paulo, a cerca de 25 km um do outro. Nesta escala, um ponto só.</p>
+      </div>
 
-      <!-- ---------- Bravend ---------- -->
-      <section class="xp-era xp-era--now" aria-labelledby="xp-bravend">
-        <header class="xp-era-head" data-reveal>
-          <span class="xp-logo" data-xp-node aria-hidden="true">
-            <img src="assets/Empresas/bravend_logo.jpg" alt="" width="120" height="120" loading="lazy" decoding="async">
-          </span>
-          <div class="xp-era-ident">
-            <h3 class="xp-company" id="xp-bravend">Bravend</h3>
-            <p class="xp-era-meta xp-hair">
-              <span>Tatuapé, São Paulo</span>
-              <span>Híbrido</span>
-              <span>jun 2026 — hoje</span>
-            </p>
-          </div>
+      <aside class="globo-legenda" aria-labelledby="globo-empresa">
+        <p class="xp-rotulo"><svg class="xp-ic" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 1.6a4.6 4.6 0 0 0-4.6 4.6c0 3.2 4.6 8.2 4.6 8.2s4.6-5 4.6-8.2A4.6 4.6 0 0 0 8 1.6Zm0 6.5a1.9 1.9 0 1 1 0-3.8 1.9 1.9 0 0 1 0 3.8Z"/></svg>Experiência</p>
+        <h3 class="globo-titulo" id="globo-empresa" data-globo-titulo>Bravend</h3>
+        <p class="globo-onde" data-globo-onde>Tatuapé, São Paulo · 1 cargo</p>
+        <div class="globo-abas" aria-label="Escolher a empresa">
+          <button type="button" class="globo-aba is-on" data-globo-aba="bravend">Bravend</button>
+          <button type="button" class="globo-aba" data-globo-aba="zincoligas">Zincoligas</button>
+        </div>
+        <div class="globo-carta" data-globo-carta></div>
+
+        <!-- Folhear os cargos, no pé da folha como numeração de página.
+             Nasce hidden: quem o mostra é o js/globo.js, e só quando a
+             empresa tem mais de um cargo — "1 de 1" com duas setas mortas
+             é ruído. -->
+        <nav class="globo-folhear" data-folhear hidden>
+          <button type="button" class="globo-folha-btn" data-folhear-passo="-1" aria-label="Cargo anterior"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M10.3 2.3 4.6 8l5.7 5.7 1.1-1.1L6.8 8l4.6-4.6z"/></svg></button>
+          <p class="globo-folha-conta" data-folhear-conta aria-live="polite"></p>
+          <button type="button" class="globo-folha-btn" data-folhear-passo="1" aria-label="Próximo cargo"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M5.7 2.3 4.6 3.4 9.2 8l-4.6 4.6 1.1 1.1L11.4 8z"/></svg></button>
+        </nav>
+      </aside>
+    </div>
+    </div>
+
+    <div class="xp-estratos">
+
+      <section class="xp-estrato xp-estrato--produto" aria-labelledby="cam-produto">
+        <header class="xp-estrato-head" data-reveal>
+          <h3 class="xp-estrato-nome" id="cam-produto">Produto</h3>
+          <p class="xp-estrato-gloss">O que o usuário toca. Do modelo de dados à interface.</p>
         </header>
-        <p class="xp-era-desc">Desenvolvimento de produto web de ponta a ponta — do modelo de dados no Django à interface em Next.js.</p>
-
         <ol class="xp-jobs" role="list">
           <li class="xp-job xp-job--now" data-reveal>
-            <span class="xp-node" data-xp-node aria-hidden="true"></span>
-            <span class="xp-when" aria-hidden="true">2026</span>
             <div class="xp-job-head">
               <div class="xp-job-ident">
+                <p class="xp-rotulo"><svg class="xp-ic" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M6 2.6h4a1.6 1.6 0 0 1 1.6 1.6v.6H14A1.4 1.4 0 0 1 15.4 6.2v6A1.4 1.4 0 0 1 14 13.6H2A1.4 1.4 0 0 1 .6 12.2v-6A1.4 1.4 0 0 1 2 4.8h2.4v-.6A1.6 1.6 0 0 1 6 2.6Zm0 1.4a.2.2 0 0 0-.2.2v.6h4.4v-.6a.2.2 0 0 0-.2-.2Z"/></svg>Cargo</p>
                 <h4 class="xp-role">Desenvolvedor Full Stack</h4>
-                <p class="xp-period">Estágio · jun 2026 — hoje · <span data-dur-from="2026-06">4 meses</span></p>
+                <p class="xp-period"><span class="xp-onde"><img class="xp-selo" src="assets/Empresas/bravend_logo.jpg" alt="" width="40" height="40" loading="lazy" decoding="async"><span class="xp-company">Bravend</span></span> Estágio · jun 2026 a hoje · <span data-dur-from="2026-06">4 meses</span> · Tatuapé, SP</p>
               </div>
               <p class="xp-now"><span class="xp-now-dot" aria-hidden="true"></span>Atual</p>
             </div>
             <div class="xp-job-body">
               <div class="xp-job-main">
-                <p class="xp-desc">Desenvolvimento e manutenção de aplicações web atuando nas duas pontas: back-end em Python/Django e front-end em Next.js.</p>
+                <p class="xp-desc">Desenvolvimento e manutenção de aplicações web atuando nas <strong>duas pontas</strong>: back-end em Python/Django e front-end em Next.js.</p>
                 <ul class="xp-tasks" role="list">
                   <li>Implementação de funcionalidades, correções e melhorias contínuas</li>
                   <li>Manutenção evolutiva das aplicações em Python e Django</li>
@@ -350,49 +381,32 @@
                   <li>Padronização dos ambientes de desenvolvimento com Docker</li>
                 </ul>
               </div>
-              <ul class="xp-stack xp-hair" role="list" aria-label="Tecnologias e ferramentas">
-                <li>Python</li>
-                <li>Django</li>
-                <li>Next.js</li>
-                <li>Tailwind</li>
-                <li>Docker</li>
-                <li>Git</li>
+              <p class="xp-rotulo"><svg class="xp-ic" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M5.6 1.2h1.2v1.6h2.4V1.2h1.2v1.6h1a1.8 1.8 0 0 1 1.8 1.8v1h1.6v1.2h-1.6v2.4h1.6v1.2h-1.6v1a1.8 1.8 0 0 1-1.8 1.8h-1v1.6H9.2v-1.6H6.8v1.6H5.6v-1.6h-1a1.8 1.8 0 0 1-1.8-1.8v-1H1.2V9.2h1.6V6.8H1.2V5.6h1.6v-1a1.8 1.8 0 0 1 1.8-1.8h1Zm-1 2.8a.6.6 0 0 0-.6.6v6.8a.6.6 0 0 0 .6.6h6.8a.6.6 0 0 0 .6-.6V4.6a.6.6 0 0 0-.6-.6Zm1.4 2h4v4h-4Z"/></svg>Stack tecnológica</p>
+              <ul class="xp-stack" role="list" aria-label="Stack tecnológica">
+                <li><svg class="xp-marca xp-marca--python" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14.25.18l.9.2.73.26.59.3.45.32.34.34.25.34.16.33.1.3.04.26.02.2-.01.13V8.5l-.05.63-.13.55-.21.46-.26.38-.3.31-.33.25-.35.19-.35.14-.33.1-.3.07-.26.04-.21.02H8.77l-.69.05-.59.14-.5.22-.41.27-.33.32-.27.35-.2.36-.15.37-.1.35-.07.32-.04.27-.02.21v3.06H3.17l-.21-.03-.28-.07-.32-.12-.35-.18-.36-.26-.36-.36-.35-.46-.32-.59-.28-.73-.21-.88-.14-1.05-.05-1.23.06-1.22.16-1.04.24-.87.32-.71.36-.57.4-.44.42-.33.42-.24.4-.16.36-.1.32-.05.24-.01h.16l.06.01h8.16v-.83H6.18l-.01-2.75-.02-.37.05-.34.11-.31.17-.28.25-.26.31-.23.38-.2.44-.18.51-.15.58-.12.64-.1.71-.06.77-.04.84-.02 1.27.05zm-6.3 1.98l-.23.33-.08.41.08.41.23.34.33.22.41.09.41-.09.33-.22.23-.34.08-.41-.08-.41-.23-.33-.33-.22-.41-.09-.41.09zm13.09 3.95l.28.06.32.12.35.18.36.27.36.35.35.47.32.59.28.73.21.88.14 1.04.05 1.23-.06 1.23-.16 1.04-.24.86-.32.71-.36.57-.4.45-.42.33-.42.24-.4.16-.36.09-.32.05-.24.02-.16-.01h-8.22v.82h5.84l.01 2.76.02.36-.05.34-.11.31-.17.29-.25.25-.31.24-.38.2-.44.17-.51.15-.58.13-.64.09-.71.07-.77.04-.84.01-1.27-.04-1.07-.14-.9-.2-.73-.25-.59-.3-.45-.33-.34-.34-.25-.34-.16-.33-.1-.3-.04-.25-.02-.2.01-.13v-5.34l.05-.64.13-.54.21-.46.26-.38.3-.32.33-.24.35-.2.35-.14.33-.1.3-.06.26-.04.21-.02.13-.01h5.84l.69-.05.59-.14.5-.21.41-.28.33-.32.27-.35.2-.36.15-.36.1-.35.07-.32.04-.28.02-.21V6.07h2.09l.14.01zm-6.47 14.25l-.23.33-.08.41.08.41.23.33.33.23.41.08.41-.08.33-.23.23-.33.08-.41-.08-.41-.23-.33-.33-.23-.41-.08-.41.08z"/></svg>Python</li><li><svg class="xp-marca xp-marca--django" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M11.146 0h3.924v18.166c-2.013.382-3.491.535-5.096.535-4.791 0-7.288-2.166-7.288-6.32 0-4.002 2.65-6.6 6.753-6.6.637 0 1.121.05 1.707.203zm0 9.143a3.894 3.894 0 00-1.325-.204c-1.988 0-3.134 1.223-3.134 3.365 0 2.09 1.096 3.236 3.109 3.236.433 0 .79-.025 1.35-.102V9.142zM21.314 6.06v9.098c0 3.134-.229 4.638-.917 5.937-.637 1.249-1.478 2.039-3.211 2.905l-3.644-1.733c1.733-.815 2.574-1.53 3.109-2.625.561-1.121.739-2.421.739-5.835V6.059h3.924zM17.39.021h3.924v4.026H17.39z"/></svg>Django</li><li><svg class="xp-marca xp-marca--nextjs" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M18.665 21.978C16.758 23.255 14.465 24 12 24 5.377 24 0 18.623 0 12S5.377 0 12 0s12 5.377 12 12c0 3.583-1.574 6.801-4.067 9.001L9.219 7.2H7.2v9.596h1.615V9.251l9.85 12.727Zm-3.332-8.533 1.6 2.061V7.2h-1.6v6.245Z"/></svg>Next.js</li><li><svg class="xp-marca xp-marca--tailwind" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12.001,4.8c-3.2,0-5.2,1.6-6,4.8c1.2-1.6,2.6-2.2,4.2-1.8c0.913,0.228,1.565,0.89,2.288,1.624 C13.666,10.618,15.027,12,18.001,12c3.2,0,5.2-1.6,6-4.8c-1.2,1.6-2.6,2.2-4.2,1.8c-0.913-0.228-1.565-0.89-2.288-1.624 C16.337,6.182,14.976,4.8,12.001,4.8z M6.001,12c-3.2,0-5.2,1.6-6,4.8c1.2-1.6,2.6-2.2,4.2-1.8c0.913,0.228,1.565,0.89,2.288,1.624 c1.177,1.194,2.538,2.576,5.512,2.576c3.2,0,5.2-1.6,6-4.8c-1.2,1.6-2.6,2.2-4.2,1.8c-0.913-0.228-1.565-0.89-2.288-1.624 C10.337,13.382,8.976,12,6.001,12z"/></svg>Tailwind</li><li><svg class="xp-marca xp-marca--docker" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M13.983 11.078h2.119a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.119a.185.185 0 00-.185.185v1.888c0 .102.083.185.185.185m-2.954-5.43h2.118a.186.186 0 00.186-.186V3.574a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.185m0 2.716h2.118a.187.187 0 00.186-.186V6.29a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.887c0 .102.082.185.185.186m-2.93 0h2.12a.186.186 0 00.184-.186V6.29a.185.185 0 00-.185-.185H8.1a.185.185 0 00-.185.185v1.887c0 .102.083.185.185.186m-2.964 0h2.119a.186.186 0 00.185-.186V6.29a.185.185 0 00-.185-.185H5.136a.186.186 0 00-.186.185v1.887c0 .102.084.185.186.186m5.893 2.715h2.118a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.185m-2.93 0h2.12a.185.185 0 00.184-.185V9.006a.185.185 0 00-.184-.186h-2.12a.185.185 0 00-.184.185v1.888c0 .102.083.185.185.185m-2.964 0h2.119a.185.185 0 00.185-.185V9.006a.185.185 0 00-.184-.186h-2.12a.186.186 0 00-.186.186v1.887c0 .102.084.185.186.185m-2.92 0h2.12a.185.185 0 00.184-.185V9.006a.185.185 0 00-.184-.186h-2.12a.185.185 0 00-.184.185v1.888c0 .102.082.185.185.185M23.763 9.89c-.065-.051-.672-.51-1.954-.51-.338.001-.676.03-1.01.087-.248-1.7-1.653-2.53-1.716-2.566l-.344-.199-.226.327c-.284.438-.49.922-.612 1.43-.23.97-.09 1.882.403 2.661-.595.332-1.55.413-1.744.42H.751a.751.751 0 00-.75.748 11.376 11.376 0 00.692 4.062c.545 1.428 1.355 2.48 2.41 3.124 1.18.723 3.1 1.137 5.275 1.137.983.003 1.963-.086 2.93-.266a12.248 12.248 0 003.823-1.389c.98-.567 1.86-1.288 2.61-2.136 1.252-1.418 1.998-2.997 2.553-4.4h.221c1.372 0 2.215-.549 2.68-1.009.309-.293.55-.65.707-1.046l.098-.288Z"/></svg>Docker</li><li><svg class="xp-marca xp-marca--git" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M23.546 10.93L13.067.452c-.604-.603-1.582-.603-2.188 0L8.708 2.627l2.76 2.76c.645-.215 1.379-.07 1.889.441.516.515.658 1.258.438 1.9l2.658 2.66c.645-.223 1.387-.078 1.9.435.721.72.721 1.884 0 2.604-.719.719-1.881.719-2.6 0-.539-.541-.674-1.337-.404-1.996L12.86 8.955v6.525c.176.086.342.203.488.348.713.721.713 1.883 0 2.6-.719.721-1.889.721-2.609 0-.719-.719-.719-1.879 0-2.598.182-.18.387-.316.605-.406V8.835c-.217-.091-.424-.222-.6-.401-.545-.545-.676-1.342-.396-2.009L7.636 3.7.45 10.881c-.6.605-.6 1.584 0 2.189l10.48 10.477c.604.604 1.582.604 2.186 0l10.43-10.43c.605-.603.605-1.582 0-2.187"/></svg>Git</li>
               </ul>
             </div>
           </li>
         </ol>
       </section>
 
-      <!-- ---------- Zincoligas ---------- -->
-      <section class="xp-era" aria-labelledby="xp-zincoligas">
-        <header class="xp-era-head" data-reveal>
-          <span class="xp-logo" data-xp-node aria-hidden="true">
-            <img src="assets/Empresas/zincoligas_logo.jpg" alt="" width="120" height="120" loading="lazy" decoding="async">
-          </span>
-          <div class="xp-era-ident">
-            <h3 class="xp-company" id="xp-zincoligas">Zincoligas Indústria e Comércio</h3>
-            <p class="xp-era-meta xp-hair">
-              <span>Itaquaquecetuba, São Paulo</span>
-              <span>jan 2023 — mai 2026</span>
-              <span data-dur-from="2023-01" data-dur-to="2026-05">3 anos e 5 meses</span>
-            </p>
-          </div>
+      <section class="xp-estrato xp-estrato--infra" aria-labelledby="cam-infra">
+        <header class="xp-estrato-head" data-reveal>
+          <h3 class="xp-estrato-nome" id="cam-infra">Infraestrutura</h3>
+          <p class="xp-estrato-gloss">O que sustenta o produto. Servidores, contas, backups e o ERP de quem depende deles.</p>
         </header>
-        <p class="xp-era-desc">A indústria onde entrei como aprendiz e saí três anos depois no time de TI, cuidando de servidores, ERP e da rotina de quem depende deles.</p>
-
         <ol class="xp-jobs" role="list">
           <li class="xp-job" data-reveal>
-            <span class="xp-node" data-xp-node aria-hidden="true"></span>
-            <span class="xp-when" aria-hidden="true">2025</span>
             <div class="xp-job-head">
               <div class="xp-job-ident">
+                <p class="xp-rotulo"><svg class="xp-ic" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M6 2.6h4a1.6 1.6 0 0 1 1.6 1.6v.6H14A1.4 1.4 0 0 1 15.4 6.2v6A1.4 1.4 0 0 1 14 13.6H2A1.4 1.4 0 0 1 .6 12.2v-6A1.4 1.4 0 0 1 2 4.8h2.4v-.6A1.6 1.6 0 0 1 6 2.6Zm0 1.4a.2.2 0 0 0-.2.2v.6h4.4v-.6a.2.2 0 0 0-.2-.2Z"/></svg>Cargo</p>
                 <h4 class="xp-role">Auxiliar de TI</h4>
-                <p class="xp-period">ago 2025 — mai 2026 · <span data-dur-from="2025-08" data-dur-to="2026-05">10 meses</span></p>
+                <p class="xp-period"><span class="xp-onde"><img class="xp-selo" src="assets/Empresas/zincoligas_logo.jpg" alt="" width="40" height="40" loading="lazy" decoding="async"><span class="xp-company">Zincoligas</span></span> ago 2025 a mai 2026 · <span data-dur-from="2025-08" data-dur-to="2026-05">10 meses</span> · Itaquaquecetuba, SP</p>
               </div>
             </div>
             <div class="xp-job-body">
               <div class="xp-job-main">
-                <p class="xp-desc">Sustentação da operação de TI: usuários, servidores, backups e o ERP que a empresa usa todos os dias.</p>
+                <p class="xp-desc"><strong>Sustentação da operação de TI</strong>: usuários, servidores, backups e o ERP que a empresa usa todos os dias.</p>
                 <ul class="xp-tasks" role="list">
                   <li>Suporte técnico N1 e N2 aos usuários da operação</li>
                   <li>Administração de contas e permissões no Active Directory</li>
@@ -401,28 +415,32 @@
                   <li>Diagnóstico de hardware, software e rede, com atendimento remoto por VPN</li>
                 </ul>
               </div>
-              <ul class="xp-stack xp-hair" role="list" aria-label="Tecnologias e ferramentas">
-                <li>Active Directory</li>
-                <li>TOTVS Protheus</li>
-                <li>OpenVPN</li>
-                <li>TeamViewer</li>
-                <li>AnyDesk</li>
+              <p class="xp-rotulo"><svg class="xp-ic" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M5.6 1.2h1.2v1.6h2.4V1.2h1.2v1.6h1a1.8 1.8 0 0 1 1.8 1.8v1h1.6v1.2h-1.6v2.4h1.6v1.2h-1.6v1a1.8 1.8 0 0 1-1.8 1.8h-1v1.6H9.2v-1.6H6.8v1.6H5.6v-1.6h-1a1.8 1.8 0 0 1-1.8-1.8v-1H1.2V9.2h1.6V6.8H1.2V5.6h1.6v-1a1.8 1.8 0 0 1 1.8-1.8h1Zm-1 2.8a.6.6 0 0 0-.6.6v6.8a.6.6 0 0 0 .6.6h6.8a.6.6 0 0 0 .6-.6V4.6a.6.6 0 0 0-.6-.6Zm1.4 2h4v4h-4Z"/></svg>Stack tecnológica</p>
+              <ul class="xp-stack" role="list" aria-label="Stack tecnológica">
+                <li><svg class="xp-marca xp-marca--microsoft" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect class="ms-1" x="1.5" y="1.5" width="9.6" height="9.6"/><rect class="ms-2" x="12.9" y="1.5" width="9.6" height="9.6"/><rect class="ms-3" x="1.5" y="12.9" width="9.6" height="9.6"/><rect class="ms-4" x="12.9" y="12.9" width="9.6" height="9.6"/></svg>Active Directory</li><li><svg class="xp-marca xp-marca--totvs" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 0C5.385 0 0 5.339 0 12c0 6.614 5.385 12 12 12 6.614 0 12-5.386 12-12S18.614 0 12 0ZM8.648 3.813c1.275-.068 10.697 2.302 11.43 2.943.614.85.614 9.118 0 9.685-.284.095-2.127-.283-4.205-.755 0 2.031-.143 3.966-.426 4.203-.756.236-10.772-2.267-11.527-2.928-.615-.85-.615-9.119 0-9.686.283-.094 2.079.284 4.205.756 0-2.031.142-3.969.425-4.205a.448.448 0 0 1 .098-.013Zm-.523 4.265c-.048 2.362.095 4.961.425 5.434.426.378 4.158 1.418 7.276 2.174.047-2.41-.095-5.008-.426-5.481-.425-.378-4.157-1.418-7.275-2.127Z"/></svg>TOTVS Protheus</li><li><svg class="xp-marca xp-marca--openvpn" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 .357C5.385.357 0 5.69 0 12.254c0 4.36 2.358 8.153 5.896 10.204l.77-5.076a7.046 7.046 0 01-1.846-4.719c0-3.897 3.18-7.076 7.13-7.076 3.948 0 7.126 3.18 7.126 7.076 0 1.847-.717 3.488-1.846 4.77L18 22.51c3.59-2.05 6-5.899 6-10.258C24 5.69 18.615.357 12 .357zm-.05 8.157a3.786 3.786 0 00-3.796 3.795 3.738 3.738 0 002.461 3.54L9.13 23.643h5.64l-1.435-7.795c1.385-.564 2.41-1.898 2.41-3.54a3.786 3.786 0 00-3.795-3.794z"/></svg>OpenVPN</li><li><svg class="xp-marca xp-marca--teamviewer" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m20.17 11.998-6.225-3.401.685 2.144H9.37l.684-2.145L3.829 12l6.225 3.404-.683-2.147h5.26l-.686 2.147zM20.448 0H3.553A3.553 3.553 0 0 0 .001 3.552v16.895A3.553 3.553 0 0 0 3.553 24h16.895A3.553 3.553 0 0 0 24 20.447V3.552A3.553 3.553 0 0 0 20.448 0zM12 21.646c-5.328 0-9.648-4.32-9.648-9.648 0-5.329 4.32-9.646 9.648-9.646S21.65 6.672 21.65 12s-4.32 9.648-9.649 9.648z"/></svg>TeamViewer</li><li><svg class="xp-marca xp-marca--anydesk" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8.322 3.677L0 12l8.322 8.323L16.645 12zm7.371.01l-1.849 1.85 6.49 6.456-6.49 6.49 1.85 1.817L24 11.993Z"/></svg>AnyDesk</li>
               </ul>
             </div>
           </li>
+        </ol>
+      </section>
 
+      <section class="xp-estrato xp-estrato--base" aria-labelledby="cam-base">
+        <header class="xp-estrato-head" data-reveal>
+          <h3 class="xp-estrato-nome" id="cam-base">Dados e rotina</h3>
+          <p class="xp-estrato-gloss">Onde tudo começou. Organizar informação antes de saber que aquilo era modelagem.</p>
+        </header>
+        <ol class="xp-jobs" role="list">
           <li class="xp-job" data-reveal>
-            <span class="xp-node" data-xp-node aria-hidden="true"></span>
-            <span class="xp-when" aria-hidden="true">2023</span>
             <div class="xp-job-head">
               <div class="xp-job-ident">
+                <p class="xp-rotulo"><svg class="xp-ic" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M6 2.6h4a1.6 1.6 0 0 1 1.6 1.6v.6H14A1.4 1.4 0 0 1 15.4 6.2v6A1.4 1.4 0 0 1 14 13.6H2A1.4 1.4 0 0 1 .6 12.2v-6A1.4 1.4 0 0 1 2 4.8h2.4v-.6A1.6 1.6 0 0 1 6 2.6Zm0 1.4a.2.2 0 0 0-.2.2v.6h4.4v-.6a.2.2 0 0 0-.2-.2Z"/></svg>Cargo</p>
                 <h4 class="xp-role">Auxiliar Administrativo</h4>
-                <p class="xp-period">jul 2023 — jul 2025 · <span data-dur-from="2023-07" data-dur-to="2025-07">2 anos e 1 mês</span></p>
+                <p class="xp-period"><span class="xp-onde"><img class="xp-selo" src="assets/Empresas/zincoligas_logo.jpg" alt="" width="40" height="40" loading="lazy" decoding="async"><span class="xp-company">Zincoligas</span></span> jul 2023 a jul 2025 · <span data-dur-from="2023-07" data-dur-to="2025-07">2 anos e 1 mês</span></p>
               </div>
             </div>
             <div class="xp-job-body">
               <div class="xp-job-main">
-                <p class="xp-desc">Rotinas administrativas e a organização dos dados que sustentavam as decisões da área.</p>
+                <p class="xp-desc">Rotinas administrativas e a organização dos dados que <strong>sustentavam as decisões</strong> da área.</p>
                 <ul class="xp-tasks" role="list">
                   <li>Gestão de documentos físicos e digitais</li>
                   <li>Entrada e análise de dados nos sistemas internos</li>
@@ -430,24 +448,24 @@
                   <li>Atendimento a clientes, fornecedores e equipes internas</li>
                 </ul>
               </div>
-              <ul class="xp-stack xp-hair" role="list" aria-label="Ferramentas">
-                <li>Microsoft Office</li>
-                <li>Adobe Acrobat</li>
+              <p class="xp-rotulo"><svg class="xp-ic" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M5.6 1.2h1.2v1.6h2.4V1.2h1.2v1.6h1a1.8 1.8 0 0 1 1.8 1.8v1h1.6v1.2h-1.6v2.4h1.6v1.2h-1.6v1a1.8 1.8 0 0 1-1.8 1.8h-1v1.6H9.2v-1.6H6.8v1.6H5.6v-1.6h-1a1.8 1.8 0 0 1-1.8-1.8v-1H1.2V9.2h1.6V6.8H1.2V5.6h1.6v-1a1.8 1.8 0 0 1 1.8-1.8h1Zm-1 2.8a.6.6 0 0 0-.6.6v6.8a.6.6 0 0 0 .6.6h6.8a.6.6 0 0 0 .6-.6V4.6a.6.6 0 0 0-.6-.6Zm1.4 2h4v4h-4Z"/></svg>Stack tecnológica</p>
+              <ul class="xp-stack" role="list" aria-label="Stack tecnológica">
+                <li><svg class="xp-marca xp-marca--microsoft" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect class="ms-1" x="1.5" y="1.5" width="9.6" height="9.6"/><rect class="ms-2" x="12.9" y="1.5" width="9.6" height="9.6"/><rect class="ms-3" x="1.5" y="12.9" width="9.6" height="9.6"/><rect class="ms-4" x="12.9" y="12.9" width="9.6" height="9.6"/></svg>Microsoft Office</li><li><svg class="xp-marca xp-marca--adobe-acrobat" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M23.63 15.3c-.71-.745-2.166-1.17-4.224-1.17-1.1 0-2.377.106-3.761.354a19.443 19.443 0 0 1-2.307-2.661c-.532-.71-.994-1.49-1.42-2.236.817-2.484 1.207-4.507 1.207-5.962 0-1.632-.603-3.336-2.342-3.336-.532 0-1.065.32-1.349.781-.78 1.384-.425 4.4.923 7.381a60.277 60.277 0 0 1-1.703 4.507c-.568 1.349-1.207 2.733-1.917 4.01C2.834 18.53.314 20.34.03 21.758c-.106.533.071 1.03.462 1.42.142.107.639.533 1.49.533 2.59 0 5.323-4.188 6.707-6.707 1.065-.355 2.13-.71 3.194-.994a34.963 34.963 0 0 1 3.407-.745c2.732 2.448 5.145 2.839 6.352 2.839 1.49 0 2.023-.604 2.2-1.1.32-.64.106-1.349-.213-1.704zm-1.42 1.03c-.107.532-.64.887-1.384.887-.213 0-.39-.036-.604-.071-1.348-.32-2.626-.994-3.903-2.059a17.717 17.717 0 0 1 2.98-.248c.746 0 1.385.035 1.81.142.497.106 1.278.426 1.1 1.348zm-7.524-1.668a38.01 38.01 0 0 0-2.945.674 39.68 39.68 0 0 0-2.52.745 40.05 40.05 0 0 0 1.207-2.555c.426-.994.78-2.023 1.136-2.981.354.603.745 1.207 1.135 1.739a50.127 50.127 0 0 0 1.987 2.378zM10.038 1.46a.768.768 0 0 1 .674-.425c.745 0 .887.851.887 1.526 0 1.135-.355 2.874-.958 4.861-1.03-2.768-1.1-5.074-.603-5.962zM6.134 17.997c-1.81 2.981-3.549 4.826-4.613 4.826a.872.872 0 0 1-.532-.177c-.213-.213-.32-.461-.249-.745.213-1.065 2.271-2.555 5.394-3.904Z"/></svg>Adobe Acrobat</li>
               </ul>
             </div>
           </li>
 
-          <li class="xp-job" data-reveal>
-            <span class="xp-node" data-xp-node aria-hidden="true"></span>
+          <li class="xp-job xp-job--raiz" data-reveal>
             <div class="xp-job-head">
               <div class="xp-job-ident">
+                <p class="xp-rotulo"><svg class="xp-ic" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M6 2.6h4a1.6 1.6 0 0 1 1.6 1.6v.6H14A1.4 1.4 0 0 1 15.4 6.2v6A1.4 1.4 0 0 1 14 13.6H2A1.4 1.4 0 0 1 .6 12.2v-6A1.4 1.4 0 0 1 2 4.8h2.4v-.6A1.6 1.6 0 0 1 6 2.6Zm0 1.4a.2.2 0 0 0-.2.2v.6h4.4v-.6a.2.2 0 0 0-.2-.2Z"/></svg>Cargo</p>
                 <h4 class="xp-role">Jovem Aprendiz</h4>
-                <p class="xp-period">jan 2023 — jun 2023 · <span data-dur-from="2023-01" data-dur-to="2023-06">6 meses</span> · meio período</p>
+                <p class="xp-period"><span class="xp-onde"><img class="xp-selo" src="assets/Empresas/zincoligas_logo.jpg" alt="" width="40" height="40" loading="lazy" decoding="async"><span class="xp-company">Zincoligas</span></span> jan 2023 a jun 2023 · <span data-dur-from="2023-01" data-dur-to="2023-06">6 meses</span> · meio período</p>
               </div>
             </div>
             <div class="xp-job-body xp-job-body--plain">
               <div class="xp-job-main">
-                <p class="xp-desc">A porta de entrada: primeiro contato com a rotina da empresa e com a disciplina de organizar dados.</p>
+                <p class="xp-desc"><strong>A porta de entrada</strong>: primeiro contato com a rotina da empresa e com a disciplina de organizar dados.</p>
                 <ul class="xp-tasks" role="list">
                   <li>Apoio às rotinas administrativas da área</li>
                   <li>Organização e conferência de dados</li>
@@ -462,32 +480,39 @@
   </section>
 
   <!-- ===================== CONTATO ===================== -->
-  <section id="contato" class="contact container">
-    <h2 class="contact-title" data-words>Vamos direto<br>ao ponto</h2>
-    <p class="contact-sub" data-words>Aberto a estágio e projetos full stack. Sem formulário e sem espera: me escreva e eu respondo no mesmo dia.</p>
-    <a class="contact-mail" href="mailto:56otavio@gmail.com">56otavio@gmail.com</a>
-    <div class="contact-meta">
-      <a href="https://www.linkedin.com/in/ot%C3%A1vio-oliveira-b9b269267" target="_blank" rel="noopener">LinkedIn&nbsp;↗</a>
-      <a href="https://github.com/OTAVIO-2507" target="_blank" rel="noopener">GitHub&nbsp;↗</a>
-      <a href="assets/curriculo.pdf" target="_blank" rel="noopener">Currículo em PDF&nbsp;↗</a>
-    </div>
-  </section>
 </main>
 
 <!-- ===================== RODAPÉ ===================== -->
-<footer class="footer container">
-  <div class="footer-top">
-    <a href="#inicio" class="footer-sign">Otávio Oliveira</a>
-    <nav class="footer-links" aria-label="Links do rodapé">
-      <a href="https://github.com/OTAVIO-2507" target="_blank" rel="noopener">GitHub</a>
-      <a href="https://www.linkedin.com/in/ot%C3%A1vio-oliveira-b9b269267" target="_blank" rel="noopener">LinkedIn</a>
-      <a href="mailto:56otavio@gmail.com">E-mail</a>
-      <a href="assets/curriculo.pdf" target="_blank" rel="noopener">Currículo</a>
-    </nav>
-  </div>
-  <div class="footer-bottom">
-    <span>© <span data-year>2026</span> Otávio Oliveira</span>
-    <span class="footer-stack">Feito à mão com HTML, CSS e JS puros, sem frameworks</span>
+<footer class="footer">
+  <!-- A arte é decorativa: tudo que ela diz já está escrito por cima,
+       então alt vazio para o leitor de tela não narrar a pintura. -->
+  <img class="footer-art"
+       srcset="assets/img/rodape-768.webp 768w, assets/img/rodape-1152.webp 1152w, assets/img/rodape.webp 1536w"
+       sizes="100vw"
+       src="assets/img/rodape-1152.webp"
+       alt="" width="1672" height="941"
+       decoding="async" fetchpriority="low">
+
+  <div class="footer-inner container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="#inicio" class="footer-sign">Otávio Oliveira</a>
+        <p class="footer-tagline">Aberto a estágio e projetos full stack. Sem formulário e sem espera: me escreva e eu respondo no mesmo dia.</p>
+      </div>
+      <nav class="footer-nav" aria-labelledby="footer-nav-title">
+        <h2 class="footer-col" id="footer-nav-title">Onde me achar</h2>
+        <ul class="footer-links" role="list">
+          <li><a href="https://github.com/OTAVIO-2507" target="_blank" rel="noopener">GitHub</a></li>
+          <li><a href="https://www.linkedin.com/in/ot%C3%A1vio-oliveira-b9b269267" target="_blank" rel="noopener">LinkedIn</a></li>
+          <li><a class="footer-mail" href="mailto:56otavio@gmail.com">56otavio@gmail.com</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© <span data-year>2026</span> Otávio Oliveira</span>
+      <span class="footer-stack">São Paulo · disponível para estágio</span>
+    </div>
   </div>
 </footer>
 </body>

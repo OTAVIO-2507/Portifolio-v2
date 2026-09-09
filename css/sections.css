@@ -235,12 +235,17 @@
   /* Na frente por padrao. Abaixo de 3:2 as camadas cobrem o hero
      inteiro e nao sobra ceu: o nome atras delas simplesmente sumiria. */
   z-index: var(--z-content);
-  font-family: var(--font-hero);
-  /* "Otavio Oliveira" mede 7,29em em Poppins 900, entao 186px e o
-     maximo que cabe na coluna de 1376px sem quebrar a linha. */
-  font-size: clamp(48px, 11.6vw, 186px);
+  font-family: var(--font-display);
+  /* O teto sai da medida da fonte, não de gosto. Em Poppins 900 o nome
+     media 7,29em e o máximo que cabia numa linha era 186px. Fraunces é
+     bem mais estreita: medido, "Otávio Oliveira" dá 5,88em, e com 186px
+     sobrariam quase 300px de coluna vazia. Remedido para 212px, que é o
+     que volta a preencher a largura sem quebrar a linha. */
+  font-size: clamp(48px, 14.2vw, 212px);
   font-weight: 900;
-  letter-spacing: -0.04em;
+  /* -0,02 e não -0,04: o aperto que a geométrica aguentava fecha demais
+     numa serifa e as serifas encostam. */
+  letter-spacing: -0.02em;
   color: var(--ink-strong);
   margin: 0 auto;
   /* Sem limite: fica em uma linha ate ~500px de largura e so entao
@@ -413,8 +418,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-family: var(--font-display);
-  font-weight: 400;
+  /* A pilha isométrica fica na grotesca, não na display: é rótulo de
+     diagrama técnico, não voz. Era Archivo Black — a Hanken em 900 faz
+     o mesmo trabalho e é uma família a menos. */
+  font-family: var(--font-sans);
+  font-weight: 900;
   font-size: clamp(48px, 6vw, 84px);
   letter-spacing: -2px;
   text-transform: uppercase;
@@ -500,10 +508,22 @@
 }
 
 /* ---------- Projetos (showcase) ---------- */
+/* ---------- Projetos: o ateliê à hora azul ----------
+   Era a única seção correndo sobre o preto liso, contra o princípio 6 do
+   PRODUCT.md. Agora tem chão próprio, e o matiz é o que a separa das
+   vizinhas: petróleo frio entre a sala violeta antes e o ateliê dourado
+   depois. Mesmo mundo do globo, outro canto e outra luz.
+
+   A cor de base não é o preto do site e sim a sombra medida da própria
+   pintura (#1a2226), para que qualquer emenda entre a tela presa e a
+   seção seja invisível. */
 .showcase {
   position: relative;
-  padding: 80px 5% 0;
-  background: var(--bg-raised);
+  /* O respiro do fim é padding da SEÇÃO, não margem do último filho: sem
+     padding embaixo a margem do filho colapsa para fora e abre uma faixa
+     do preto do main entre esta pintura e a do ateliê dourado. */
+  padding: 80px 5% 72px;
+  background: #1a2226;
 }
 
 .showcase-bg {
@@ -513,30 +533,48 @@
   pointer-events: none;
 }
 
+/* A pintura fica presa enquanto os cards passam por cima: uma tela só,
+   sempre do tamanho da janela, então o corte do cover é sempre o mesmo —
+   a mesma mecânica do palco da experiência.
+
+   O véu é fraco no meio e forte nas pontas. No meio os cards são opacos
+   e cobrem tudo, então escurecer ali seria escurecer o que ninguém vê;
+   nas pontas é onde a pintura encosta nas seções vizinhas. */
 .showcase-bg-sticky {
   position: sticky;
   top: 0;
   height: 100vh;
   overflow: hidden;
+  background-image:
+    linear-gradient(180deg, rgba(10, 16, 19, 0.72) 0%, rgba(10, 16, 19, 0.26) 22%, rgba(10, 16, 19, 0.26) 74%, rgba(10, 16, 19, 0.8) 100%),
+    image-set(url("../assets/Projetos/cenario.webp") 1x);
+  background-size: cover, cover;
+  background-position: center, center;
+  background-repeat: no-repeat;
 }
 
+@media (max-width: 900px) {
+  .showcase-bg-sticky {
+    background-image:
+      linear-gradient(180deg, rgba(10, 16, 19, 0.72) 0%, rgba(10, 16, 19, 0.26) 22%, rgba(10, 16, 19, 0.26) 74%, rgba(10, 16, 19, 0.8) 100%),
+      image-set(url("../assets/Projetos/cenario-800.webp") 1x);
+  }
+}
+
+/* A constelação de partículas sai: pontinhos flutuando sobre um ateliê
+   pintado é o mesmo vocabulário de vazio espacial que a seção estava
+   tentando abandonar. O elemento fica no DOM porque o JS o consulta;
+   deixa de ser desenhado. */
 .showcase-bg-sticky canvas {
-  width: 100%;
-  height: 100%;
-  display: block;
+  display: none;
 }
 
+/* O holofote azul que seguia o mouse também sai. Era o acento frio do
+   desenho antigo — o mesmo que saiu da experiência — e agora a cena já
+   tem a sua fonte de luz pintada: a lâmpada. Duas luzes competindo, uma
+   pintada e uma de CSS, é uma a mais. */
 .showcase-spot {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 720px;
-  height: 720px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(91, 116, 255, 0.11), transparent 62%);
-  opacity: 0;
-  pointer-events: none;
-  will-change: transform, opacity;
+  display: none;
 }
 
 .showcase-head {
@@ -610,53 +648,45 @@
   flex-wrap: wrap;
   gap: clamp(2rem, 4vw, 4rem);
   padding: clamp(1.6rem, 3.4vw, 3.6rem);
-  border-radius: 30px;
-  border: 1px solid var(--line);
-  /* Opaco: o card sobrepõe o projeto anterior na pilha sticky sem
-     deixar o conteúdo de baixo transparecer. */
-  background: linear-gradient(165deg, #13141f, #09090f);
-  box-shadow: 0 42px 110px -38px rgba(0, 0, 0, 0.85);
+  /* ---------- a prancha ----------
+     O card era um retângulo de vidro pousado sobre a pintura. Agora é uma
+     peça do próprio ateliê: superfície de tela esticada, com a trama do
+     linho por baixo e as travessas de madeira como aresta.
+
+     Os três tons da borda foram amostrados na pintura, nas telas
+     encostadas à esquerda: #76786d na travessa que pega luz, #6d6f62 na
+     lateral, #5b5549 na que está na sombra. Não são cores escolhidas, são
+     as cores que já estão lá.
+
+     A trama entra a 0,42 do original. Foi medido: acima disso o texto a
+     50% de branco cai abaixo de 4,5 sobre ela; nesse valor a trama ainda
+     se lê e nenhuma cor de texto precisou mudar.
+
+     Opaco: o card sobrepõe o projeto anterior na pilha sticky sem deixar
+     o conteúdo de baixo transparecer. O degradê é translúcido, mas o
+     linho embaixo não tem alfa. */
+  border-radius: 20px;
+  border: 11px solid #5b5549;
+  border-top-color: #76786d;
+  border-left-color: #6d6f62;
+  background:
+    linear-gradient(165deg, rgba(22, 33, 38, 0.93), rgba(11, 17, 21, 0.96)),
+    url("../assets/Projetos/linho.webp") repeat;
+  background-size: auto, 240px auto;
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 0, 0, 0.5),
+    inset 0 3px 18px rgba(0, 0, 0, 0.5),
+    0 42px 110px -38px rgba(0, 0, 0, 0.85);
 }
 
 .proj--flip .proj-card {
   flex-direction: row-reverse;
 }
 
-/* Fundo do card: o próprio mockup borrado, sob um véu escuro que
-   escurece mais o lado do texto. Fica recortado pelo raio do card,
-   então acompanha o tilt sem vazar. */
-.proj-card-bg {
-  position: absolute;
-  inset: 0;
-  border-radius: 30px;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.proj-card-bg-img {
-  position: absolute;
-  /* Estoura o contêiner para o blur não revelar bordas transparentes. */
-  inset: -64px;
-  background-size: cover;
-  background-position: center;
-  filter: blur(56px) saturate(1.15) brightness(0.6);
-}
-
-.proj-card-bg::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(100deg, rgba(9, 9, 15, 0.4) 32%, rgba(9, 9, 15, 0.85) 64%);
-}
-
-.proj--flip .proj-card-bg::after {
-  background: linear-gradient(260deg, rgba(9, 9, 15, 0.4) 32%, rgba(9, 9, 15, 0.85) 64%);
-}
-
 .proj-card-glow {
   position: absolute;
   inset: 0;
-  border-radius: 30px;
+  border-radius: 20px;
   overflow: hidden;
   pointer-events: none;
 }
@@ -665,7 +695,10 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(46% 60% at 14% 0%, rgba(61, 90, 254, 0.13), transparent 62%);
+  /* Dourado e não azul: o acento frio era do desenho antigo e é o mesmo
+     que saiu da seção de experiência. Este tom é o do céu da pintura do
+     ateliê, e rima com a lâmpada quente da cena nova. */
+  background: radial-gradient(46% 60% at 14% 0%, rgba(233, 180, 110, 0.12), transparent 62%);
 }
 
 .proj--flip .proj-card-glow::before {
@@ -694,13 +727,11 @@
   transform: translateZ(52px) scale(0.963);
 }
 
+/* O halo azul atrás da imagem era o terceiro acento frio da seção — o
+   mesmo que saiu do card e do holofote. Aqui ele não é substituído por
+   nada: quem separa a obra do fundo agora é a moldura. */
 .proj-backglow {
-  position: absolute;
-  width: 82%;
-  height: 70%;
-  background: radial-gradient(50% 50% at 50% 50%, rgba(61, 90, 254, 0.22), transparent 70%);
-  filter: blur(10px);
-  pointer-events: none;
+  display: none;
 }
 
 .proj-shot {
@@ -715,9 +746,32 @@
   box-shadow: 0 36px 90px -28px rgba(0, 0, 0, 0.85);
 }
 
+/* ---------- a obra ----------
+   A captura era um retângulo arredondado flutuando dentro do card: um
+   card dentro do card. Agora ela é uma obra emoldurada, pendurada na
+   prancha — mesma madeira da aresta do card, mais fina, e a mesma luz
+   vindo de cima à esquerda.
+
+   Isso também resolve o gradiente magenta-laranja do mockup, que era a
+   coisa mais destoante da seção: emoldurado, ele deixa de ser fundo
+   solto e passa a ser a cor da própria obra. */
 .proj-shot-img {
   display: block;
   overflow: hidden;
+  /* O passe-partout: a faixa escura entre a madeira e a obra. É o que
+     uma peça emoldurada tem de verdade, e é o que afasta o gradiente
+     magenta-laranja do mockup da moldura sem tocar na imagem — filtrar
+     a captura seria mexer no trabalho que ela mostra. */
+  padding: 10px;
+  background: #10171b;
+  border: 7px solid #5b5549;
+  border-top-color: #76786d;
+  border-left-color: #6d6f62;
+  border-radius: 3px;
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 0, 0, 0.55),
+    inset 0 2px 12px rgba(0, 0, 0, 0.4),
+    0 18px 44px -18px rgba(0, 0, 0, 0.75);
 }
 
 .proj-shot-img img {
@@ -737,19 +791,26 @@
   transform-style: preserve-3d;
 }
 
+/* O rótulo do projeto fala o mesmo idioma do da experiência: ícone
+   geométrico, caixa alta espaçada, peso 700 na grotesca da casa. A
+   monoespaçada saiu — era vocabulário de painel técnico, e a página
+   inteira já abandonou isso. */
 .proj-meta {
   display: flex;
   align-items: center;
   gap: 14px;
   transform: translateZ(26px);
-  font-family: var(--font-mono);
 }
 
 .proj-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
   font-size: 11.5px;
-  letter-spacing: 0.14em;
+  font-weight: 700;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .proj-fill {
@@ -757,14 +818,19 @@
 }
 
 .proj-year {
-  font-size: 12px;
-  color: var(--ink-muted);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .proj-title {
+  font-family: var(--font-display);
   font-size: clamp(2rem, 3.4vw, 3.2rem);
   font-weight: 900;
-  letter-spacing: -0.03em;
+  /* Mesma lição do .section-title: o aperto que a grotesca aguentava
+     encosta serifa em serifa na caixa alta da Fraunces. */
+  letter-spacing: -0.015em;
   line-height: 1.02;
   text-transform: uppercase;
   color: var(--ink-strong);
@@ -779,12 +845,46 @@
   transform: translateZ(30px);
 }
 
+/* A stack do projeto usa as MESMAS pastilhas da experiência — mesma
+   classe, mesmo logo, mesma regra de cor. Aqui o fundo é escuro, então
+   os logos ficam monocromáticos, que é a regra já valendo na lista sem
+   JS: metade dessas marcas é quase preta e sumiria. */
 .proj-stack {
-  font-family: var(--font-mono);
-  font-size: 12.5px;
-  letter-spacing: 0.02em;
-  color: rgba(255, 255, 255, 0.55);
   transform: translateZ(24px);
+}
+
+/* ---------- as ações ----------
+   Chips e botões eram todos pílulas, e o resultado era sopa: nada ali
+   dizia o que é rótulo e o que é ação. As pastilhas ficam pílula, porque
+   são etiqueta e porque é assim que a seção de experiência as escreve;
+   os botões viram placa, com aresta reta e a mesma madeira.
+
+   E o primário deixa de ser branco puro. Ele era o ponto mais claro da
+   página inteira, o que num ateliê à meia-luz é justamente o que não se
+   pode ter. O tom novo é a luz da lâmpada da cena: os pixels mais claros
+   do bulbo dão #fff5d9, e daí saiu este creme quente. */
+.proj-actions .btn {
+  border-radius: 7px;
+}
+
+.proj-actions .btn-primary {
+  background: #e6d9bd;
+  color: #1a2226;
+  border: 1px solid #b9a988;
+}
+
+.proj-actions .btn-primary:hover {
+  background: #f2e8d2;
+}
+
+.proj-actions .btn-ghost {
+  border-color: rgba(160, 158, 140, 0.42);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.proj-actions .btn-ghost:hover {
+  border-color: rgba(190, 188, 168, 0.7);
+  background: rgba(160, 158, 140, 0.12);
 }
 
 .proj-actions {
@@ -803,7 +903,7 @@
 .proj-glare {
   position: absolute;
   inset: 0;
-  border-radius: 30px;
+  border-radius: 20px;
   overflow: hidden;
   pointer-events: none;
   /* O scale compensa a ampliação da perspectiva (1400/(1400-70)),
@@ -852,13 +952,28 @@
 }
 
 /* ---------- GitHub ---------- */
+/* Vive dentro da seção de projetos e, como os projetos, precisa de uma
+   prancha própria: a grade de contribuições é um bloco de dados denso e
+   sobre a parede pintada ela ficava boiando, sem chão. Mesma cor, mesmo
+   raio e mesma borda dos cards de projeto — é a mesma peça apoiada na
+   mesma parede. */
 .github {
-  /* Vive dentro da seção de projetos: acima do canvas de partículas
-     (z 1 > z-bg) e com respiro para fechar a faixa da seção. */
   position: relative;
   z-index: 1;
-  padding-top: 40px;
-  padding-bottom: 64px;
+  margin: 8px auto 0;
+  padding: 34px clamp(18px, 3vw, 40px) 30px;
+  border-radius: 20px;
+  border: 11px solid #5b5549;
+  border-top-color: #76786d;
+  border-left-color: #6d6f62;
+  background:
+    linear-gradient(165deg, rgba(22, 33, 38, 0.93), rgba(11, 17, 21, 0.96)),
+    url("../assets/Projetos/linho.webp") repeat;
+  background-size: auto, 240px auto;
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 0, 0, 0.5),
+    inset 0 3px 18px rgba(0, 0, 0, 0.5),
+    0 42px 110px -38px rgba(0, 0, 0, 0.85);
 }
 
 .github-title {
@@ -1039,15 +1154,38 @@
   padding-bottom: 48px;
 }
 
+/* A sala. A experiência ganha chão próprio em vez de continuar sobre o
+   preto do resto da página — é o ritmo do wishlabs, onde a página é uma
+   sequência de ambientes com cor e não uma superfície única. Sangra de
+   borda a borda; o body já tem overflow-x: hidden, então 100vw não abre
+   rolagem lateral. As pontas voltam para --bg para emendar sem costura
+   com as seções vizinhas. */
 .xp::before {
+  content: '';
+  position: absolute;
+  left: calc(50% - 50vw);
+  width: 100vw;
+  top: 0;
+  bottom: 0;
+  background: linear-gradient(180deg,
+    #060608 0%,
+    #191333 11%,
+    #241c40 42%,
+    #201a3a 74%,
+    #060608 100%);
+  pointer-events: none;
+}
+
+/* O clarão que existia antes vira a luz alta da sala, sobre o novo chão. */
+.xp::after {
   content: '';
   position: absolute;
   left: -6%;
   top: 40px;
   width: min(760px, 76%);
   height: 640px;
-  background: radial-gradient(circle at 28% 28%, rgba(91, 116, 255, 0.17), transparent 62%),
-              radial-gradient(circle at 70% 58%, rgba(174, 162, 255, 0.09), transparent 58%);
+  background: radial-gradient(circle at 28% 28%, rgba(122, 139, 243, 0.2), transparent 62%),
+              radial-gradient(circle at 70% 58%, rgba(174, 162, 255, 0.1), transparent 58%);
   filter: blur(38px);
   pointer-events: none;
 }
@@ -1083,28 +1221,17 @@
 /* Uma fileira de itens separados por fio de cabelo. É o mesmo idioma em
    três lugares (o resumo, os dados da empresa e a stack), o que dá
    unidade à seção sem recorrer a pills. */
+/* Fileira de metadados. Saiu a monoespaçada e saiu o fio de cabelo entre
+   os itens: as duas coisas são vocabulário de painel técnico, e o
+   wishlabs não usa nenhuma delas. Quem separa agora é o espaço. */
 .xp-hair {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: 5px 16px;
+  gap: 4px 22px;
   margin: 0;
   padding: 0;
-  font-family: var(--font-mono);
-}
-
-.xp-hair > * {
-  position: relative;
-}
-
-.xp-hair > * + *::before {
-  content: '';
-  position: absolute;
-  left: -9px;
-  top: 0.24em;
-  bottom: 0.18em;
-  width: 1px;
-  background: rgba(255, 255, 255, 0.16);
+  font-weight: 500;
 }
 
 .xp-scale {
@@ -1139,8 +1266,8 @@
 
 @media (min-width: 1080px) {
   .xp-line {
-    --rail: 74px;
-    --indent: 120px;
+    --rail: 84px;
+    --indent: 130px;
     --logo: 62px;
   }
 }
@@ -1149,11 +1276,19 @@
    não precisa casar em pixel com o primeiro e o último ponto. */
 .xp-rail {
   position: absolute;
-  left: calc(var(--rail) - 1px);
+  left: calc(var(--rail) - 1.5px);
   top: 8px;
   bottom: 26px;
-  width: 2px;
-  background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.09) 5%, rgba(255, 255, 255, 0.09) 90%, transparent);
+  width: 3px;
+  border-radius: 3px;
+  /* Trilha de subida, não régua uniforme. Os valores subiram junto com o
+     chão: o que dava contraste sobre o preto sumia sobre a aubergine. */
+  background: linear-gradient(180deg,
+    transparent,
+    rgba(255, 255, 255, 0.2) 5%,
+    rgba(255, 255, 255, 0.14) 46%,
+    rgba(255, 255, 255, 0.08) 78%,
+    transparent);
 }
 
 .xp-rail-fill {
@@ -1166,9 +1301,38 @@
   will-change: transform;
 }
 
+/* A cabeça do trilho: o preenchimento sozinho diz "li até aqui", a
+   cabeça diz para que lado está indo. Fica fora do .xp-rail-fill de
+   propósito — aquele elemento é escalado em Y, e um filho ali sairia
+   esticado junto. */
+.xp-rail-head {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 5px;
+  height: 5px;
+  margin-left: -2.5px;
+  margin-top: -2.5px;
+  border-radius: 50%;
+  background: var(--accent-pale);
+  box-shadow: 0 0 10px 2px rgba(139, 157, 255, 0.5);
+  opacity: 0;
+  transition: opacity 0.3s var(--ease-out);
+  will-change: transform;
+  pointer-events: none;
+}
+
+.xp-rail-head.is-on {
+  opacity: 1;
+}
+
 /* ---------- Empresa: a âncora do trecho ---------- */
+.xp-era {
+  position: relative;
+}
+
 .xp-era + .xp-era {
-  margin-top: clamp(48px, 5vw, 76px);
+  margin-top: clamp(72px, 7.5vw, 116px);
 }
 
 .xp-era-head {
@@ -1216,11 +1380,16 @@
   min-width: 0;
 }
 
+/* Kicker: caixa alta curta e tingida sobre o bloco, como o "DREAM TEAM"
+   do wishlabs. O PRODUCT.md lista rótulo em caixa alta como
+   anti-reference, mas ali a queixa é o rótulo genérico repetido em toda
+   seção; aqui ele nomeia a empresa, que é informação de verdade. */
 .xp-company {
-  font-size: clamp(19px, 2vw, 27px);
+  font-size: clamp(12px, 1.05vw, 13.5px);
   font-weight: 700;
-  letter-spacing: -0.025em;
-  color: var(--ink-strong);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-soft);
 }
 
 .xp-era-meta {
@@ -1245,147 +1414,168 @@
   margin: clamp(24px, 2.6vw, 34px) 0 0;
   padding: 0;
   display: grid;
-  gap: clamp(14px, 1.6vw, 20px);
+  gap: clamp(20px, 2.2vw, 30px);
 }
 
 /* ---------- Cargo: o ponto no eixo ---------- */
+/* Painel gordo, não fio. Sobre o chão da sala cada cargo é superfície de
+   verdade, com raio generoso — a gramática do wishlabs, que não usa
+   régua de 1px em lugar nenhum. */
 .xp-job {
-  --bloom: 0;
+  --pad: clamp(24px, 2.8vw, 38px);
   position: relative;
   isolation: isolate;
-  padding: clamp(20px, 2.2vw, 30px);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 18px;
-  background: linear-gradient(180deg, rgba(17, 18, 27, 0.78), rgba(10, 11, 17, 0.9));
-  transition: border-color 0.4s var(--ease-out), transform 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out);
+  padding: var(--pad);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.05);
+  transition: background 0.22s var(--ease-out), transform 0.22s var(--ease-out);
 }
 
-.xp-job::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  border-radius: inherit;
-  background: radial-gradient(120% 96% at 0% 0%, rgba(139, 157, 255, 0.1), transparent 58%);
-  opacity: var(--bloom);
-  transition: opacity 0.45s var(--ease-out);
-  pointer-events: none;
-}
-
+/* Com painel sólido o estado é a cor do painel, não um brilho por trás. */
 .xp-job.is-active {
-  --bloom: 1;
-  border-color: rgba(139, 157, 255, 0.22);
+  background: rgba(255, 255, 255, 0.085);
 }
 
 /* O cargo atual ganha superfície mais clara, borda em accent e um fio
    vertical na aresta esquerda. Os anteriores não são apagados: o texto
    deles mantém o mesmo contraste. */
-.xp-job--now {
-  --bloom: 0.6;
-  border-color: rgba(139, 157, 255, 0.24);
-  background: linear-gradient(180deg, rgba(24, 27, 46, 0.82), rgba(11, 12, 20, 0.92));
-}
-
-.xp-job--now::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 18px;
-  bottom: 18px;
-  width: 2px;
-  border-radius: 2px;
-  background: linear-gradient(180deg, var(--accent-pale), var(--accent) 42%, rgba(91, 116, 255, 0));
+.xp-job--now,
+.xp-job--now.is-active {
+  background: rgba(122, 139, 243, 0.17);
 }
 
 .xp-node {
   position: absolute;
-  /* Acompanha o padding do cartão para cair sempre na altura da
-     primeira linha do cargo, em qualquer largura. */
-  top: calc(clamp(20px, 2.2vw, 30px) + 7px);
+  /* Acompanha o respiro do bloco para cair sempre na altura da primeira
+     linha do cargo, em qualquer largura. */
+  top: calc(var(--pad) + 12px);
   left: calc(var(--rail) - var(--indent) - 6px);
+  /* metade da largura do nó, para centrar no trilho de 3px */
+  margin-left: -0.5px;
   z-index: 2;
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
-  background: #101119;
-  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.2);
-  transition: background 0.55s var(--ease-out), box-shadow 0.55s var(--ease-out), transform 0.35s var(--ease-out);
+  background: #211a3c;
+  box-shadow: inset 0 0 0 2.5px rgba(255, 255, 255, 0.4);
+  transition: background 0.18s var(--ease-out), box-shadow 0.18s var(--ease-out), transform 0.22s var(--ease-out);
 }
 
 /* Acende quando a frente do trilho passa por ele (js/xp.js). */
 .xp-node.is-lit {
   background: var(--accent-pale);
-  box-shadow: 0 0 0 4px rgba(91, 116, 255, 0.13), 0 0 14px rgba(91, 116, 255, 0.5);
+  box-shadow: 0 0 0 4px rgba(122, 139, 243, 0.16), 0 0 14px rgba(122, 139, 243, 0.55);
 }
 
-
-/* Ano na calha à esquerda do trilho. Só aparece quando muda em relação
-   ao cargo de cima — é um eixo, não uma etiqueta por linha. */
-.xp-when {
-  display: none;
+/* Anel de ignição: dispara uma vez quando a frente do trilho cruza o nó,
+   e some. Vive no pseudo-elemento porque o hover já usa o transform do
+   próprio nó — os dois brigariam pelo mesmo canal. */
+.xp-node::after {
+  content: '';
   position: absolute;
-  top: calc(clamp(20px, 2.2vw, 30px) + 5px);
-  right: calc(100% + var(--indent) - var(--rail) + 16px);
-  font-family: var(--font-mono);
-  font-size: 11.5px;
-  letter-spacing: 0.1em;
-  /* Nao baixar deste valor: e o piso que mantem o rotulo do eixo em
-     4,5:1 sobre o fundo da secao (WCAG AA para texto normal). */
-  color: rgba(255, 255, 255, 0.46);
-  transition: color 0.5s var(--ease-out);
+  inset: -3px;
+  border-radius: 50%;
+  border: 1px solid var(--accent-soft);
+  opacity: 0;
+  pointer-events: none;
 }
 
-.xp-job.is-active .xp-when {
-  color: var(--accent-pale);
+.xp-node.is-lit::after {
+  animation: xp-ignite 0.5s var(--ease-out) forwards;
+}
+
+@keyframes xp-ignite {
+  from { opacity: 0.85; transform: scale(0.55); }
+  to   { opacity: 0;    transform: scale(2.1); }
+}
+
+
+/* O ano é a espinha da seção. Só aparece quando muda em relação ao
+   cargo de cima — marca a virada, não etiqueta cada linha.
+
+   Abaixo de 1080px a calha não comporta o numeral em corpo grande,
+   então ele vira um rótulo curto acima do cargo. Continua visível: na
+   versão anterior ele simplesmente sumia nessas larguras. */
+.xp-when {
+  display: block;
+  margin-bottom: 14px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  /* Piso de 4,5:1 (WCAG AA). O valor subiu de 0.46 para 0.58 quando o
+     chão da seção deixou de ser quase-preto e virou aubergine: sobre o
+     painel claro o antigo media 4,17:1. Piso de contraste é relativo ao
+     fundo, então ele é recalculado toda vez que o fundo muda. */
+  color: rgba(255, 255, 255, 0.58);
+  transition: color 0.45s var(--ease-out);
 }
 
 @media (min-width: 1080px) {
   .xp-when {
-    display: block;
+    position: absolute;
+    top: calc(var(--pad) + 6px);
+    right: calc(100% + var(--indent) - var(--rail) + 18px);
+    margin-bottom: 0;
+    font-size: 13px;
+    line-height: 1;
   }
 }
 
+/* Foco por rolagem e ponteiro falam por canais diferentes: o foco
+   levanta o ano, o ponteiro o pinta de accent. O foco SOBE o contraste —
+   descer daqui furaria o piso de 4,5:1 anotado acima, que foi o que uma
+   versão anterior desta seção fez ao escurecer o rótulo em vez de
+   clarear (medido em 4,07:1). */
+.xp-job.is-active .xp-when {
+  color: rgba(255, 255, 255, 0.64);
+}
+
+/* Sem a caixa, um space-between jogava o "Atual" contra a borda direita
+   da tela, longe do cargo a que ele se refere. Agora ele segue o nome,
+   alinhado pela linha de base. */
 .xp-job-head {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+  align-items: baseline;
   flex-wrap: wrap;
-  gap: 10px 20px;
+  gap: 6px 22px;
 }
 
 .xp-job-ident {
-  flex: 1 1 auto;
+  flex: 0 1 auto;
   min-width: 0;
 }
 
+/* Geométrica pesada em caixa de frase — "Keep your obsession." e não
+   "KEEP YOUR OBSESSION". A Archivo Black em caixa alta era o que puxava
+   a seção de volta para tipografia-de-template. */
 .xp-role {
-  font-size: clamp(17px, 1.5vw, 21px);
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-size: clamp(20px, 1.9vw, 27px);
+  font-weight: 900;
+  line-height: 1.14;
+  letter-spacing: -0.022em;
   color: var(--ink-strong);
 }
 
 .xp-job--now .xp-role {
-  font-size: clamp(19px, 1.8vw, 24px);
+  font-size: clamp(23px, 2.3vw, 32px);
 }
 
 .xp-period {
-  margin-top: 7px;
-  font-family: var(--font-mono);
-  font-size: 12.2px;
-  letter-spacing: 0.03em;
-  color: var(--ink-muted);
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.62);
 }
 
 /* "Atual" sem pill: só o ponto que pulsa e a palavra. */
 .xp-now {
   display: inline-flex;
   align-items: center;
-  gap: 9px;
+  gap: 8px;
   flex: none;
-  font-family: var(--font-mono);
-  font-size: 11.5px;
-  letter-spacing: 0.16em;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--accent-pale);
 }
@@ -1407,19 +1597,30 @@
 /* Corpo do cartão: responsabilidades à esquerda, stack numa coluna
    própria à direita, separadas por um fio. Abaixo de 1080px a stack
    desce para uma fileira sob um fio horizontal. */
+/* Coluna única. A stack era uma coluna de 172px à direita quando ela
+   ainda era lista de texto empilhada; virou fileira de pastilhas debaixo
+   das tarefas, como na referência, e a coluna estreita só apertava as
+   pastilhas uma por linha. */
 .xp-job-body {
   display: grid;
   gap: 16px;
-  margin-top: 18px;
-  padding-top: 18px;
-  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  margin-top: 22px;
 }
 
 .xp-desc {
   max-width: 68ch;
-  font-size: 15px;
-  line-height: 1.7;
+  font-size: 15.5px;
+  line-height: 1.66;
   color: rgba(255, 255, 255, 0.72);
+}
+
+/* Peso misturado dentro da frase, destacando o termo que carrega o
+   sentido — o movimento de tipografia mais característico da
+   referência ("Find your people", "Retake is built on..."). */
+.xp-desc strong,
+.xp-era-desc strong {
+  font-weight: 700;
+  color: var(--ink-strong);
 }
 
 .xp-tasks {
@@ -1431,28 +1632,30 @@
 
 .xp-tasks li {
   position: relative;
-  padding-left: 21px;
+  padding-left: 19px;
   max-width: 70ch;
   font-size: 14.6px;
   line-height: 1.62;
   color: rgba(255, 255, 255, 0.68);
 }
 
-/* Marcador de traço, não de bolinha: acompanha o desenho técnico do
-   resto da seção e acende junto com o cartão. */
+/* Ponto cheio, não traço de 1px. O traço era o último resquício de
+   desenho técnico na lista — e uma linha de 1px é justamente o que a
+   referência não tem em lugar nenhum. */
 .xp-tasks li::before {
   content: '';
   position: absolute;
-  left: 0;
-  top: 0.72em;
-  width: 10px;
-  height: 1px;
-  background: rgba(255, 255, 255, 0.28);
-  transition: background 0.4s var(--ease-out), width 0.4s var(--ease-out);
+  left: 1px;
+  top: 0.62em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transition: background 0.26s var(--ease-out), transform 0.26s var(--ease-out);
 }
 
 .xp-job.is-active .xp-tasks li::before {
-  width: 14px;
+  transform: scale(1.16);
   background: var(--accent-soft);
 }
 
@@ -1461,61 +1664,108 @@
 .xp-tasks li:nth-child(4)::before { transition-delay: 0.12s; }
 .xp-tasks li:nth-child(5)::before { transition-delay: 0.16s; }
 
+/* ============================================================
+   RÓTULOS COM ÍCONE E STACK EM CHIPS
+   ============================================================
+   O padrão vem da referência do cartão: antes de cada bloco um rótulo
+   pequeno em caixa alta com um ícone, e a stack em pastilhas em vez de
+   lista corrida. É o que dá ritmo a um cartão denso — o olho encontra
+   "onde começa o cargo" sem precisar ler.
+
+   Os ícones são desenhados aqui, geométricos. Não são logos das
+   tecnologias: metade desta stack (Active Directory, TOTVS Protheus,
+   OpenVPN, TeamViewer, AnyDesk) não tem logo limpo para usar, e uma
+   fileira em que só metade das pastilhas tem marca fica pior do que
+   nenhuma ter.
+
+   A tipografia é a do projeto (--font-sans). A referência usa uma
+   grotesca genérica e os tokens daqui já cobrem isso; trocar a fonte só
+   para imitar a imagem contrariaria o sistema que a página já tem.
+   ============================================================ */
+
+.xp-rotulo {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 0 6px;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.xp-ic {
+  flex: none;
+  width: 17px;
+  height: 17px;
+  fill: currentColor;
+}
+
+/* O rótulo da stack fica solto do corpo do cargo, como um sub-cabeçalho. */
+.xp-job-body .xp-rotulo {
+  margin-top: 18px;
+}
+
+/* ---------- a stack em pastilhas ---------- */
+/* As pastilhas quebram linha, como na referência. Cheguei a tentar
+   fileira única com rolagem lateral: são 512px de pastilhas em 394px de
+   papel, e nenhuma redução de tipo honesta fecha essa conta, então ela
+   virava uma terceira região de rolagem dentro de um cartão que já rola
+   dentro de um palco preso. Quebrar linha custa uma linha de altura e não
+   custa nada de interação. */
 .xp-stack {
-  margin-top: 2px;
-  padding-top: 15px;
-  border-top: 1px solid rgba(255, 255, 255, 0.07);
-  font-size: 12.4px;
-  letter-spacing: 0.02em;
-  color: rgba(255, 255, 255, 0.6);
-  transition: border-color 0.4s var(--ease-out);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.xp-stack li {
+  /* flex: none para a pastilha nunca encolher: o padrão do flex é
+     espremer, e aqui isso quebraria o nome da tecnologia dentro dela. */
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px 4px 7px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.74);
+}
+
+/* ---------- os logos das tecnologias ----------
+   Traçados oficiais do simple-icons (CC0 1.0, domínio público). Quatro
+   não existem lá — Active Directory, TOTVS Protheus e Microsoft Office,
+   cujas marcas a Microsoft e a TOTVS não liberam nesse acervo — e ficam
+   com um símbolo neutro, que não imita marca nenhuma.
+
+   Na lista escura o logo é monocromático: metade destas marcas é quase
+   preta (Next.js #000, Django #092E20, TeamViewer #050A52) e sumiria no
+   fundo violeta. A cor de marca entra sobre o pergaminho, que é onde a
+   referência a usa. */
+.xp-marca {
+  flex: none;
+  width: 13px;
+  height: 13px;
+  fill: currentColor;
+}
+
+/* A marca da Microsoft são quatro retângulos, não um traçado: por padrão
+   herdam currentColor como as outras, e só ganham cor no pergaminho. */
+.xp-marca--microsoft rect {
+  fill: currentColor;
 }
 
 @media (min-width: 1080px) {
-  .xp-job-body {
-    grid-template-columns: minmax(0, 1fr) 186px;
-    column-gap: 40px;
-  }
-
-  .xp-job-body--plain {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  /* Item de grid estica por padrão, então o fio acompanha a altura toda
-     do corpo mesmo quando a stack é curta. */
-  .xp-stack {
-    flex-direction: column;
-    flex-wrap: nowrap;
-    align-items: flex-start;
-    align-content: flex-start;
-    gap: 10px;
-    margin-top: 0;
-    padding-top: 0;
-    padding-left: 26px;
-    border-top: none;
-    border-left: 1px solid rgba(255, 255, 255, 0.08);
-  }
-
-  /* Aqui o fio de cabelo vira um traço horizontal que liga cada
-     tecnologia à régua vertical. */
-  .xp-stack li::before {
-    content: '';
-    left: -26px;
-    top: 0.62em;
-    bottom: auto;
-    width: 9px;
-    height: 1px;
-    background: rgba(255, 255, 255, 0.18);
-    transition: background 0.4s var(--ease-out);
-  }
-
-  .xp-job.is-active .xp-stack {
-    border-left-color: rgba(139, 157, 255, 0.24);
-  }
-
-  .xp-job.is-active .xp-stack li::before {
-    background: rgba(139, 157, 255, 0.5);
-  }
+  /* Quem fecha a composição voltou a ser o painel, então o corpo ocupa a
+     largura dele. */
 }
 
 /* Entrada: os cargos de um mesmo trecho escalonam levemente. */
@@ -1535,11 +1785,11 @@
    e o feedback equivalente ali. Guardar por largura nao resolvia: um
    tablet de toque de 834px passava pela guarda. */
 @media (hover: hover) {
+  /* Hover e foco por rolagem não podem pintar o mesmo estado, senão
+     apontar para um painel qualquer põe dois "ativos" na tela. O foco
+     clareia a superfície; o ponteiro levanta o painel e acende o ano. */
   .xp-job:hover {
-    --bloom: 1;
-    border-color: rgba(139, 157, 255, 0.22);
-    transform: translateY(-2px);
-    box-shadow: 0 20px 44px -26px rgba(0, 0, 0, 0.95);
+    transform: translateY(-3px);
   }
 
   .xp-job:hover .xp-node {
@@ -1551,22 +1801,23 @@
   }
 
   .xp-job:hover .xp-tasks li::before {
-    width: 14px;
+    transform: scale(1.16);
     background: var(--accent-soft);
   }
 
-  @media (min-width: 1080px) {
-    .xp-job:hover .xp-stack {
-      border-left-color: rgba(139, 157, 255, 0.24);
-    }
-
-    .xp-job:hover .xp-stack li::before {
-      background: rgba(139, 157, 255, 0.5);
-    }
+  /* A pastilha responde no lugar do fio e dos pontos que existiam antes. */
+  .xp-job:hover .xp-stack li {
+    border-color: rgba(139, 157, 255, 0.3);
+    background: rgba(139, 157, 255, 0.1);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  /* O rodapé aparece sem subir. */
+  .footer {
+    transform: none;
+  }
+
   .xp-job.will-reveal,
   .xp-job.will-reveal.is-in {
     transform: none;
@@ -1575,97 +1826,370 @@
   .xp-rail-fill {
     box-shadow: none;
   }
+
+  .xp-rail-head {
+    display: none;
+  }
 }
-/* ---------- Contato ---------- */
-/* Sem cartão de CTA: a seção é uma composição direta, alinhada à
-   esquerda, com o e-mail como elemento principal. */
-.contact {
-  padding-top: 130px;
-  padding-bottom: 90px;
+/* ============================================================
+   EXPERIÊNCIA E PROJETOS — superfície neutra
+   ============================================================
+   Estas duas seções recuam de propósito. O destaque da página é o hero
+   e o rodapé, que carregam as duas pinturas; aqui no meio o trabalho é
+   deixar o conteúdo trabalhar. Nada de textura, pincelada, mancha ou
+   chão colorido: hierarquia por tipografia e espaço.
+
+   O agrupamento por camada da stack continua no HTML, mas agora ele se
+   expressa só em texto. A informação fica, a expressão gráfica sai.
+   ============================================================ */
+
+.xp-estratos {
+  position: relative;
+  margin-top: clamp(36px, 4.4vw, 64px);
 }
 
-.contact-title {
-  font-family: var(--font-display);
-  font-size: clamp(38px, 5.6vw, 72px);
-  font-weight: 400;
-  letter-spacing: -0.02em;
-  line-height: 1.02;
+/* Sem chão próprio nem sangria: cada camada é um agrupamento de texto,
+   separado por espaço e por um fio, como o resto da página faz. */
+.xp-estrato {
+  position: relative;
+  padding-block: clamp(34px, 4vw, 60px);
+}
+
+.xp-estrato + .xp-estrato {
+  border-top: 1px solid var(--line);
+}
+
+.xp-estrato-head {
+  max-width: 62ch;
+  margin-bottom: clamp(20px, 2.4vw, 34px);
+}
+
+.xp-estrato-nome {
+  font-size: clamp(12px, 1.1vw, 13.5px);
+  font-weight: 700;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  margin-bottom: 22px;
-  color: var(--ink-strong);
+  color: var(--accent-soft);
 }
 
-.contact-sub {
-  font-size: 17px;
-  line-height: 1.65;
+.xp-estrato-gloss {
+  margin-top: 8px;
+  font-size: 15.5px;
+  line-height: 1.6;
   color: var(--ink-soft);
-  margin-bottom: 54px;
-  max-width: 52ch;
 }
 
-.contact-mail {
-  display: inline-block;
-  max-width: 100%;
-  font-weight: 800;
-  font-size: clamp(24px, 4.6vw, 58px);
-  letter-spacing: -0.03em;
+/* ---------- A empresa, como metadado do cargo ---------- */
+.xp-onde {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-right: 4px;
+}
+
+.xp-selo {
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  object-fit: cover;
+  background: #fff;
+  border: 1px solid var(--line-strong);
+}
+
+#experiencia .xp-estrato .xp-company {
+  font-size: inherit;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
   color: var(--ink-strong);
-  text-decoration: none;
-  overflow-wrap: anywhere;
-  border-bottom: 3px solid var(--line-strong);
-  padding-bottom: 8px;
-  transition: border-color 0.3s var(--ease-out), color 0.3s var(--ease-out);
 }
 
-.contact-mail:hover {
-  color: var(--accent-pale);
-  border-color: var(--accent);
+.xp-estrato .xp-period {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 8px;
 }
 
-.contact-meta {
+.xp-job--raiz .xp-role {
+  font-size: clamp(18px, 1.6vw, 23px);
+}
+
+/* ============================================================
+   O GLOBO DA EXPERIÊNCIA
+   ============================================================
+   Canvas 2D, sem biblioteca. O site não carrega Three.js desde que o
+   blob do hero virou paisagem em parallax, e trazer uma engine de
+   ~150 KB para desenhar uma esfera contrariaria o argumento da página.
+
+   A malha de costa é real (Natural Earth 110m, simplificada), e os dois
+   pinos são os endereços verdadeiros. Não há terceiro pino: inventar
+   cidade seria inventar experiência, e o PRODUCT.md proíbe.
+
+   O painel NÃO é o pergaminho da referência. Um bloco de papel quente
+   sobre um site quase preto brigaria com tudo à volta; aqui ele é uma
+   superfície no tom da casa, com um fio quente na aresta como única
+   citação da imagem.
+   ============================================================ */
+
+.globo {
+  display: grid;
+  gap: clamp(24px, 3vw, 48px);
+  margin-top: clamp(28px, 3.4vw, 48px);
+  align-items: start;
+}
+
+@media (min-width: 900px) {
+  .globo {
+    grid-template-columns: minmax(0, 520px) minmax(0, 340px);
+    justify-content: start;
+    gap: clamp(32px, 4vw, 56px);
+  }
+}
+
+.globo-cena {
+  position: relative;
+}
+
+.globo-cv {
+  display: block;
+  width: 100%;
+  max-width: 520px;
+  aspect-ratio: 1;
+  height: auto;
+  margin-inline: auto;
+  cursor: grab;
+  /* pan-y no telefone: o quadro do globo ocupa quase a largura toda da
+     tela, e travar o gesto vertical ali seria travar a rolagem da
+     página. No toque, portanto, o dedo gira só para os lados; com
+     ponteiro o arrasto já gira nas duas direções em qualquer largura. */
+  touch-action: pan-y;
+}
+
+.globo-cv:active { cursor: grabbing; }
+
+.globo-dica {
+  margin-top: 14px;
+  text-align: center;
+  font-size: 12.5px;
+  letter-spacing: 0.02em;
+  color: var(--ink-muted);
+}
+
+/* ---------- O painel ---------- */
+.globo-legenda {
+  position: relative;
+  align-self: start;
+  padding: clamp(20px, 2.2vw, 28px);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.04);
+  /* O fio quente na aresta: a única citação direta do pergaminho da
+     referência, sem trazer o bloco de papel inteiro. */
+  border: 1px solid rgba(214, 186, 138, 0.18);
+}
+
+.globo-abas {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px 34px;
-  margin-top: 44px;
+  gap: 8px;
+  margin-bottom: 18px;
 }
 
-.contact-meta a {
-  font-family: var(--font-mono);
+.globo-aba {
+  padding: 7px 15px;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  background: none;
+  font: inherit;
   font-size: 13.5px;
+  font-weight: 600;
   color: var(--ink-soft);
-  text-decoration: none;
-  transition: color 0.2s ease;
+  cursor: pointer;
+  transition: color 0.2s var(--ease-out), border-color 0.2s var(--ease-out), background 0.2s var(--ease-out);
 }
 
-.contact-meta a:hover {
-  color: var(--accent-pale);
+.globo-aba:hover { color: var(--ink-strong); }
+
+.globo-aba.is-on {
+  color: var(--ink-strong);
+  border-color: rgba(214, 186, 138, 0.5);
+  background: rgba(214, 186, 138, 0.12);
+}
+
+.globo-titulo {
+  font-size: clamp(21px, 2vw, 27px);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: var(--ink-strong);
+}
+
+.globo-onde {
+  margin-top: 5px;
+  font-size: 14px;
+  color: var(--ink-muted);
+}
+
+
+
+/* Dentro do painel o cargo perde a moldura: quem enquadra agora é o
+   painel, e caixa dentro de caixa é o que a gente veio tirar. */
+.globo-corpo .xp-job {
+  padding: 0;
+  border-radius: 0;
+  background: none;
+}
+
+.globo-corpo .xp-job + .xp-job {
+  margin-top: clamp(22px, 2.4vw, 34px);
+  padding-top: clamp(22px, 2.4vw, 34px);
+  border-top: 1px solid var(--line);
+}
+
+
+/* ---------- Revelação do rodapé ---------- */
+/* O rodapé não sobe: ele fica parado no fundo da janela e o conteúdo
+   escorre para fora de cima dele. É a mecânica da referência — lá são
+   dois painéis position: sticky presos em top: 0 logo antes do fim, e
+   medindo a rolagem eles ficam cravados enquanto a seção anterior passa
+   por cima. O transform é none o tempo todo: quem se move é o que está
+   na frente, não o rodapé. Foi por isso que a primeira medição que fiz
+   aqui não achou animação nenhuma.
+
+   O herói e o main precisam de fundo opaco e de camada própria, senão o
+   rodapé fixo aparece através deles durante a página inteira. */
+:root {
+  --footer-h: min(100svh, 880px);
+}
+
+.hero,
+main {
+  position: relative;
+  z-index: 1;
+  background: var(--bg);
+}
+
+/* Nada de tela intermediária entre o conteúdo e o rodapé. O painel sobe
+   sobre os próprios cargos: uma tela inserida só para servir de fundo
+   vira vão morto de rolagem antes do rodapé, que foi exatamente o que
+   apareceu quando tentei um palco preso aqui.
+
+   Sobra só o respiro de fim de seção. */
+main {
+  padding-bottom: clamp(56px, 7vh, 100px);
 }
 
 /* ---------- Rodapé ---------- */
-/* Banda compacta: assinatura manuscrita de um lado, links reais do
-   outro, colofão embaixo. */
+/* A arte ocupa a última tela e o texto mora em cima dela. O rodapé é
+   fixo e vive atrás do conteúdo: ver a mecânica de revelação acima. */
 .footer {
-  padding-top: 24px;
-  padding-bottom: 36px;
+  /* No fluxo, sobreposto ao fim do conteúdo pela margem negativa, e
+     empurrado de volta para baixo pelo --rise. Em rise 1 ele está
+     exatamente onde estaria sem a margem — fora da tela, com os cargos
+     inteiros à vista; em 0 subiu por cima deles.
+
+     Como nada aqui fica congelado, a subida precisa ser diferencial: o
+     painel anda a rolagem MAIS o próprio deslocamento, então se move em
+     relação aos cargos e o movimento se lê. */
+  position: relative;
+  margin-top: calc(-1 * var(--footer-h));
+  --rise: 0;
+  /* 55% e não 100%: o painel já anda 1:1 com a rolagem por estar no
+     fluxo, e o deslocamento soma em cima disso. Com 100% ele partia de
+     quase duas telas abaixo e só entrava nos últimos pixels. */
+  transform: translate3d(0, calc(var(--rise) * 55%), 0);
+  will-change: transform;
+  /* Na FRENTE do conteúdo. Atrás, quem desenhava a borda visível era o
+     corte reto do main e o canto arredondado nunca aparecia. */
+  z-index: 2;
+  height: var(--footer-h);
+  display: flex;
+  flex-direction: column;
+  /* Cantos de painel: é o que faz o rodapé ler como uma peça que sobe
+     por cima da página, e não como o fundo aparecendo por trás dela. */
+  border-radius: clamp(18px, 2vw, 30px) clamp(18px, 2vw, 30px) 0 0;
+  overflow: hidden;
+  /* O deslocamento de subida entra por aqui, escrito pelo js/footer.js.
+     Em 1 ele começa 14% abaixo; em 0 está no lugar. Sem JS fica em 0 e o
+     rodapé simplesmente aparece — a subida é enriquecimento. */
+}
+
+.footer-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  /* A arte é 1,78 contra ~1,6 do painel, então o corte é horizontal e
+     pequeno; só o eixo X importa. Centro serve: a ovelha está em 52%. */
+  object-position: 50% 50%;
+  z-index: -2;
+}
+
+/* O véu. Sem ele o texto branco cai em cima da areia clara da pintura e
+   reprova em contraste. Os valores foram escolhidos para passar em AA
+   sobre QUALQUER imagem, inclusive branco puro: com 0,82 de #060608 por
+   cima de branco o fundo resultante fica em luminância 0,035, o que
+   deixa o texto do colofão em 7:1. Trocar a arte não quebra a
+   legibilidade. */
+.footer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    /* Menor pegada possível. O véu tem de ser forte onde o texto senta,
+       porque a pintura chega a luminância 0,99 ali (nuvens brancas) e
+       texto claro em AA exige isso. Mas fora dessas faixas ele cai a
+       zero rápido, para o mar, a falésia e a ovelha aparecerem inteiros.
+       Antes ele se estendia até 58% e apagava metade do quadro. */
+    linear-gradient(180deg,
+      rgba(6, 6, 8, 0.9) 0%,
+      rgba(6, 6, 8, 0.82) 22%,
+      rgba(6, 6, 8, 0.3) 32%,
+      rgba(6, 6, 8, 0) 42%),
+    linear-gradient(0deg,
+      rgba(6, 6, 8, 0.9) 0%,
+      rgba(6, 6, 8, 0.8) 11%,
+      rgba(6, 6, 8, 0.25) 20%,
+      rgba(6, 6, 8, 0) 30%);
+  pointer-events: none;
+}
+
+.footer-inner {
+  position: relative;
+  /* O .container traz margin: 0 auto, e num pai flex-column isso vence o
+     align-items: stretch — o bloco encolhia para o tamanho do conteúdo e
+     ficava centrado em vez de ocupar a largura toda. */
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-top: clamp(38px, 5vw, 62px);
+  padding-bottom: clamp(28px, 3.4vw, 42px);
 }
 
 .footer-top {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 18px 32px;
-  padding: 30px 0;
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
+  gap: 30px 40px;
 }
 
+/* Mesmo tratamento do nome no hero: Poppins 900 com tracking fechado. O
+   subset carregado no <head> (" Oaeilortvá") já cobre exatamente
+   "Otávio Oliveira", então reusar aqui não custa byte nenhum. */
 .footer-sign {
-  font-family: var(--font-script);
-  font-size: 30px;
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: clamp(32px, 3.9vw, 54px);
+  font-weight: 900;
+  line-height: 1.02;
+  letter-spacing: -0.04em;
   color: var(--ink-strong);
   text-decoration: none;
-  letter-spacing: 0.01em;
   transition: color 0.25s ease;
 }
 
@@ -1673,15 +2197,53 @@
   color: var(--accent-pale);
 }
 
+/* Tipografia medida no rodapé da referência: DM Sans, tudo no mesmo
+   tom, hierarquia só por peso — 700 no título de coluna, 500 nos links,
+   400 na chamada — e tracking negativo em todos. Título e link têm o
+   MESMO corpo: lá nada é caixa alta e nada muda de cor entre eles. */
+.footer-inner {
+  font-family: var(--font-sans);
+}
+
+.footer-tagline {
+  margin-top: 10px;
+  max-width: 46ch;
+  font-size: clamp(16px, 1.5vw, 22px);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.012em;
+  color: var(--footer-tint);
+}
+
+/* Sem caixa alta e sem tracking positivo: na referência o título da
+   coluna é só o mesmo texto em peso 700, no mesmo corpo e na mesma cor
+   dos links abaixo dele. */
+.footer-col {
+  margin: 0 0 10px;
+  font-size: clamp(16px, 1.5vw, 21px);
+  font-weight: 700;
+  line-height: 1.21;
+  letter-spacing: -0.02em;
+  text-transform: none;
+  color: var(--footer-tint);
+}
+
 .footer-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px 28px;
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  min-width: 160px;
 }
 
 .footer-links a {
-  font-size: 14px;
-  color: var(--ink-soft);
+  font-size: clamp(16px, 1.5vw, 21px);
+  font-weight: 500;
+  /* Entrelinha larga nos links e apertada no título: é o que separa os
+     dois na referência, já que corpo e cor são idênticos. */
+  line-height: 1.6;
+  letter-spacing: -0.02em;
+  color: var(--footer-tint);
   text-decoration: none;
   transition: color 0.2s ease;
 }
@@ -1690,20 +2252,45 @@
   color: var(--ink-strong);
 }
 
+/* Na coluna, junto dos outros contatos. Mantém o endereço à vista em vez
+   da palavra "E-mail": assim dá para ler e copiar sem clicar. */
+.footer-mail {
+  overflow-wrap: anywhere;
+}
+
 .footer-bottom {
+  margin-top: auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: 24px;
   flex-wrap: wrap;
-  gap: 12px;
-  font-size: 13px;
-  color: var(--ink-muted);
+  gap: 10px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: rgba(255, 255, 255, 0.78);
 }
 
 .footer-stack {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 14px;
+}
+
+/* Em retrato o object-fit: cover corta metade da largura da pintura, e o
+   recorte central perdia justamente o domo e o mar — sobrava a porta. O
+   rodapé encurta, para exigir menos corte, e o enquadramento desloca
+   para a direita, onde a cúpula está. */
+@media (max-width: 620px) {
+  :root {
+    /* O conteúdo do rodapé mede 766px aqui; reservar menos cortava a
+       assinatura no topo, porque o painel tem overflow: hidden. */
+    --footer-h: min(96svh, 800px);
+  }
+
+  .footer-art {
+    /* Em retrato o corte horizontal come quase 80% da largura; 52% cai
+       na ovelha, que é o assunto da cena. */
+    object-position: 52% 50%;
+  }
 }
 
 /* ============================================================
@@ -1854,21 +2441,6 @@
     font-size: 14.2px;
   }
 
-  .contact {
-    padding-top: 84px;
-    padding-bottom: 64px;
-  }
-
-  .contact-sub {
-    margin-bottom: 40px;
-  }
-
-  .contact-meta {
-    flex-direction: column;
-    gap: 14px;
-    margin-top: 36px;
-  }
-
   .footer-top {
     flex-direction: column;
     align-items: flex-start;
@@ -1878,5 +2450,728 @@
   .footer-bottom {
     flex-direction: column;
     align-items: flex-start;
+  }
+}
+
+/* Cargo apontado pelo pino do globo: realce curto, sem mover nada de
+   lugar. É feedback de "é este aqui", não um estado permanente. */
+.xp-job.is-apontado {
+  box-shadow: 0 0 0 1px rgba(214, 186, 138, 0.34), 0 0 0 6px rgba(214, 186, 138, 0.08);
+}
+
+/* A nota mora debaixo do globo, não na folha: ela fala do mapa — de por
+   que dois pinos parecem um só — e não da empresa. Sai da folha, que
+   encolheu, e entra onde a informação é usada. */
+.globo-nota {
+  margin-top: 6px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-muted);
+  text-align: center;
+  max-width: 46ch;
+  margin-inline: auto;
+}
+
+/* Branco cheio, não 0,9: medindo sobre a mesa, com 0,9 a nota dava
+   4,46:1 — a quatro centésimos do piso. Em branco dá 5,0. Mesmo peso da
+   dica, que já é branco pelo mesmo motivo. */
+.globo-cena .globo-nota {
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+/* A cena pintada atrás do globo, no telefone. Fica confinada ao quadro e
+   não à seção inteira: o cenário é claro e sépia, e o texto da seção é
+   claro sobre escuro — estendê-lo a tudo quebraria a leitura do resto.
+
+   O véu é mais forte no pé do que no meio: as duas linhas de dica moram
+   ali e, sobre o prédio claro da pintura nova, a nota media 3,77:1 com o
+   véu uniforme de 0,5. No desktop quem faz esse papel é a elipse difusa
+   do .globo-cena::after; aqui, com o quadro recortado, o degradê do
+   próprio quadro resolve. */
+.globo-cena {
+  border-radius: 20px;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center 44%;
+  padding: clamp(14px, 1.8vw, 26px) 0 clamp(8px, 1vw, 14px);
+}
+
+/* A imagem do quadro só é declarada abaixo de 1000px, que é onde o quadro
+   existe. Acima disso quem pinta é o palco inteiro, e a regra .xp-cena
+   zera este fundo — mas zerar depois não evita o download: a classe
+   .xp-cena entra pelo JS, então no primeiro cálculo de estilo a imagem já
+   está no computado e o navegador vai buscá-la. Media query resolve antes
+   de existir requisição: 134 KB a menos em toda carga de desktop. */
+@media (max-width: 999px) {
+  .globo-cena {
+    background-image:
+      linear-gradient(180deg, rgba(10, 8, 20, 0.3) 0%, rgba(10, 8, 20, 0.26) 52%, rgba(10, 8, 20, 0.74) 100%),
+      image-set(url("../assets/globo/cenario-1200.webp") 1x);
+  }
+}
+
+@media (max-width: 900px) {
+  .globo-cena {
+    background-image:
+      linear-gradient(180deg, rgba(10, 8, 20, 0.3) 0%, rgba(10, 8, 20, 0.26) 52%, rgba(10, 8, 20, 0.74) 100%),
+      image-set(url("../assets/globo/cenario-800.webp") 1x);
+  }
+}
+
+/* Sobre a cena a dica precisa de mais peso do que tinha sobre o fundo
+   liso da seção. */
+/* Branco cheio, não 0,82: sobre a parte mais clara do cenário (nuvem
+   sépia sob o véu) a dica media 4,34:1, abaixo do piso. Em branco dá
+   5,51. */
+.globo-cena .globo-dica {
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
+}
+
+/* ---------- A legenda vira pergaminho ----------
+   border-image em 9 fatias: os quatro cantos ficam intactos, as bordas
+   esticam num eixo só e o miolo nos dois. É por isso que pedi a folha
+   com o centro liso — é o miolo que deforma.
+
+   O corte de 68px (na imagem de 626 de largura) foi escolhido para
+   pegar os rasgos dos cantos, que são bem maiores que a borda do meio:
+   medindo, a borda mede ~6px no meio da lateral e bem mais nos cantos. */
+.globo-legenda {
+  /* 28 e não 34: a moldura de pergaminho comia 68px de altura útil, e é
+     altura que a stack precisa. Em 28 os rasgos dos cantos continuam
+     legíveis — o corte de 68px da imagem não muda, só o destino. */
+  border: 28px solid transparent;
+  border-image: url("../assets/globo/folha.webp") 68 fill stretch;
+  background: none;
+  padding: 4px 10px 12px;
+}
+
+/* Sobre o pergaminho (miolo #efc694, luminância 0,609) o texto tem de
+   ser escuro. Os valores abaixo foram calculados sobre essa cor. */
+.globo-legenda .globo-titulo { color: #2e1f12; }
+.globo-legenda .globo-onde { color: #5a4430; }
+
+.globo-legenda .globo-aba {
+  border-color: rgba(70, 48, 26, 0.4);
+  color: #5a4430;
+}
+
+.globo-legenda .globo-aba:hover { color: #2e1f12; }
+
+.globo-legenda .globo-aba.is-on {
+  color: #2e1f12;
+  border-color: rgba(70, 48, 26, 0.75);
+  background: rgba(120, 82, 42, 0.16);
+}
+
+/* ============================================================
+   A SEÇÃO COMO CENA
+   ============================================================
+   A pintura deixa de ser um quadro ao lado do texto e passa a ser a
+   seção inteira: globo no meio, carta ao lado, mesa atrás.
+
+   Duas coisas obrigaram o formato de PALCO PRESO em vez de simplesmente
+   esticar a seção, e as duas foram medidas:
+
+   1. O rodapé é sobreposto: ele fica no fluxo com margin-top negativa de
+      uma tela inteira e sobe por cima do que vier antes. Medindo a
+      curva, ele só está fora da tela enquanto faltarem ~630px de
+      rolagem. Ou seja, qualquer conteúdo nos últimos ~630px da página é
+      coberto, sempre. A versão anterior desta seção terminava 319px
+      antes do fim — o globo nunca aparecia inteiro, no melhor
+      enquadramento sobravam 415px de faixa livre para 640px de
+      composição.
+
+   2. Reservar essa pista esticando a seção estragava a pintura: com
+      background cover numa caixa de 1440x2000 o cenário 2730x1536 é
+      ampliado até só sobrar parede — foi o que aconteceu na primeira
+      tentativa.
+
+   O palco preso resolve os dois de uma vez. A cena tem exatamente o
+   tamanho da janela, então o corte do cover é sempre o mesmo e sempre
+   correto; e a altura extra da seção vira curso de rolagem com a cena
+   parada, que é a pista que o rodapé precisa. O que antes seria vão
+   morto agora é o próprio tempo da subida do rodapé sobre a cena.
+
+   Tudo pende de .xp-cena, que o js/globo.js só põe quando o globo
+   realmente subiu. Sem JS e sem canvas nada disto existe.
+   ============================================================ */
+
+@media (min-width: 1000px) {
+  #experiencia.xp-cena {
+    padding-top: 0;
+    padding-bottom: 0;
+    /* 100svh de cena + a pista. A pista tem de ser maior que os ~630px
+       que o rodapé cobre, senão a cena nunca aparece limpa; o excedente
+       é o tempo de leitura antes de o rodapé começar a subir. */
+    min-height: min(200svh, calc(100svh + 1000px));
+  }
+
+  /* A sala violeta e o clarão saem: quem faz o chão agora é a pintura. */
+  #experiencia.xp-cena::before,
+  #experiencia.xp-cena::after {
+    display: none;
+  }
+
+  .xp-cena .xp-palco {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    /* Sangra da caixa da .container sem abrir rolagem lateral: o body já
+       tem overflow-x hidden, mesmo truque do .xp::before. */
+    margin-inline: calc(50% - 50vw);
+    width: 100vw;
+    overflow: hidden;
+
+    /* Três colunas, e a do meio é a única que importa: as duas de fora
+       têm a largura da carta, então a coluna do meio fica exatamente
+       centrada no palco e o globo com ela. A carta ocupa a terceira; a
+       primeira fica vazia, é parede pintada. Centralizar o globo dentro
+       de uma coluna de 1fr, como estava, punha ele a um terço da tela. */
+    --carta: clamp(300px, 30vw, 470px);
+    display: grid;
+    grid-template-columns: var(--carta) minmax(0, 1fr) var(--carta);
+    grid-template-rows: auto minmax(0, 1fr);
+    /* Vão curto de propósito: a coluna do meio é o que sobra depois das
+       duas larguras de carta, então cada pixel de vão sai do globo. Na
+       referência a folha quase encosta na esfera. */
+    column-gap: clamp(16px, 1.6vw, 28px);
+    row-gap: clamp(10px, 1.6vh, 24px);
+    align-items: center;
+    /* Sem a caixa de 1280 da .container: na referência a folha encosta na
+       borda direita do quadro e a cena usa a largura toda. Com o recuo de
+       container sobrava margem morta dos dois lados e a coluna do meio
+       ficava estreita demais para o globo. */
+    padding: clamp(52px, 7vh, 92px) clamp(24px, 3vw, 56px) clamp(28px, 4vh, 52px);
+  }
+
+  /* A pintura, de borda a borda do palco. O véu escuro é mais forte em
+     cima, onde mora o cabeçalho claro, e alivia no meio, onde está a
+     tinta que interessa. */
+  .xp-cena .xp-palco::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image:
+      /* Véu leve. A pintura nova traz cidade, paleta, tubos e pincéis, e
+         o véu antigo (0,62 no topo) engolia justamente esse detalhe. Quem
+         segura o texto são os véus locais — a elipse do cabeçalho e a das
+         duas linhas sob o globo —, não este, que só assenta o tom. */
+      linear-gradient(180deg, rgba(6, 6, 8, 0.28) 0%, rgba(6, 6, 8, 0.15) 26%, rgba(6, 6, 8, 0.12) 62%, rgba(6, 6, 8, 0.26) 100%),
+      image-set(url("../assets/globo/cenario.webp") 1x);
+    background-size: cover, cover;
+    background-position: center, center 56%;
+    background-repeat: no-repeat;
+  }
+
+  /* display: contents dissolve o .globo para que a carta possa atravessar
+     as duas fileiras do palco. É seguro aqui porque .xp-cena só existe
+     depois de o globo sair do hidden. */
+  .xp-cena .globo {
+    display: contents;
+  }
+
+  .xp-cena .xp-head {
+    grid-column: 1 / 3;
+    grid-row: 1;
+    align-self: end;
+    justify-self: start;
+    /* 46ch e não 54: o conjunto do globo agora sobe até esta fileira, e
+       com 54ch a última linha do lede entrava no caminho do aro. */
+    max-width: 46ch;
+  }
+
+  .xp-cena .globo-cena {
+    grid-column: 2;
+    /* Nas duas fileiras: o conjunto aro+base é alto e o que sobrava para
+       ele numa fileira só deixava a esfera com menos de metade do que a
+       coluna comporta. Sobe por trás do cabeçalho, que por isso ficou
+       mais estreito do que a coluna. */
+    grid-row: 1 / -1;
+    align-self: stretch;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-end;
+    /* O quadro sai: a cena já é o fundo do palco. */
+    background: none;
+    border-radius: 0;
+    padding: 0;
+    overflow: visible;
+  }
+
+  /* A tela ocupa a coluna inteira e o que sobra depois das duas linhas
+     de dica; quem decide o tamanho do globo dentro dela é o js, que
+     mede as duas dimensões. Sem aspect-ratio: a caixa é retangular de
+     propósito, e o conjunto se ancora pelo pé dentro dela. */
+  .xp-cena .globo-cv {
+    flex: 1 1 auto;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    max-width: none;
+    aspect-ratio: auto;
+  }
+
+  .xp-cena .globo-dica {
+    margin-top: 10px;
+  }
+
+  /* No palco largo a tela do globo é ~25% da área visível e sobra
+     bastante fundo para rolar a página com o dedo, então aqui o gesto
+     vertical pode ser da esfera. É o que faz girar para cima funcionar
+     também em tela de toque. */
+  .xp-cena .globo-cv {
+    touch-action: none;
+  }
+
+  /* As duas linhas debaixo do globo caem sobre a parte clara da mesa: ali
+     a dica media 3,81:1 e a nota 3,49:1. Mesmo recurso do cabeçalho, uma
+     elipse difusa em vez de uma tarja, para não colar um retângulo de
+     interface no meio da pintura. */
+  .xp-cena .globo-cena::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -40px;
+    width: min(112%, 660px);
+    /* Alta o bastante para a segunda linha cair perto do miolo da elipse
+       e não na saia dela: com 164px a nota media 4,27:1 sobre a mesa
+       clara da pintura nova. */
+    height: 208px;
+    transform: translateX(-50%);
+    z-index: -1;
+    background: radial-gradient(50% 50% at 50% 50%,
+      rgba(5, 4, 10, 0.86) 0%,
+      rgba(5, 4, 10, 0.78) 46%,
+      rgba(5, 4, 10, 0.4) 78%,
+      rgba(5, 4, 10, 0) 100%);
+    pointer-events: none;
+  }
+
+  /* Três cargos não cabem numa folha só, então ela rola por dentro.
+     Sem overscroll-behavior de propósito: dentro de um palco preso,
+     conter a rolagem prende o leitor — chegando ao fim da folha a
+     página tem de continuar descendo sozinha. */
+  .xp-cena .globo-legenda {
+    grid-column: 3;
+    grid-row: 1 / -1;
+    align-self: center;
+    /* Mais baixa que o palco de propósito: com a folha de ponta a ponta
+       ela vira uma barra lateral, e o que se quer é uma folha pousada na
+       cena, com pintura em cima e embaixo dela. */
+    max-height: min(100%, 84svh);
+    /* Coluna flex para o rodapé de folhear poder descer até o pé do
+       papel: com a altura travada no cargo mais alto, uma página curta
+       deixaria a numeração boiando no meio da folha. */
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(90, 68, 48, 0.42) transparent;
+  }
+
+  /* O véu por trás do texto de abertura. A parede pintada é clara e o
+     título é branco: sem escurecer nada o texto some na tinta.
+
+     Mas o véu NÃO pode ser um retângulo com cantos arredondados — vira um
+     cartão de interface colado por cima de um quadro, que é exatamente a
+     costura que esta seção está tentando não ter. Então ele é uma elipse
+     difusa que sangra para fora do texto: lê como a luz caindo naquele
+     canto da parede, e não como uma caixa. */
+  .xp-cena .xp-head {
+    position: relative;
+    padding: 0;
+    background: none;
+  }
+
+  .xp-cena .xp-head::before {
+    content: '';
+    position: absolute;
+    /* Insets simétricos e elipse de 50%/50% no centro: é o que faz o
+       degradê chegar a zero exatamente na borda da caixa. Com a elipse
+       maior que a caixa (a primeira tentativa) ela era cortada reta em
+       baixo com alfa 0,19 e aparecia um risco horizontal na parede. */
+    inset: -54% -52%;
+    z-index: -1;
+    /* A rampa foi alargada depois de medir: com a queda antiga a linha de
+       baixo do cabeçalho ("3 anos e 9 meses") caía onde o véu já valia
+       0,22 e media 4,22:1, abaixo do piso de 4,5. */
+    background: radial-gradient(50% 50% at 50% 50%,
+      rgba(5, 4, 10, 0.92) 0%,
+      rgba(5, 4, 10, 0.88) 40%,
+      rgba(5, 4, 10, 0.7) 66%,
+      rgba(5, 4, 10, 0.32) 86%,
+      rgba(5, 4, 10, 0) 100%);
+    pointer-events: none;
+  }
+
+  /* O pé da folha esmaece quando ainda há cargo embaixo. É sticky e não
+     absolute porque o elemento que rola é a própria folha: absolute subiria
+     junto com o conteúdo e o aviso sumiria na primeira rolagem.
+
+     O tom saiu do papel medido na parte de baixo da folha, então o
+     esmaecido lê como sombra no papel e não como um véu por cima dele. */
+  .globo-legenda::after {
+    content: '';
+    display: block;
+    position: sticky;
+    bottom: -12px;
+    height: 56px;
+    margin-top: -56px;
+    /* Chega até a dobra do papel, senão o esmaecido termina num retângulo
+       reto e a borda rasgada denuncia a costura. -10px é exatamente o
+       padding lateral da folha: encosta na borda sem invadir o rasgo. */
+    margin-inline: -10px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.24s var(--ease-out);
+    /* A rampa começa fraca: o que está sob o topo do esmaecido ainda é
+       texto para ler, e só o último pedaço some de vez. */
+    background: linear-gradient(180deg,
+      rgba(233, 195, 148, 0) 0%,
+      rgba(233, 195, 148, 0.28) 52%,
+      rgba(226, 185, 137, 0.9) 100%);
+  }
+
+  .globo-legenda.tem-mais::after { opacity: 1; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .globo-legenda::after { transition: none; }
+  }
+}
+
+/* Tela baixa: o cabeçalho não encolhe sozinho porque a tipografia da
+   página escala por LARGURA, e aqui quem falta é altura. Em 1366x720 os
+   272px fixos de cabeçalho deixavam o globo com 278px — o protagonista
+   virava miniatura. Estes cortes devolvem ~60px para a esfera sem tirar
+   nenhuma informação da tela. */
+@media (min-width: 1000px) and (max-height: 820px) {
+  .xp-cena .xp-title { font-size: clamp(30px, 5.6vh, 52px); }
+
+  .xp-cena .xp-lede {
+    font-size: 15.5px;
+    line-height: 1.5;
+  }
+
+  .xp-cena .xp-scale { margin-top: 14px; }
+
+  .xp-cena .globo-cv { max-height: calc(100% - 66px); }
+
+  .xp-cena .globo-dica,
+  .xp-cena .globo-nota { font-size: 12.2px; }
+}
+
+/* ---------- A carta com os cargos dentro ---------- */
+.globo-carta {
+  margin-top: 12px;
+}
+
+/* A folha é mais apertada que a página: aqui cada linha economizada é
+   uma linha de cargo que aparece sem precisar rolar o pergaminho. */
+.globo-carta .xp-tasks {
+  gap: 7px;
+  margin-top: 12px;
+}
+
+.globo-carta .xp-tasks li {
+  font-size: 14.2px;
+  line-height: 1.5;
+}
+
+.globo-carta .xp-desc {
+  line-height: 1.55;
+}
+
+
+
+/* O anel de foco da página é o periwinkle #8b9dff. Sobre o pergaminho
+   (luminância 0,712) ele mede 1,82:1, abaixo dos 3:1 que a 1.4.11 pede
+   para indicador de foco. Dentro da folha ele vira tinta: 11,9:1. */
+.globo-legenda:focus-visible,
+.globo-legenda :focus-visible {
+  outline-color: #2b1c0f;
+}
+
+.globo-cargos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.globo-carta .xp-job {
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+
+/* O separador entre cargos saiu junto com a rolagem: agora só existe
+   uma página por vez, e o seletor de irmão adjacente continuava casando
+   com o irmão hidden — desenhava um fio solto no alto da segunda e da
+   terceira página, com 20px de recuo atrás dele. */
+
+/* Sobre pergaminho, tudo escuro. Os valores saíram do miolo medido
+   (#efc694, luminância 0,609). */
+.globo-carta .xp-role { color: #2b1c0f; font-size: clamp(16px, 1.4vw, 19px); }
+.globo-carta .xp-period,
+.globo-carta .xp-desc,
+.globo-carta .xp-tasks li { color: #4a3623; }
+.globo-carta .xp-desc strong,
+.globo-carta .xp-company { color: #2b1c0f; }
+.globo-carta .xp-tasks li::before { background: rgba(74, 54, 35, 0.55); }
+.globo-carta .xp-now { color: #6b4a12; }
+.globo-carta .xp-now-dot { background: #6b4a12; }
+.globo-carta .xp-selo { border-color: rgba(70, 48, 26, 0.35); }
+
+/* ---------- a folha aperta para caber a stack ----------
+   Os rótulos com ícone custaram três linhas por cargo, e a folha passou
+   de 728px de conteúdo para 616 de espaço: as pastilhas caíam fora. O
+   que sai é repetição, não informação.
+
+   O selo e o nome da empresa dentro do cargo eram os mesmos que já estão
+   no alto da folha — é o padrão da referência, onde a empresa aparece uma
+   vez, sob "Experiência", e o bloco do cargo traz só a função. Fora da
+   folha, na lista sem JS, eles continuam: lá não existe cabeçalho de
+   carta para carregar essa informação. */
+.globo-carta .xp-onde {
+  display: none;
+}
+
+/* "Atual" ao lado da função em vez de numa linha só dele. */
+.globo-carta .xp-job-head {
+  align-items: center;
+  gap: 4px 12px;
+}
+
+.globo-carta .xp-job-ident {
+  flex: 1 1 auto;
+}
+
+.globo-carta .xp-job-body {
+  margin-top: 16px;
+}
+
+.globo-carta .xp-job-body .xp-rotulo {
+  margin-top: 13px;
+}
+
+.globo-carta .xp-tasks {
+  gap: 6px;
+}
+
+.globo-carta .xp-tasks li {
+  line-height: 1.44;
+}
+
+.globo-carta .xp-desc {
+  line-height: 1.5;
+}
+
+.globo-carta .xp-stack li {
+  padding: 3px 10px;
+}
+
+/* ---------- rótulos e pastilhas sobre o pergaminho ----------
+   Os mesmos valores escuros do resto da folha; a pastilha troca o véu
+   branco por um bege queimado, senão ela clareia o papel em vez de se
+   assentar nele. */
+/* #705436 e não #7a5c3c: o rótulo tem 11,5px, então o piso é 4,5 e o
+   tom anterior media 4,45 sobre o miolo mais claro do papel
+   (rgb 253,213,165). Este dá 5,06. */
+.globo-carta .xp-rotulo,
+.globo-legenda > .xp-rotulo {
+  color: #705436;
+}
+
+.globo-carta .xp-stack li {
+  border-color: rgba(90, 68, 48, 0.34);
+  background: rgba(120, 82, 42, 0.1);
+  color: #4a3623;
+}
+
+/* Sobre o papel o logo assume a cor da marca. Seis delas foram
+   escurecidas no espaço linear (o matiz fica, a luminância desce) porque
+   sobre o miolo da pastilha — rgb(240,200,153) — as originais mediam
+   entre 1,55 e 2,82 e sumiam no bege. O alvo é 3,0, o piso de contraste
+   para elemento gráfico. As que já passavam ficaram intactas. */
+.globo-carta .xp-marca {
+  fill: var(--marca, currentColor);
+}
+
+.xp-marca--python { --marca: #3776AB; }         /* oficial, media 3,09 */
+.xp-marca--django { --marca: #092E20; }         /* oficial, media 9,43 */
+.xp-marca--nextjs { --marca: #000000; }         /* oficial, media 13,43 */
+.xp-marca--teamviewer { --marca: #050A52; }     /* oficial, media 11,46 */
+.xp-marca--tailwind { --marca: #037D93; }       /* de #06B6D4, era 1,55 */
+.xp-marca--docker { --marca: #1A77BD; }         /* de #2496ED, era 2,02 */
+.xp-marca--openvpn { --marca: #AF5D15; }        /* de #EA7E20, era 1,79 */
+.xp-marca--git { --marca: #CC4329; }            /* de #F05032, era 2,28 */
+.xp-marca--anydesk { --marca: #D23B33; }        /* de #EF443B, era 2,41 */
+.xp-marca--adobe-acrobat { --marca: #E21A22; }  /* de #EC1C24, era 2,82 */
+.xp-marca--totvs { --marca: #363636; }         /* oficial, mede 7,73 */
+
+/* A Microsoft pediu a remoção das marcas dela do simple-icons, então este
+   traçado não vem de lá — mas a marca é literalmente quatro quadrados
+   iguais com um vão, então é reprodução exata, não aproximação. As quatro
+   cores oficiais sobre o papel mediam entre 1,10 (o amarelo) e 2,26, daí
+   o mesmo escurecimento linear das outras. */
+.globo-carta .xp-marca--microsoft .ms-1 { fill: #CD421B; }  /* de #F25022, era 2,26 */
+.globo-carta .xp-marca--microsoft .ms-2 { fill: #557E00; }  /* de #7FBA00, era 1,50 */
+.globo-carta .xp-marca--microsoft .ms-3 { fill: #0079B2; }  /* de #00A4EF, era 1,78 */
+.globo-carta .xp-marca--microsoft .ms-4 { fill: #956A00; }  /* de #FFB900, era 1,10 */
+
+@media (hover: hover) {
+  .globo-carta .xp-job:hover .xp-stack li {
+    border-color: rgba(90, 68, 48, 0.55);
+    background: rgba(120, 82, 42, 0.17);
+  }
+}
+
+/* ---------- folhear os cargos ----------
+   As setas no pé da folha, com a contagem no meio, como numeração de
+   página. Ficam sobre o pergaminho, então herdam os mesmos tons escuros
+   do resto da carta. */
+/* O [hidden] do navegador é regra do agente e perde para qualquer
+   display de autor: sem esta linha o rodapé continuava ocupando 61px de
+   papel na empresa de um cargo só, invisível e empurrando o conteúdo
+   para fora da folha. */
+.globo-folhear[hidden] {
+  display: none;
+}
+
+.globo-folhear {
+  /* auto empurra para o pé, como numeração de página. */
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(90, 68, 48, 0.28);
+}
+
+.globo-folha-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* 34px e não menos: é alvo de toque, e abaixo disso vira mira. */
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid rgba(90, 68, 48, 0.4);
+  border-radius: 50%;
+  background: rgba(120, 82, 42, 0.1);
+  color: #4a3623;
+  cursor: pointer;
+  transition: background 0.2s var(--ease-out), border-color 0.2s var(--ease-out), opacity 0.2s var(--ease-out);
+}
+
+.globo-folha-btn svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+
+.globo-folha-btn:disabled {
+  opacity: 0.32;
+  cursor: default;
+}
+
+@media (hover: hover) {
+  .globo-folha-btn:not(:disabled):hover {
+    border-color: rgba(70, 48, 26, 0.75);
+    background: rgba(120, 82, 42, 0.2);
+  }
+}
+
+.globo-folha-conta {
+  min-width: 5.5ch;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  /* Mesmo tom medido dos rótulos: 5,06 sobre o miolo mais claro do papel. */
+  color: #705436;
+}
+
+/* ---------- a virada ----------
+   A página entra girando na dobradiça esquerda, como folha de bloco
+   presa por cima. Só a que entra é animada: a que sai some na hora, e a
+   300ms ninguém percebe a ausência da saída — animar as duas exigiria
+   manter as duas no DOM visível e dobraria o custo por virada.
+
+   A perspectiva mora na carta, não na página: em cada página o eixo de
+   fuga seria recalculado a partir do próprio elemento e o giro sairia
+   torto. */
+.globo-carta {
+  perspective: 1100px;
+}
+
+.globo-carta .xp-job {
+  transform-origin: left center;
+}
+
+@keyframes folha-frente {
+  from { opacity: 0; transform: rotateY(18deg) translateX(16px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes folha-tras {
+  from { opacity: 0; transform: rotateY(-18deg) translateX(-16px); }
+  to { opacity: 1; transform: none; }
+}
+
+.globo-carta .xp-job.folheia-frente {
+  animation: folha-frente 0.3s var(--ease-out) both;
+}
+
+.globo-carta .xp-job.folheia-tras {
+  animation: folha-tras 0.3s var(--ease-out) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .globo-carta .xp-job.folheia-frente,
+  .globo-carta .xp-job.folheia-tras {
+    animation: none;
+  }
+}
+
+/* ---------- o acento frio sai da cena ----------
+   O fio à esquerda do lede e o lilás de "3 anos e 9 meses" são o acento
+   violeta do desenho antigo, de quando esta seção era uma sala fria. Na
+   pintura a óleo eles leem como interface esquecida por cima do quadro.
+
+   O fio some e o recuo que existia só para abrir espaço para ele vai
+   junto. A cor vira o dourado do próprio céu da pintura, amostrado por
+   k-means no arquivo: #e9b46e é o segundo tom dominante e mede 8,15
+   sobre o véu do cabeçalho, bem acima do piso de 4,5.
+
+   Escopado a .xp-cena: na lista sem JS o fundo continua sendo a sala
+   violeta, que é onde aquele acento nasceu e ainda faz sentido. */
+.xp-cena .xp-lede {
+  padding-left: 0;
+}
+
+.xp-cena .xp-lede::before {
+  display: none;
+}
+
+.xp-cena .xp-scale-total {
+  color: #e9b46e;
+}
+
+/* No telefone o palco não se prende: a composição de duas colunas não
+   cabe numa tela vertical, então a seção volta a ser fluxo normal com o
+   cenário confinado ao quadro do globo. O que ela precisa é só da pista
+   de rolagem, senão o rodapé cobre os últimos cargos da carta e eles
+   nunca aparecem inteiros. */
+@media (max-width: 999px) {
+  #experiencia.xp-cena {
+    padding-bottom: calc(var(--footer-h) * 0.74);
   }
 }

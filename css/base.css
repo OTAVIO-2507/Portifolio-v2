@@ -2,14 +2,6 @@
    base.css: tokens de design, reset, fontes e tipografia base
    ============================================================ */
 
-@font-face {
-  font-family: 'Bropella';
-  src: url('../assets/fonts/bropella.otf') format('opentype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
 :root {
   /* Cores */
   --bg: #060608;
@@ -27,13 +19,28 @@
   --line-strong: rgba(255, 255, 255, 0.16);
 
   /* Tipografia */
+  /* ---------- tipografia: três vozes, não seis ----------
+     Antes eram seis famílias para doze regras: Archivo Black numa regra,
+     DM Sans noutra, Poppins só para o nome (com subset text= das letras
+     de "Otávio Oliveira", inútil para qualquer outra coisa) e a Bropella
+     carregada sem uso nenhum.
+
+     Agora: a display fala, a sans lê, a mono cataloga.
+
+     Fraunces é old-style com eixos SOFT e WONK — terminais amolecidos e
+     formas alternativas de propósito, desenho que parece talhado à mão.
+     É o que conversa com a tinta a óleo das artes da página sem virar a
+     didone de catálogo que todo portfólio usa. */
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
   --font-sans: 'Hanken Grotesk', system-ui, sans-serif;
-  --font-display: 'Archivo Black', sans-serif;
-  /* Só o nome no hero: geométrica de bojos circulares, o desenho mais
-     próximo do lettering do wishlabs (que lá é SVG, não fonte). */
-  --font-hero: 'Poppins', 'Archivo Black', sans-serif;
   --font-mono: 'Spline Sans Mono', ui-monospace, monospace;
-  --font-script: 'Bropella', cursive;
+
+  /* Tom do rodapé, amostrado da lã da ovelha na própria pintura. O accent
+     da casa é frio e o quadro é quente: sobre ele o lilás lia como cor
+     aplicada por cima, esta lê como cor da cena. Reamostrado a cada troca
+     de arte — e nas três pinturas o creme quente caiu quase no mesmo
+     valor, o que é sinal de que a escolha é da luz e não do assunto. */
+  --footer-tint: #efe7d4;
 
   /* Motion */
   --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
@@ -129,9 +136,12 @@ h1, h2, h3 {
 
 /* Títulos de seção compartilhados */
 .section-title {
+  font-family: var(--font-display);
   font-size: clamp(32px, 5vw, 52px);
   font-weight: 900;
-  letter-spacing: -0.035em;
+  /* -0,015 e não -0,035: serifa em caixa alta com o aperto que a
+     grotesca aguentava encosta serifa em serifa e embola. */
+  letter-spacing: -0.015em;
   text-transform: uppercase;
   color: var(--ink-strong);
 }

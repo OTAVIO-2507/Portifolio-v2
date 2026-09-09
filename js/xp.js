@@ -18,6 +18,7 @@ function initXp({ reduced }) {
 
   const rail = sec.querySelector('.xp-rail');
   const fill = sec.querySelector('[data-xp-line]');
+  const head = sec.querySelector('[data-xp-head]');
   const nodes = [...sec.querySelectorAll('[data-xp-node]')];
   const cards = [...sec.querySelectorAll('.xp-job')];
   if (!rail || !fill) return;
@@ -36,8 +37,9 @@ function initXp({ reduced }) {
     const r = rail.getBoundingClientRect();
 
     if (r.bottom < -200 || r.top > vh + 200) {
-      // Sai de cena sem deixar cartão preso em foco.
+      // Sai de cena sem deixar cartão preso em foco nem cabeça acesa.
       cards.forEach((card) => card.classList.remove('is-active'));
+      if (head) head.classList.remove('is-on');
       return;
     }
 
@@ -66,6 +68,14 @@ function initXp({ reduced }) {
     // fica um pouco à frente do que está sendo lido, nunca atrás.
     const p = Math.max(0, Math.min(1, (vh * 0.62 - r.top) / Math.max(1, r.height)));
     fill.style.transform = 'scaleY(' + p.toFixed(4) + ')';
+
+    // A cabeça anda por transform, no mesmo ponto onde o preenchimento
+    // termina. Só acende entre as pontas: parada no topo ou no fim ela
+    // viraria enfeite, não indicação de avanço.
+    if (head) {
+      head.style.transform = 'translateY(' + (r.height * p).toFixed(1) + 'px)';
+      head.classList.toggle('is-on', p > 0.002 && p < 0.998);
+    }
 
     const y = r.top + r.height * p;
     nodes.forEach((n, i) => n.classList.toggle('is-lit', centros[i] <= y + 2));
