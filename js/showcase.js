@@ -370,6 +370,10 @@ function initCursor(sec) {
   const cur = document.createElement('div');
   cur.className = 'proj-cursor';
   cur.textContent = 'Ver Projeto';
+  // Balão de ponteiro, e ponteiro é coisa de quem enxerga: sem isto o
+  // texto ficava solto no fim do documento, depois do rodapé, e o leitor
+  // de tela anunciava "Ver Projeto" sem nada a que se referir.
+  cur.setAttribute('aria-hidden', 'true');
   document.body.appendChild(cur);
 
   let tx = 0, ty = 0, x = 0, y = 0, active = false, raf = null;
