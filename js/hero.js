@@ -12,17 +12,25 @@ function initHero({ reduced }) {
 }
 
 /* Divide o h1 em letras para a entrada em cascata.
-   Sem JS (ou com motion reduzido) o título simplesmente aparece. */
+   Sem JS (ou com motion reduzido) o título simplesmente aparece.
+
+   Uma letra por span é desenho, não conteúdo: para o leitor de tela isso
+   vira "O, t, á, v, i, o" — o nome soletrado, no h1 mais importante da
+   página. Então o texto inteiro vai no aria-label ANTES do corte e os
+   pedaços saem da árvore de acessibilidade. */
 function splitHeadline(reduced) {
   const el = document.querySelector('[data-split]');
   if (!el || reduced) return;
 
-  const words = el.textContent.trim().split(' ');
+  const texto = el.textContent.trim();
+  const words = texto.split(' ');
+  el.setAttribute('aria-label', texto);
   el.textContent = '';
   let i = 0;
   words.forEach((word, wi) => {
     const w = document.createElement('span');
     w.className = 'word';
+    w.setAttribute('aria-hidden', 'true');
     for (const ch of word) {
       const span = document.createElement('span');
       span.className = 'hero-char';
