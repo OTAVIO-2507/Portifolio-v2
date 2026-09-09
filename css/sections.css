@@ -776,6 +776,14 @@
 
 .proj-shot-img img {
   width: 100%;
+  /* O par width/height no HTML existe para o navegador reservar a caixa
+     ANTES de a captura chegar — sem ele a moldura nascia com altura zero
+     e crescia no meio da rolagem, arrastando o card e as medidas do
+     js/showcase.js junto. Mas o atributo também entra como altura em
+     PIXELS, e aí 776px de espaço vazio ficariam reservados: é este
+     `height: auto` que devolve a decisão à proporção. Um sem o outro
+     troca um defeito por outro. */
+  height: auto;
   display: block;
   transform: scale(1.14);
   transform-origin: 50% 20%;
