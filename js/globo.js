@@ -795,9 +795,16 @@ function initGlobo({ reduced }) {
      Nada disso existe para quem pediu menos movimento: sem repouso e sem
      inércia, o globo só anda enquanto o dedo anda. */
   if (!reduced) {
-    let parado = false, ultimo = 0;
+    let parado = false, ultimo = 0, raf = null, naTela = false;
     cv.addEventListener('pointerdown', () => { parado = true; }, { once: true });
     const girar = (t) => {
+      /* O globo fica a milhares de pixels abaixo do hero, e o laço antigo
+         começava a rodar no load e nunca mais parava: com a página no
+         topo ele repintava a esfera inteira ~120 vezes por segundo —
+         projeção da costa, recorte, textura, aro — para ninguém.
+         "Canvas/efeitos pausam fora da viewport" é promessa escrita no
+         PRODUCT.md; aqui ela passa a valer. */
+      if (!naTela) { raf = null; ultimo = 0; return; }
       const dt = ultimo ? Math.min(64, t - ultimo) : 16.7;
       ultimo = t;
       if (!arrastando) {
@@ -818,8 +825,23 @@ function initGlobo({ reduced }) {
           desenha();
         }
       }
-      requestAnimationFrame(girar);
+      raf = requestAnimationFrame(girar);
     };
-    requestAnimationFrame(girar);
+    const acordar = () => { if (raf == null && naTela) raf = requestAnimationFrame(girar); };
+
+    /* Sem IntersectionObserver o laço roda como antes: navegador velho
+       perde a economia, nunca a cena. */
+    if (window.IntersectionObserver) {
+      new IntersectionObserver((entradas) => {
+        naTela = entradas[0].isIntersecting;
+        // Voltar à cena não pode ressuscitar um arremesso guardado desde a
+        // última vez: parado é parado.
+        if (!naTela) { vLon = 0; vLat = 0; }
+        acordar();
+      }).observe(cv);
+    } else {
+      naTela = true;
+    }
+    acordar();
   }
 }
