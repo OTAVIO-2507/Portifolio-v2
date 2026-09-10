@@ -51,6 +51,30 @@
   --container: 1440px;
   --gutter: 32px;
 
+  /* ---------- escala de texto pequeno ----------
+     Os títulos são clamp() calculado por seção — cada ambiente tem a
+     própria voz e não cabe numa escala. Já o texto pequeno (rótulo,
+     metadado, legenda, ficha técnica) é o mesmo trabalho em toda a
+     página, e estava escrito em dezesseis tamanhos entre 10,5 e 23px:
+     14 ao lado de 14,2, de 14,5 e de 14,6; 12 ao lado de 12,2, 12,4 e
+     12,5. Dois décimos de pixel ninguém enxerga — o que aquilo produzia
+     não era ajuste fino, era um número novo por seção, que a seção
+     seguinte copiava.
+
+     A escala abaixo não foi inventada: é a que a página já usava, com
+     as quase-colisões unificadas. Só colapsou o que não dá para ver —
+     diferenças abaixo de 0,75px. Os degraus que alguém escolheu de
+     propósito continuam de pé, inclusive o 10,5 do rótulo em mono, que
+     é pequeno porque tem tracking largo e caixa alta segurando a
+     leitura. */
+  --texto-2xs: 10.5px;  /* rótulo em mono, caixa alta, com tracking  */
+  --texto-xs: 11.5px;   /* selo, contador                            */
+  --texto-sm: 12px;     /* legenda, metadado                         */
+  --texto-md: 13px;     /* ficha técnica, apoio                      */
+  --texto-lg: 14px;     /* item de lista, corpo secundário           */
+  --texto-xl: 15.5px;   /* corpo em painel                           */
+  --texto-2xl: 17px;    /* corpo em destaque, entrada de seção       */
+
   /* Escala de z-index */
   --z-bg: 0;
   --z-content: 10;
