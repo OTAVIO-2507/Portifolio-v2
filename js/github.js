@@ -38,7 +38,23 @@ function initGithubCalendar() {
       build(card, data);
     })
     .catch(() => {
-      status.textContent = 'Não foi possível carregar as contribuições do GitHub agora.';
+      /* A mensagem sozinha era um beco: a API de contribuições cai, ou
+         estoura limite de requisição, e quem está avaliando fica olhando
+         um aviso sem nada para fazer — bem na seção que existe para
+         mostrar o perfil. O caminho até ele não depende dessa API, então
+         não tem por que morrer junto com ela. */
+      status.textContent = '';
+      const aviso = document.createElement('p');
+      aviso.className = 'gh-erro-texto';
+      aviso.textContent = 'O calendário de contribuições não carregou agora.';
+      const saida = document.createElement('a');
+      saida.className = 'gh-erro-saida';
+      saida.href = 'https://github.com/' + USER;
+      saida.target = '_blank';
+      saida.rel = 'noopener';
+      saida.textContent = 'Ver o perfil no GitHub';
+      status.appendChild(aviso);
+      status.appendChild(saida);
     });
 }
 

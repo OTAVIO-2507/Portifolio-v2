@@ -1168,6 +1168,33 @@
   padding: 34px 50px;
 }
 
+/* O estado de falha tem duas linhas: o que houve, e para onde ir. */
+.gh-erro-texto {
+  margin-bottom: 12px;
+}
+
+.gh-erro-saida {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--ink-strong);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: rgba(255, 255, 255, 0.35);
+  transition: text-decoration-color 0.25s ease;
+}
+
+.gh-erro-saida::after {
+  content: '↗';
+  font-size: 0.9em;
+}
+
+@media (hover: hover) {
+  .gh-erro-saida:hover {
+    text-decoration-color: var(--ink-strong);
+  }
+}
+
 .gh-scroll {
   position: relative;
   overflow-x: auto;
