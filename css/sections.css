@@ -67,8 +67,10 @@
   transition: color 0.2s ease;
 }
 
-.nav-links a:hover {
-  color: var(--ink-strong);
+@media (hover: hover) {
+  .nav-links a:hover {
+    color: var(--ink-strong);
+  }
 }
 
 .nav-cv {
@@ -456,8 +458,13 @@
 .iso-row--4 p { transition-delay: 0.15s; }
 .iso-row--5 p { transition-delay: 0.2s; }
 
-.iso:hover .iso-row p {
-  transform: translateY(calc(var(--iso-h) * -1));
+/* No toque este é o pior dos casos: o hover troca o CONTEÚDO visível da
+   linha, e grudado ele deixa a peça mostrando a face de trás para
+   sempre, sem nada que a devolva. */
+@media (hover: hover) {
+  .iso:hover .iso-row p {
+    transform: translateY(calc(var(--iso-h) * -1));
+  }
 }
 
 .about-manifesto {
@@ -978,8 +985,19 @@
   border: 1px solid #b9a988;
 }
 
-.proj-actions .btn-primary:hover {
-  background: #f2e8d2;
+@media (hover: hover) {
+  .proj-actions .btn-primary:hover {
+    background: #f2e8d2;
+  }
+}
+
+/* O press na palheta do ateliê. Não basta o .btn-primary:active de
+   components.css: esta regra tem a mesma especificidade e sections.css
+   carrega depois, então lá o creme do repouso venceria o press.
+   Escurece o creme em vez de clarear — a mão apertando afunda a tinta. */
+.proj-actions .btn-primary:active {
+  background: #d3c3a2;
+  border-color: #a1906f;
 }
 
 .proj-actions .btn-ghost {
@@ -988,9 +1006,16 @@
   background: rgba(10, 16, 19, 0.35);
 }
 
-.proj-actions .btn-ghost:hover {
-  border-color: rgba(214, 205, 184, 0.72);
-  background: rgba(160, 158, 140, 0.16);
+@media (hover: hover) {
+  .proj-actions .btn-ghost:hover {
+    border-color: rgba(214, 205, 184, 0.72);
+    background: rgba(160, 158, 140, 0.16);
+  }
+}
+
+.proj-actions .btn-ghost:active {
+  border-color: rgba(224, 216, 197, 0.85);
+  background: rgba(160, 158, 140, 0.28);
 }
 
 .proj-actions [data-mag] {
@@ -2150,7 +2175,9 @@
   transition: color 0.2s var(--ease-out), border-color 0.2s var(--ease-out), background 0.2s var(--ease-out);
 }
 
-.globo-aba:hover { color: var(--ink-strong); }
+@media (hover: hover) {
+  .globo-aba:hover { color: var(--ink-strong); }
+}
 
 .globo-aba.is-on {
   color: var(--ink-strong);
@@ -2335,8 +2362,10 @@ main {
   transition: color 0.25s ease;
 }
 
-.footer-sign:hover {
-  color: var(--accent-pale);
+@media (hover: hover) {
+  .footer-sign:hover {
+    color: var(--accent-pale);
+  }
 }
 
 /* Tipografia medida no rodapé da referência: DM Sans, tudo no mesmo
@@ -2390,8 +2419,10 @@ main {
   transition: color 0.2s ease;
 }
 
-.footer-links a:hover {
-  color: var(--ink-strong);
+@media (hover: hover) {
+  .footer-links a:hover {
+    color: var(--ink-strong);
+  }
 }
 
 /* Na coluna, junto dos outros contatos. Mantém o endereço à vista em vez
@@ -2556,8 +2587,14 @@ main {
     border-radius: 10px;
   }
 
-  .nav-links a:hover {
-    background: rgba(255, 255, 255, 0.06);
+  /* Aninhado, e não `and (hover: hover)` na consulta de fora: as regras
+     de layout deste bloco precisam valer no toque, só o realce é que
+     não. Este é o menu hambúrguer — a superfície com menos chance de
+     ter ponteiro na página inteira. */
+  @media (hover: hover) {
+    .nav-links a:hover {
+      background: rgba(255, 255, 255, 0.06);
+    }
   }
 
   .hero {
@@ -2733,7 +2770,9 @@ main {
   color: #5a4430;
 }
 
-.globo-legenda .globo-aba:hover { color: #2e1f12; }
+@media (hover: hover) {
+  .globo-legenda .globo-aba:hover { color: #2e1f12; }
+}
 
 .globo-legenda .globo-aba.is-on {
   color: #2e1f12;
