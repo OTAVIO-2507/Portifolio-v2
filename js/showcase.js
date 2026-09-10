@@ -103,7 +103,15 @@ function initScrollZoom(sec, reduced) {
   };
   // criarScrollSuave (reveal.js) da a esta secao a mesma inercia do
   // hero: os cards deslizam ate o valor novo em vez de colar nele.
-  const acordar = criarScrollSuave(update);
+  //
+  // Com movimento reduzido o atrito vai a 1, e ai o suave alcanca a
+  // rolagem no primeiro passo: `desloc` nasce zero, o laco desenha uma
+  // vez e dorme. Importa porque `desloc` NAO esta atras do guarda de
+  // `reduced` — ele entra no calculo dos fades de cobertura e do titulo,
+  // que continuam existindo por correcao, nao por enfeite. Com o atrito
+  // padrao esses fades ficavam arrastando atras da rolagem: movimento
+  // residual justamente para quem pediu nenhum.
+  const acordar = criarScrollSuave(update, reduced ? 1 : undefined);
   window.addEventListener('resize', () => { medirModo(); acordar(); }, { passive: true });
 }
 
