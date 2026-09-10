@@ -22,8 +22,9 @@ e-mail/LinkedIn e recrutador convencido de que o código dele entrega.
 
 Preciso, técnico, artesanal. Sóbrio e denso em detalhe — engenheiro que
 domina o ofício e mostra isso no acabamento, não em adjetivos. O toque
-humano vem da assinatura em fonte manuscrita (Bropella) e de textos em
-primeira pessoa, diretos, em PT-BR.
+humano vem dos textos em primeira pessoa, diretos, em PT-BR, e da tinta
+a óleo que serve de chão às seções: a mão aparece na pintura, não numa
+fonte que imita caligrafia.
 
 ## Anti-references
 
