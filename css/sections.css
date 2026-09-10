@@ -1263,6 +1263,19 @@
 .gh-stats .gh-total {
   color: #39d353;
   font-weight: 700;
+  transition: color 0.45s ease;
+}
+
+/* O modo arte tira o verde do GitHub de cena — a grade vira tinta, a
+   legenda troca de paleta, a chave acende no âmbar da lâmpada. O total
+   ficava para trás: o número mais proeminente da linha seguia verde,
+   sozinho, sobre o linho.
+
+   Este é o #d9903a de OLEO[4] em js/github.js, a face da pincelada mais
+   intensa — o mesmo tom que o ano usa no seu ponto mais alto, que é o
+   que um total é. Sobre o linho dá 7,0:1. */
+.github.is-arte .gh-stats .gh-total {
+  color: #d9903a;
 }
 
 .gh-stats .gh-link {
