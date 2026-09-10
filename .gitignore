@@ -1,3 +1,18 @@
 Thumbs.db
 .DS_Store
 node_modules/
+
+# Originais de arte antes da conversão.
+#
+# O site serve .webp; os .png/.jpg/.psd que ficam em assets/ são a fonte
+# de onde eles saíram — 26 MB que nenhuma página referencia. Ficam no
+# disco para uma reexportação futura, fora do repositório para sempre.
+#
+# Os dois logos de empresa em .jpg entraram antes desta regra e seguem
+# rastreados: arquivo já versionado não é afetado por .gitignore.
+assets/**/*.png
+assets/**/*.jpg
+assets/**/*.jpeg
+assets/**/*.psd
+assets/**/*.tif
+assets/**/*.tiff
