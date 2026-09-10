@@ -805,6 +805,22 @@
   position: relative;
   flex: 1 1 340px;
   min-width: min(100%, 320px);
+  /* ---------- a coluna tem a largura do texto ----------
+     Sem teto ela crescia até 465px, mas a tinta nunca passava de 380 —
+     o resto era folga morta. Na peça deitada normal essa folga cai na
+     borda da tela e ninguém vê; na ESPELHADA ela cai entre o texto e o
+     quadro e vira buraco: medido, o vão visível era de 161px contra os
+     76px do arranjo normal, mais que o dobro.
+
+     390 e não 380: é a medida de 44ch da descrição (382px) com uma
+     folga de respiro. Abaixo disso a descrição do Ping Pong ganha uma
+     quinta linha e o vão piora de novo — foi medido nos dois arranjos,
+     de 420 a 380. Aqui o vão fica em 85 contra 75, e os 10 que sobram
+     são a rag do texto alinhado à esquerda, que não tem como sumir.
+
+     O que a coluna devolve, a moldura absorve: ela passa de 648 para
+     724px, e a obra ficar maior é o ponto da seção. */
+  max-width: 390px;
   display: flex;
   flex-direction: column;
   gap: 17px;
@@ -2428,6 +2444,19 @@ main {
 
   .proj-media {
     order: -1;
+    /* A moldura para no seu teto de 780px dentro de uma coluna mais
+       larga, e centrada ela ficava 27px fora do prumo do texto. Aqui
+       embaixo a peça é foto em cima, legenda embaixo: as duas encostam
+       na mesma margem esquerda. */
+    justify-content: flex-start;
+  }
+
+  /* Espelhar não quer dizer nada quando a peça vira uma coluna só — o
+     `order` acima já põe a obra em cima nos dois casos. Mas row-reverse
+     continuava empacotando para a DIREITA, e com a coluna de texto agora
+     estreita isso jogava a ficha para o canto oposto ao da moldura. */
+  .proj--flip .proj-card {
+    flex-direction: row;
   }
 }
 

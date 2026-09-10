@@ -127,6 +127,12 @@ h1, h2, h3 {
   top: 16px;
 }
 
+/* Termo tecnico com hifen no meio nao pode quebrar na linha: "z-index"
+   partido em "z-" e "index" le como duas palavras. */
+.nao-quebra {
+  white-space: nowrap;
+}
+
 .container {
   max-width: var(--container);
   margin: 0 auto;
