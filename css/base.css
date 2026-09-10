@@ -59,6 +59,43 @@
   --z-cursor: 90;
 }
 
+/* ============================================================
+   Breakpoints: cinco fronteiras, uma forma de escrever cada uma
+   ============================================================
+   Custom property não é lida dentro de @media — não existe
+   var(--bp-lg) em media query. Então a fonte da verdade é esta
+   tabela, e o que a mantém verdadeira é obedecê-la.
+
+     620px   retrato de celular   rodapé, corte da arte
+     760px   celular → tablet     --gutter cai para 20px, menu vira
+                                  hambúrguer
+     900px   tablet               showcase solta o fundo preso, globo
+                                  troca de cena
+    1000px   desktop              about vira duas colunas, xp entra em
+                                  modo cinema
+    1080px   desktop largo        xp abre a linha do tempo inteira
+
+   CONVENÇÃO — daqui em diante, só estas duas formas:
+
+     acima:  @media (min-width: 900px)
+     abaixo: @media (max-width: 899.98px)
+
+   Os 0,02px não são preciosismo. Antes desta regra a página tinha
+   `max-width: 1079px` de um lado e `min-width: 1080px` do outro, e
+   entre os dois havia um vão: em 1079,5px — largura que aparece o
+   tempo todo com zoom de navegador e em tela com DPI fracionário —
+   nenhuma das duas regras valia, e a seção caía num estado que
+   ninguém desenhou. O par 760/761 tinha o mesmo vão.
+
+   Havia também sobreposição: `max-width: 1000px` e `min-width: 1000px`
+   valiam AMBAS em exatamente 1000px, então naquela largura o about
+   estava empilhado como celular enquanto a xp já estava em cinema de
+   desktop.
+
+   Fronteira nova só entra aqui, e só quando o conteúdo pedir — nunca
+   porque uma seção precisou de um ajuste. Ajuste de uma seção resolve
+   dentro da fronteira que já existe. */
+
 *,
 *::before,
 *::after {

@@ -567,7 +567,7 @@
   background-repeat: no-repeat;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 899.98px) {
   .showcase-bg-sticky {
     background-image:
       linear-gradient(180deg, rgba(10, 16, 19, 0.72) 0%, rgba(10, 16, 19, 0.26) 22%, rgba(10, 16, 19, 0.26) 74%, rgba(10, 16, 19, 0.8) 100%),
@@ -1385,7 +1385,7 @@
   padding-left: var(--indent);
 }
 
-@media (min-width: 761px) {
+@media (min-width: 760px) {
   .xp-line {
     --rail: 40px;
     --indent: 88px;
@@ -2408,7 +2408,7 @@ main {
    recorte central perdia justamente o domo e o mar — sobrava a porta. O
    rodapé encurta, para exigir menos corte, e o enquadramento desloca
    para a direita, onde a cúpula está. */
-@media (max-width: 620px) {
+@media (max-width: 619.98px) {
   :root {
     /* O conteúdo do rodapé mede 766px aqui; reservar menos cortava a
        assinatura no topo, porque o painel tem overflow: hidden. */
@@ -2426,7 +2426,7 @@ main {
    Responsividade
    ============================================================ */
 
-@media (max-width: 1000px) {
+@media (max-width: 999.98px) {
   .about-grid {
     grid-template-columns: 1fr;
     gap: 48px;
@@ -2455,7 +2455,7 @@ main {
    1080 e não 1025: é o breakpoint que o resto do arquivo já usa, e ficar
    um pouco ACIMA do ponto de quebra é o lado seguro do erro — sobra uma
    faixa estreita sem empilhamento, nunca uma com empilhamento vazando. */
-@media (max-width: 1079px) {
+@media (max-width: 1079.98px) {
   .showcase-head {
     /* Título preso sem fundo próprio colidiria com as peças que agora
        rolam por baixo dele. */
@@ -2490,7 +2490,7 @@ main {
   }
 }
 
-@media (max-width: 760px) {
+@media (max-width: 759.98px) {
   :root {
     --gutter: 20px;
   }
@@ -2666,7 +2666,7 @@ main {
    .xp-cena entra pelo JS, então no primeiro cálculo de estilo a imagem já
    está no computado e o navegador vai buscá-la. Media query resolve antes
    de existir requisição: 134 KB a menos em toda carga de desktop. */
-@media (max-width: 999px) {
+@media (max-width: 999.98px) {
   .globo-cena {
     background-image:
       linear-gradient(180deg, rgba(10, 8, 20, 0.3) 0%, rgba(10, 8, 20, 0.26) 52%, rgba(10, 8, 20, 0.74) 100%),
@@ -2674,7 +2674,7 @@ main {
   }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 899.98px) {
   .globo-cena {
     background-image:
       linear-gradient(180deg, rgba(10, 8, 20, 0.3) 0%, rgba(10, 8, 20, 0.26) 52%, rgba(10, 8, 20, 0.74) 100%),
@@ -3333,7 +3333,7 @@ main {
    cenário confinado ao quadro do globo. O que ela precisa é só da pista
    de rolagem, senão o rodapé cobre os últimos cargos da carta e eles
    nunca aparecem inteiros. */
-@media (max-width: 999px) {
+@media (max-width: 999.98px) {
   #experiencia.xp-cena {
     padding-bottom: calc(var(--footer-h) * 0.74);
   }
