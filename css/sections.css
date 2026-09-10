@@ -1073,6 +1073,30 @@
     inset 0 0 0 1px rgba(0, 0, 0, 0.5),
     inset 0 3px 18px rgba(0, 0, 0, 0.5),
     0 42px 110px -38px rgba(0, 0, 0, 0.85);
+  transition: background-color 0.6s ease;
+}
+
+/* ---------- o painel vira tela ----------
+   A tentação era reaproveitar assets/Projetos/linho.webp, que já estava
+   no painel. Mas aquele arquivo não é trama de tela: é um recorte
+   espelhado das telas encostadas da pintura, com barra de madeira no
+   meio e simetria evidente. Ladrilhado, lia como painel de compensado,
+   com emenda visível a cada 240px.
+
+   A trama aqui é DESENHADA: dois degradês de repetição cruzados, urdume
+   e trama, a 4px de passo. Sem arquivo, sem emenda possível — repetição
+   de gradiente é contínua por construção — e escala sozinha em qualquer
+   densidade de tela.
+
+   O chão esquenta junto: linho cru é bege terroso, não azul de painel
+   técnico, e é sobre ele que o dia sem commit aparece como tela nua. */
+.github.is-arte {
+  background:
+    repeating-linear-gradient(90deg,
+      rgba(255, 243, 222, 0.03) 0 1px, transparent 1px 4px),
+    repeating-linear-gradient(0deg,
+      rgba(255, 243, 222, 0.026) 0 1px, transparent 1px 4px),
+    linear-gradient(165deg, #241d15, #15100c);
 }
 
 .github-title {
@@ -1104,8 +1128,11 @@
   transition: background 0.5s ease, border-color 0.5s ease;
 }
 
-.gh-card.is-game {
-  background: #050507;
+/* O cartão interno se apaga: com o painel virando tela, uma segunda
+   caixa por cima dela seria moldura dentro de moldura. */
+.gh-card.is-arte {
+  background: transparent;
+  border-color: transparent;
 }
 
 .gh-status {
@@ -1170,9 +1197,10 @@
   height: 11px;
   border-radius: 3px;
   display: inline-block;
+  transition: background 0.45s ease;
 }
 
-.gh-game-toggle {
+.gh-arte-toggle {
   display: flex;
   align-items: center;
   gap: 9px;
@@ -1180,7 +1208,7 @@
   padding-left: 14px;
 }
 
-.gh-game-label {
+.gh-arte-label {
   font-family: var(--font-mono);
   font-size: 10.5px;
   letter-spacing: 0.1em;
@@ -1200,8 +1228,10 @@
   padding: 0;
 }
 
+/* Ligada, a chave é o âmbar da lâmpada da cena — não o verde do GitHub,
+   que é justamente a cor que o modo arte tira de cena. */
 .gh-switch.is-on {
-  background: #10b981;
+  background: #b8791f;
 }
 
 .gh-switch i {

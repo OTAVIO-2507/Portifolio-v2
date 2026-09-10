@@ -1,10 +1,10 @@
 // Calendário de contribuições do GitHub (via API pública jogruber.de)
-// com o easter egg "MODO JOGO": uma navinha atira nos quadradinhos.
+// com o MODO ARTE: a espátula repinta o ano a óleo.
 
 const USER = 'OTAVIO-2507';
 const API = 'https://github-contributions-api.jogruber.de/v4/';
 
-const CS = 13, GAP = 3, STEP = CS + GAP, MLH = 22, EXTRA = 80;
+const CS = 13, GAP = 3, STEP = CS + GAP, MLH = 22;
 const COLORS = ['#161b26', '#0e4429', '#006d32', '#26a641', '#39d353'];
 const MONTHS = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
 const MONTHS_FULL = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
@@ -115,9 +115,13 @@ function build(card, data) {
   tip.className = 'gh-tip';
   wrap.appendChild(tip);
 
+  // O <section class="github">: e nele que a trama do linho mora, e e
+  // ela que precisa aparecer quando a tinta entra.
+  const painel = card.closest('.github');
+
   const rects = new Map();
   const levels = new Map();
-  const state = { on: false, raf: null, canvas: null };
+  const state = { on: false, raf: null, telas: [] };
 
   weeks.forEach((week, wx) => {
     week.forEach((date, dy) => {
@@ -133,7 +137,12 @@ function build(card, data) {
       r.setAttribute('fill', COLORS[lv]);
       r.style.transition = 'opacity 0.1s';
       r.addEventListener('mouseenter', () => {
-        if (state.on) return;
+        /* Sem guarda de modo. O modo jogo suprimia isto porque lá o
+           quadradinho era alvo e o dado estava sendo destruido; aqui a
+           pincelada É o dado, e continuar dizendo a data e a contagem no
+           hover e' justamente o que separa uma releitura de um enfeite.
+           Os <rect> ficam com opacidade zero por baixo da tinta, e
+           opacidade zero ainda recebe ponteiro. */
         const c = data[date] ? data[date].count : 0;
         const dd = parseDate(date);
         tip.textContent = (c === 0 ? 'Sem contribuições' : c === 1 ? '1 contribuição' : c + ' contribuições') +
@@ -148,7 +157,7 @@ function build(card, data) {
     });
   });
 
-  // Rodapé: legenda + toggle do modo jogo + estatística
+  // Rodapé: legenda + chave do modo arte + estatística
   const foot = document.createElement('div');
   foot.className = 'gh-foot';
   card.appendChild(foot);
@@ -161,10 +170,14 @@ function build(card, data) {
   const less = document.createElement('span');
   less.textContent = 'Menos';
   legend.appendChild(less);
+  // Guardadas: a legenda tem de trocar de paleta junto com a grade,
+  // senao ela continua explicando um verde que saiu de cena.
+  const amostras = [];
   for (let i = 0; i < 5; i++) {
     const sq = document.createElement('i');
     sq.style.background = COLORS[i];
     legend.appendChild(sq);
+    amostras.push(sq);
   }
   const more = document.createElement('span');
   more.textContent = 'Mais';
@@ -172,13 +185,15 @@ function build(card, data) {
   left.appendChild(legend);
 
   const tg = document.createElement('div');
-  tg.className = 'gh-game-toggle';
+  tg.className = 'gh-arte-toggle';
   const tgLabel = document.createElement('span');
-  tgLabel.className = 'gh-game-label';
-  tgLabel.textContent = 'MODO JOGO';
+  tgLabel.className = 'gh-arte-label';
+  tgLabel.textContent = 'MODO ARTE';
   const btn = document.createElement('button');
   btn.className = 'gh-switch';
-  btn.setAttribute('aria-label', 'Ativar modo jogo');
+  // O rotulo nao muda com o estado: quem carrega o estado e aria-pressed,
+  // e um nome que se inverte a cada clique confunde quem le por audio.
+  btn.setAttribute('aria-label', 'Modo arte');
   btn.setAttribute('aria-pressed', 'false');
   const knob = document.createElement('i');
   btn.appendChild(knob);
@@ -196,168 +211,219 @@ function build(card, data) {
     total.toLocaleString('pt-BR') + '</strong> vezes no último ano no <strong class="gh-link">GitHub</strong>';
   foot.appendChild(stats);
 
-  const restore = () => {
+  const restaurar = () => {
     rects.forEach((r, date) => {
       const lv = data[date] ? data[date].level : 0;
       levels.set(date, lv);
       r.setAttribute('fill', COLORS[lv]);
+      r.style.transition = 'opacity 0.45s ease';
       r.style.opacity = '1';
     });
+    amostras.forEach((sq, i) => { sq.style.background = COLORS[i]; });
   };
 
-  const setGame = (on) => {
+  const setArte = (on) => {
     state.on = on;
     btn.classList.toggle('is-on', on);
     btn.setAttribute('aria-pressed', String(on));
-    card.classList.toggle('is-game', on);
-    labelG.style.opacity = on ? '0.14' : '1';
+    card.classList.toggle('is-arte', on);
+    if (painel) painel.classList.toggle('is-arte', on);
+    labelG.style.opacity = on ? '0.4' : '1';
     tip.style.opacity = '0';
-    wrap.style.paddingBottom = on ? EXTRA + 'px' : '0';
-    if (on) {
-      rects.forEach((r, date) => { if ((levels.get(date) || 0) === 0) r.style.opacity = '0'; });
-      const cv = document.createElement('canvas');
-      cv.width = svgW;
-      cv.height = svgH + EXTRA;
-      cv.style.cssText = 'position:absolute;left:0;top:0;width:' + svgW + 'px;height:' + (svgH + EXTRA) + 'px;z-index:10';
-      wrap.appendChild(cv);
-      state.canvas = cv;
-      runGame(cv, { weeks, data, rects, levels, state });
-    } else {
-      if (state.raf) { cancelAnimationFrame(state.raf); state.raf = null; }
-      if (state.canvas) { state.canvas.remove(); state.canvas = null; }
-      restore();
-    }
+
+    if (state.raf) { cancelAnimationFrame(state.raf); state.raf = null; }
+    state.telas.forEach((c) => c.remove());
+    state.telas = [];
+
+    if (!on) { restaurar(); return; }
+
+    /* Duas telas, não uma. A tinta é PERMANENTE: uma pincelada assentada
+       não sai mais, então aquela camada nunca é limpa. O brilho da
+       espátula é transitório e precisa sumir a cada quadro — desenhado na
+       mesma tela, ele viraria um borrão acumulado atravessando o ano.
+
+       As duas ficam ACIMA da grade sem receber ponteiro: os <rect>
+       continuam embaixo, invisíveis e clicáveis, então passar o mouse
+       sobre uma pincelada ainda diz a data e a contagem. O modo jogo
+       apagava o dado; este só troca a representação dele. */
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    const novaTela = (z) => {
+      const c = document.createElement('canvas');
+      c.width = Math.round(svgW * dpr);
+      c.height = Math.round(svgH * dpr);
+      c.style.cssText = 'position:absolute;left:0;top:0;pointer-events:none;z-index:' + z +
+        ';width:' + svgW + 'px;height:' + svgH + 'px';
+      c.getContext('2d').setTransform(dpr, 0, 0, dpr, 0, 0);
+      wrap.appendChild(c);
+      state.telas.push(c);
+      return c;
+    };
+
+    amostras.forEach((sq, i) => {
+      sq.style.background = i === 0 ? 'rgba(255,255,255,0.06)' : OLEO[i].face;
+    });
+    pintarOAno(novaTela(5), novaTela(6), { weeks, levels, rects, state });
   };
-  btn.addEventListener('click', () => setGame(!state.on));
+
+  btn.addEventListener('click', () => setArte(!state.on));
 }
 
-function runGame(cv, { weeks, data, rects, levels, state }) {
-  const ctx = cv.getContext('2d');
-  const W = cv.width, H = cv.height;
-  const player = { x: W / 2 - 15, y: H - 25, w: 30, h: 20, speed: 4, dir: 1 };
-  let bullets = [];
-  let particles = [];
-  let lastShot = 0;
-  const stars = Array.from({ length: 140 }, () => ({
-    x: Math.random() * W,
-    y: Math.random() * H,
-    sp: Math.random() * 0.4 + 0.1,
-    sz: Math.random() * 1.2 + 0.5,
-    a: Math.random() * 0.5 + 0.1,
-  }));
+/* ============================================================
+   O ano em tinta
+   ============================================================
+   O modo antigo era uma navinha atirando nos quadradinhos. Divertido,
+   mas Space Invaders não tem nada a ver com um ateliê à hora azul — e o
+   tiro APAGAVA o registro de commits, inventando um estado que nunca
+   existiu.
 
-  const explode = (x, y, color) => {
-    for (let i = 0; i < 12; i++) {
-      const ang = Math.random() * Math.PI * 2;
-      const sp = Math.random() * 2.5 + 1.2;
-      particles.push({ x, y, vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp, color, sz: Math.random() * 2 + 1, life: 0, max: Math.random() * 15 + 15 });
-    }
+   Aqui a espátula atravessa a grade semana a semana e assenta uma
+   pincelada por dia com commit. O número não muda: muda a
+   representação. O verde do GitHub é raspado pela própria espátula, uma
+   coluna por vez, e no lugar dele entra a paleta da pintura que serve de
+   chão à seção.
+
+   Frio e fino para poucos commits, quente e grosso para muitos: a escala
+   de intensidade vira escala de TEMPERATURA e MASSA, que é como um
+   pintor a leria. Dia sem commit é tela nua, e ali aparece a trama do
+   linho do próprio painel.
+
+   Não há laço de repouso. Quando o ano termina de ser pintado é um
+   quadro parado, e quadro parado não gasta quadro de animação. */
+
+/* Os tons saíram por percentil de luminância da própria pintura do
+   ateliê (assets/Projetos/cenario.webp): o teal da parede nos níveis
+   baixos, o ocre das telas encostadas no meio, o âmbar da lâmpada no
+   alto. `massa` é a espessura da pincelada. */
+const OLEO = [
+  null,
+  { face: '#33565c', luz: '#547e86', sombra: '#16292d', massa: 0.42 },
+  { face: '#5a7d6a', luz: '#83a68c', sombra: '#2c4436', massa: 0.62 },
+  { face: '#9a7a3e', luz: '#c9a45f', sombra: '#4f3a17', massa: 0.82 },
+  { face: '#d9903a', luz: '#f6c877', sombra: '#7d4d12', massa: 1.00 },
+];
+
+const DURACAO_PINTURA = 2600;
+
+function pintarOAno(telaTinta, telaFerramenta, { weeks, levels, rects, state }) {
+  const ctx = telaTinta.getContext('2d');
+  const fer = telaFerramenta.getContext('2d');
+  const larguraCss = parseFloat(telaTinta.style.width);
+  const alturaCss = parseFloat(telaTinta.style.height);
+  const reduzido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* Ruído estável por dia: a mesma pincelada sai igual toda vez que o
+     modo é ligado. Aleatório de verdade faria o quadro mudar a cada
+     clique, e quadro que muda sozinho não é quadro. */
+  const ruido = (semente, n) => {
+    const s = Math.sin(semente * 127.1 + n * 311.7) * 43758.5453;
+    return s - Math.floor(s);
   };
 
-  const resetLevels = () => {
-    rects.forEach((r, date) => {
-      const lv = data[date] ? data[date].level : 0;
-      levels.set(date, lv);
-      r.setAttribute('fill', COLORS[lv]);
-      r.style.opacity = lv === 0 ? '0' : '1';
-    });
-  };
+  /* Uma pincelada de espátula: quadrilátero irregular de cantos moles,
+     pegando luz em cima e à direita — a mesma direção da lâmpada da
+     cena — e com a sombra caindo embaixo e à esquerda. */
+  function pincelada(x, y, lado, tinta, semente) {
+    const r = (n) => ruido(semente, n);
+    const folga = lado * 0.16;
+    const d = (n) => (r(n) - 0.5) * 2 * folga;
+    const p = [
+      [x + d(1), y + d(2)],
+      [x + lado + d(3), y + d(4)],
+      [x + lado + d(5), y + lado + d(6)],
+      [x + d(7), y + lado + d(8)],
+    ];
 
-  const update = () => {
-    // A nave patrulha só o trecho que ainda tem quadradinhos vivos
-    let minWi = -1, maxWi = -1;
-    weeks.forEach((week, wx) => {
-      week.forEach((date) => {
-        if (date && (levels.get(date) || 0) > 0) {
-          if (minWi === -1) minWi = wx;
-          minWi = Math.min(minWi, wx);
-          maxWi = Math.max(maxWi, wx);
-        }
-      });
-    });
-    let minX = 0, maxX = W - player.w;
-    if (minWi !== -1) {
-      minX = minWi * STEP;
-      maxX = Math.max(minX, Math.min(W - player.w, (maxWi + 1) * STEP - player.w));
-    }
-    player.x = Math.max(minX, Math.min(maxX, player.x)) + player.speed * player.dir;
-    if (player.x >= maxX) { player.x = maxX; player.dir = -1; }
-    else if (player.x <= minX) { player.x = minX; player.dir = 1; }
-
-    const now = Date.now();
-    if (now - lastShot >= 140) {
-      bullets.push({ x: player.x + player.w / 2 - 1.5, y: player.y - 4, vy: -6, w: 3, h: 8 });
-      lastShot = now;
-    }
-
-    let any = false;
-    levels.forEach((lv) => { if (lv > 0) any = true; });
-    if (!any) resetLevels();
-
-    stars.forEach((s) => { s.y += s.sp; if (s.y > H) { s.y = 0; s.x = Math.random() * W; } });
-    bullets = bullets.filter((b) => { b.y += b.vy; return b.y > 0; });
-    particles.forEach((p) => { p.x += p.vx; p.y += p.vy; p.life++; });
-    particles = particles.filter((p) => p.life < p.max);
-
-    for (let bi = bullets.length - 1; bi >= 0; bi--) {
-      const b = bullets[bi];
-      let hit = false;
-      for (let wx = 0; wx < weeks.length && !hit; wx++) {
-        for (let dy = 0; dy < 7 && !hit; dy++) {
-          const date = weeks[wx][dy];
-          if (!date) continue;
-          const lv = levels.get(date) || 0;
-          if (lv === 0) continue;
-          const cx = wx * STEP, cy = MLH + dy * STEP;
-          if (b.x < cx + CS && b.x + b.w > cx && b.y < cy + CS && b.y + b.h > cy) {
-            bullets.splice(bi, 1);
-            hit = true;
-            const nl = lv - 1;
-            levels.set(date, nl);
-            const r = rects.get(date);
-            if (r) {
-              if (nl === 0) r.style.opacity = '0';
-              else r.setAttribute('fill', COLORS[nl]);
-            }
-            explode(cx + CS / 2, cy + CS / 2, COLORS[lv]);
-          }
-        }
-      }
-    }
-  };
-
-  const draw = () => {
-    ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = '#fff';
-    stars.forEach((s) => { ctx.globalAlpha = s.a; ctx.fillRect(s.x, s.y, s.sz, s.sz); });
-    ctx.globalAlpha = 1;
-    ctx.fillStyle = '#fbbf24';
-    bullets.forEach((b) => ctx.fillRect(b.x, b.y, b.w, b.h));
-    particles.forEach((p) => {
-      ctx.fillStyle = p.color;
-      ctx.globalAlpha = Math.max(0, 1 - p.life / p.max);
-      ctx.fillRect(p.x, p.y, p.sz, p.sz);
-    });
-    ctx.globalAlpha = 1;
-    ctx.fillStyle = '#38bdf8';
-    ctx.shadowColor = '#38bdf8';
-    ctx.shadowBlur = 6;
+    /* arcTo e não quadraticCurveTo pelos meios: interpolar pelos pontos
+       médios arredonda o quadrilátero inteiro e a pincelada vira bala.
+       Aqui os lados ficam RETOS e só os cantos amolecem, que é o que a
+       espátula deixa — aresta de lâmina, canto de massa. */
+    const raio = lado * 0.3;
+    ctx.save();
     ctx.beginPath();
-    ctx.moveTo(player.x + player.w / 2, player.y);
-    ctx.lineTo(player.x + player.w, player.y + player.h);
-    ctx.lineTo(player.x + player.w * 0.7, player.y + player.h * 0.75);
-    ctx.lineTo(player.x + player.w * 0.3, player.y + player.h * 0.75);
-    ctx.lineTo(player.x, player.y + player.h);
+    ctx.moveTo((p[0][0] + p[1][0]) / 2, (p[0][1] + p[1][1]) / 2);
+    for (let i = 1; i <= 4; i++) {
+      const a = p[i % 4], b = p[(i + 1) % 4];
+      ctx.arcTo(a[0], a[1], b[0], b[1], raio);
+    }
     ctx.closePath();
+
+    // a massa levanta do painel: sombra para baixo e à esquerda
+    ctx.shadowColor = 'rgba(0, 0, 0, ' + (0.5 * tinta.massa).toFixed(2) + ')';
+    ctx.shadowOffsetX = -1.1 * tinta.massa;
+    ctx.shadowOffsetY = 1.8 * tinta.massa;
+    ctx.shadowBlur = 2.6 * tinta.massa;
+
+    const g = ctx.createLinearGradient(x, y + lado, x + lado, y);
+    g.addColorStop(0, tinta.sombra);
+    g.addColorStop(0.52, tinta.face);
+    g.addColorStop(1, tinta.luz);
+    ctx.fillStyle = g;
     ctx.fill();
-    ctx.shadowBlur = 0;
+    ctx.restore();
+
+    // o fio de luz na crista, onde a espátula deixou a tinta mais alta
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(p[0][0] + lado * 0.16, p[0][1] + lado * 0.22);
+    ctx.quadraticCurveTo(
+      x + lado * (0.4 + r(9) * 0.3), y + lado * (0.1 + r(10) * 0.2),
+      p[1][0] - lado * 0.14, p[1][1] + lado * 0.28
+    );
+    ctx.strokeStyle = 'rgba(255, 246, 228, ' + (0.34 * tinta.massa).toFixed(2) + ')';
+    ctx.lineWidth = Math.max(0.7, lado * 0.09 * tinta.massa);
+    ctx.lineCap = 'round';
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  let pintadas = 0;
+  const inicio = performance.now();
+
+  const pintarColuna = (wx) => {
+    const week = weeks[wx];
+    if (!week) return;
+    week.forEach((date, dy) => {
+      if (!date) return;
+      // a espátula raspa o verde desta coluna ao passar
+      const r = rects.get(date);
+      if (r) { r.style.transition = 'opacity 0.35s ease'; r.style.opacity = '0'; }
+      const lv = levels.get(date) || 0;
+      if (lv === 0) return;
+      // 2px além da célula: massa de tinta encosta na vizinha em vez
+      // de respeitar a grade, e é o encosto que faz o quadro parecer
+      // pintado em vez de tabelado.
+      pincelada(wx * STEP - 1, MLH + dy * STEP - 1, CS + 2, OLEO[lv], wx * 7 + dy);
+    });
   };
 
-  const loop = () => {
-    if (!state.on) return;
-    update();
-    draw();
-    state.raf = requestAnimationFrame(loop);
+  const passo = (t) => {
+    const p = Math.min(1, (t - inicio) / DURACAO_PINTURA);
+    const ate = Math.ceil(p * weeks.length);
+    while (pintadas < ate) pintarColuna(pintadas++);
+
+    // a ferramenta: um brilho estreito onde a tinta está sendo posta
+    fer.clearRect(0, 0, larguraCss, alturaCss);
+    if (p < 1) {
+      const cx = p * weeks.length * STEP;
+      const g = fer.createLinearGradient(cx - STEP * 2, 0, cx + STEP * 0.8, 0);
+      g.addColorStop(0, 'rgba(246, 231, 200, 0)');
+      g.addColorStop(0.74, 'rgba(246, 231, 200, 0.17)');
+      g.addColorStop(1, 'rgba(246, 231, 200, 0)');
+      fer.fillStyle = g;
+      fer.fillRect(cx - STEP * 2, MLH - 3, STEP * 2.8, 7 * STEP + 2);
+      state.raf = requestAnimationFrame(passo);
+    } else {
+      state.raf = null;
+    }
   };
-  loop();
+
+  if (reduzido) {
+    /* Sem movimento: o quadro aparece pronto. É a alternativa em fade
+       sem deslocamento que o PRODUCT.md pede, e a espátula — que só
+       existe para mostrar o gesto — não chega a entrar em cena. */
+    while (pintadas < weeks.length) pintarColuna(pintadas++);
+    state.raf = null;
+  } else {
+    state.raf = requestAnimationFrame(passo);
+  }
 }
