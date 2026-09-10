@@ -2891,6 +2891,16 @@ main {
     touch-action: none;
   }
 
+  /* A dica só promete as duas direções onde as duas existem. Abaixo
+     desta fronteira o touch-action é pan-y — o dedo gira para os lados
+     e o gesto vertical é da rolagem —, então "em qualquer direção"
+     seria falso justamente na tela onde está a maioria de quem visita.
+     O elemento é aria-hidden, decorativo: o pseudo não esconde texto de
+     ninguém que dependa dele. */
+  .xp-cena .globo-dica::after {
+    content: ', em qualquer direção';
+  }
+
   /* As duas linhas debaixo do globo caem sobre a parte clara da mesa: ali
      a dica media 3,81:1 e a nota 3,49:1. Mesmo recurso do cabeçalho, uma
      elipse difusa em vez de uma tarja, para não colar um retângulo de
